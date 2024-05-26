@@ -20,15 +20,17 @@ class AdministratorManager:
 
     def authenticate_administrator(self, email, password):
         """Authentifie un administrateur par email et mot de passe."""
-        hashed_password = hashlib.sha256(password.encode()).hexdigest()
-        results = self.db.read_records(
-            table="administrators", 
-            condition="email=? AND password=?", 
-            params=(email, hashed_password)
-        )
-        print(results)
-        pause_system()
-        return len(results) > 0
+        try:
+            hashed_password = hashlib.sha256(password.encode()).hexdigest()
+            results = self.db.read_records(
+                table="administrators", 
+                condition="email=? AND password=?", 
+                params=(email, hashed_password)
+            )
+            return len(results) > 0
+        except Exception as e:
+            print(f"Erreur lors de l'authentification : {e}")
+        return False
        
     def __del__(self):
         """Ferme la connexion à la base de données lors de la destruction de l'objet."""
