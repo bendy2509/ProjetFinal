@@ -27,7 +27,7 @@ def main():
         print("Menu Principal:")
         print("1. Menu gestion Batiment")
 
-        choice = get_int_user("Choisissez une option: ", x+6, y)
+        choice = get_int_user("Choisissez une option: ")
 
         if choice == 1:
             menuGestionBatiment(db_file)

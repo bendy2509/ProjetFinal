@@ -31,10 +31,3 @@ class AdministratorManager:
         except Exception as e:
             print(f"Erreur lors de l'authentification : {e}")
         return False
-       
-    def __del__(self):
-        """Ferme la connexion à la base de données lors de la destruction de l'objet."""
-        if self.db.conn:
-            self.db.conn.close()
-            print(f"Disconnected from database: {self.db.db_file}")
-
