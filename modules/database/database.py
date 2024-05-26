@@ -94,7 +94,7 @@ class Database:
         """Met à jour des lignes dans la table spécifiée en fonction de la condition donnée."""
         set_values = ', '.join([f"{column} = ?" for column in values.keys()])
         query = f"UPDATE {table} SET {set_values} WHERE {condition}"
-        self.execute_query(query, list(values.values()))
+        return self.execute_query(query, list(values.values()))
 
     def delete_record(self, table, condition):
         """Supprime des lignes de la table spécifiée en fonction de la condition donnée."""

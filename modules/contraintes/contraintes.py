@@ -15,7 +15,7 @@ def clear_screen():
 def pause_system():
     os.system('pause' if os.name == 'nt' else 'read -p "Appuyez sur Entrée pour continuer..."')
 
-def get_int_user(prompt, x, y):
+def get_int_user(prompt):
     """Demande à l'utilisateur une valeur entière jusqu'à ce qu'une valeur valide soit entrée."""
     while True:
         try:
@@ -33,6 +33,10 @@ def check_building_name(name):
     if name in valid_names:
         return True
     else:
+        clear_screen()
+        print("Mauvais choix. Veuillez choisir entrer A, B, C, D")
+        pause_system()
+        clear_screen()
         return False
 
 def validRoomFloor(floor):
@@ -45,7 +49,7 @@ def validRoomFloor(floor):
     clear_screen()
     return False
 
-def validRoomNumber(room_number, floor_number, x, y):
+def validRoomNumber(room_number, floor_number, ):
     """Tenir à ce que les salles soient dans la bonne étage avec le bon numéro."""
     room_ = {
         "floor_1": [n for n in range(101, 107)],
@@ -74,3 +78,10 @@ def is_valid_room_type(room_type):
         print("Vous devez choisir entre 'salle de cours, salle virtuelle, labo'")
         pause_system()
     return room_type.lower() in valid_room_types
+
+def authenticate_admin(admin_manager):
+    """Demande les informations d'authentification et vérifie l'authenticité de l'administrateur."""
+    print("Vous devez vous identifier !")
+    admin_email = input("Email administrateur: ")
+    admin_password = input("Mot de passe : ")
+    return admin_manager.authenticate_administrator(admin_email, admin_password)
