@@ -2,7 +2,7 @@ import sys
 import os
 
 # Ajouter le chemin du projet au sys.path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from modules.administrateur.administrateur import AdministratorManager
 from modules.gestionBatiment.buildingsManager import Building, BuildingManager, Room
@@ -88,12 +88,7 @@ def menuGestionBatiment(db_file):
                 pause_system()
 
         elif choice == 2:
-            if authenticate_admin(admin_manager):
-                add_room_to_building(manager=manager, admin_manager=admin_manager)
-            else:
-                print("Authentification échouée. Accès refusé.")
-                pause_system()
-
+            add_room_to_building(manager=manager, admin_manager=admin_manager)
         elif choice == 3:
             if authenticate_admin(admin_manager):
                 old_name = input("Nom actuel du bâtiment: ")
