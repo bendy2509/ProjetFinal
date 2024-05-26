@@ -53,8 +53,11 @@ class BuildingManager(Database):
     def update_building_name(self, old_name, new_name):
         clear_screen()
         try:
-            self.update_record("buildings", {"name": new_name}, f"name='{old_name}'")
-            print(f"Le nom du batiment '{old_name}' est remplacé par '{new_name}'.")
+            succes = self.update_record("buildings", {"name": new_name}, f"name='{old_name}'")
+            if len(succes) > 0:
+                print(f"Le nom du batiment '{old_name}' est remplacé par '{new_name}'.")
+            else:
+                print(f"Le nom {old_name} est introuvable.")
         except sqlite3.IntegrityError:
             print(f"Le Batiment '{new_name}' existe déjà.")
         pause_system()
