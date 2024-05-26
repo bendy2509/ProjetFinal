@@ -7,7 +7,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from modules.administrateur.administrateur import AdministratorManager
 from modules.gestionBatiment.buildingsManager import Building, BuildingManager, Room
 from modules.contraintes.contraintes import (
-    check_building_name, clear_screen, cursor_position,
+    check_building_name, clear_screen,
     get_int_user, is_valid_room_type, pause_system,
     validRoomFloor, validRoomNumber
 )
@@ -15,23 +15,14 @@ from modules.contraintes.contraintes import (
 
 def menuBatiment(x, y):
     clear_screen()
-    cursor_position(x, y+3)
     print("Menu Gestion Batiment :")
-    cursor_position(x+2, y)
     print("1. Enregistrer un bâtiment")
-    cursor_position(x+3, y)
     print("2. Ajouter une salle à un bâtiment")
-    cursor_position(x+4, y)
     print("3. Modifier le nom d'un bâtiment")
-    cursor_position(x+5, y)
     print("4. Modifier le nombre d'étages d'un bâtiment")
-    cursor_position(x+6, y)
     print("5. Afficher les bâtiments")
-    cursor_position(x+7, y)
     print("6. Supprimer un bâtiment")
-    cursor_position(x+8, y)
     print("7. Quitter")
-    cursor_position(x+9, y)
     choice = get_int_user("Choisissez une option: ", x+10, y)
 
     return choice
@@ -42,12 +33,11 @@ def to_add_building(manager, x, y):
 
     while True:
         clear_screen()
-        cursor_position(x, y)
+        
         name = input("Nom du bâtiment (A, B, C ou D): ")
         if check_building_name(name):
             break
         else:
-            cursor_position(x+2, y)
             print("Mauvais choix. Veuillez réessayer !!")
             pause_system()
     floors = 3
@@ -58,30 +48,24 @@ def to_add_building(manager, x, y):
 def add_room_to_building(manager, admin_manager, x, y):
     """Ajoute une salle à un bâtiment après authentification de l'administrateur."""
 
-    cursor_position(x, y)
+    
     print("Vous devez vous identifier !")
-    cursor_position(x+1, y)
     admin_email = input("Email administrateur: ")
-    cursor_position(x+2, y)
     admin_password = input("Mot de passe : ")
     if admin_manager.authenticate_administrator(admin_email, admin_password):
-        cursor_position(x+3, y)
         building_name = input("Nom du bâtiment: ")
-        cursor_position(x+4, y)
-        room_floor = get_int_user("Entrer le numéro étage (1, 2 ou 3) : ", x+1, y)
+        room_floor = get_int_user("Entrer le numéro étage (1, 2 ou 3) : ", x+5, y)
 
         while not validRoomFloor(room_floor):
-            room_floor = get_int_user("Entrer le numéro étage (1, 2 ou 3) : ", x+1, y)
+            room_floor = get_int_user("Entrer le numéro étage (1, 2 ou 3) : ", x+6, y)
 
-        room_number = get_int_user("Numéro de la salle: ", x+2, y)
+        room_number = get_int_user("Numéro de la salle: ", x+7, y)
         while not validRoomNumber(room_number, room_floor, x+3, y):
             clear_screen()
             room_number = get_int_user("Numéro de la salle: ", x+2, y)
-        cursor_position(x+3, y)
         room_type = input("Type de salle (salle de cours, salle virtuelle, labo): ")
         while not is_valid_room_type(room_type):
             clear_screen()
-            cursor_position(x+3, y)
             room_type = input("Type de salle (salle de cours, salle virtuelle, labo): ")
 
         capacity = get_int_user("Nombre de places disponibles (taper 0 pour laisser par défaut soit 60): ", x+4, y)
@@ -101,7 +85,7 @@ def menuGestionBatiment(db_file):
     manager = BuildingManager(db_file)
     admin_manager = AdministratorManager(db_file)
 
-    x, y = 1, 50
+    x, y = 1, 40
 
     while True:
         choice = menuBatiment(x, y)
