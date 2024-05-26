@@ -2,7 +2,7 @@
 import sqlite3
 from contextlib import closing
 
-from modules.contraintes.contraintes import clear_screen, cursor_position, pause_system
+from modules.contraintes.contraintes import clear_screen, pause_system
 
 class Database:
     def __init__(self, db_file):
@@ -74,7 +74,6 @@ class Database:
         affected_rows = self.execute_query(query, list(values.values()))
         if affected_rows == 0:
             clear_screen()
-            cursor_position(5,50)
             print("Les données que vous essayez d'insérer existent déjà dans la base de données.")
 
     def read_records(self, table, columns=None, condition=None, params=None):
