@@ -87,8 +87,6 @@ class Database:
         if condition:
             query += f" WHERE {condition}"
         if params:
-            print(query + params)
-            pause_system()
             return self.execute_query(query, params)
         else:
             return self.execute_query(query)
