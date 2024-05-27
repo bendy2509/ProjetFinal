@@ -5,16 +5,16 @@ from contextlib import closing
 from modules.contraintes.contraintes import clear_screen, pause_system
 
 class Database:
-    def __init__(self, db_file):
-        self.db_file = db_file
+    def __init__(self, DB_FILE):
+        self.DB_FILE = DB_FILE
         self.conn = self.create_connection()
         self.create_tables()
 
     def create_connection(self):
-        """Crée une connexion à la base de données SQLite spécifiée par db_file."""
+        """Crée une connexion à la base de données SQLite spécifiée par DB_FILE."""
         try:
-            conn = sqlite3.connect(self.db_file)
-            print(f"Connected to database: {self.db_file}")
+            conn = sqlite3.connect(self.DB_FILE)
+            print(f"Connected to database: {self.DB_FILE}")
             return conn
         except sqlite3.Error as e:
             print(f"Error connecting to database: {e}")
@@ -106,5 +106,5 @@ class Database:
         clear_screen()
         if self.conn:
             self.conn.close()
-            print(f"Déconnection à la base de donnée: {self.db_file}")
+            print(f"Déconnection à la base de donnée: {self.DB_FILE}")
             pause_system()

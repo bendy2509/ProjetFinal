@@ -5,8 +5,8 @@ from modules.contraintes.contraintes import pause_system
 from modules.database.database import Database
 
 class AdministratorManager:
-    def __init__(self, db_file):
-        self.db = Database(db_file)
+    def __init__(self, DB_FILE):
+        self.db = Database(DB_FILE)
 
     def add_administrator(self, first_name, last_name, address, phone, email, password):
         """Ajoute un administrateur à la base de données."""
@@ -30,4 +30,5 @@ class AdministratorManager:
             return len(results) > 0
         except Exception as e:
             print(f"Erreur lors de l'authentification : {e}")
+            pause_system()
         return False

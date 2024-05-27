@@ -2,10 +2,11 @@ import sys
 import os
 
 # Ajouter le chemin du projet au sys.path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from modules.gestionSalle.roomManager import Room
 from modules.administrateur.administrateur import AdministratorManager
-from modules.gestionBatiment.buildingsManager import Building, BuildingManager, Room
+from modules.gestionBatiment.buildingsManager import Building, BuildingManager
 from modules.contraintes.contraintes import (
     authenticate_admin, check_building_name, clear_screen,
     get_int_user, is_valid_room_type, pause_system,
@@ -69,13 +70,13 @@ def add_room_to_building(manager, admin_manager, ):
         pause_system()
 
 
-def menuGestionBatiment(db_file):
+def menuGestionBatiment(DB_FILE):
     """
     Fonction principale pour gérer le menu de gestion des bâtiments et
     effectuer les opérations en fonction du choix de l'utilisateur.
     """
-    manager = BuildingManager(db_file)
-    admin_manager = AdministratorManager(db_file)
+    manager = BuildingManager(DB_FILE)
+    admin_manager = AdministratorManager(DB_FILE)
 
     while True:
         choice = menuBatiment()
@@ -88,12 +89,7 @@ def menuGestionBatiment(db_file):
                 pause_system()
 
         elif choice == 2:
-            if authenticate_admin(admin_manager):
-                add_room_to_building(manager=manager, admin_manager=admin_manager)
-            else:
-                print("Authentification échouée. Accès refusé.")
-                pause_system()
-
+            add_room_to_building(manager=manager, admin_manager=admin_manager)
         elif choice == 3:
             if authenticate_admin(admin_manager):
                 old_name = input("Nom actuel du bâtiment: ")

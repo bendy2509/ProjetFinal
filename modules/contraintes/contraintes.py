@@ -13,6 +13,7 @@ def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def pause_system():
+    """ Pour mettre le système sur pause."""
     os.system('pause' if os.name == 'nt' else 'read -p "Appuyez sur Entrée pour continuer..."')
 
 def get_int_user(prompt):
