@@ -6,15 +6,15 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from modules.database.database import Database
 from modules.administrateur.administrateur import AdministratorManager
-from modules.gestionBatiment.buildingsManager import Building, BuildingManager, Room
+from modules.gestionBatiment.buildingsManager import BuildingManager
 from modules.gestionBatiment.gestionBatiment import menuGestionBatiment
 from modules.contraintes.contraintes import clear_screen, get_int_user
 
 
-db_file = "database.db"
-database = Database(db_file)
-manager = BuildingManager(db_file)
-admin_manager = AdministratorManager(db_file)
+DB_FILE = "database.db"
+database = Database(DB_FILE)
+manager = BuildingManager(DB_FILE)
+admin_manager = AdministratorManager(DB_FILE)
 #admin_manager.add_administrator("Bendy", "SERVILUS", "Pistère", "4170 5257", "bendyservilus@gmail.com", "Servilus_2409")
 
 
@@ -30,7 +30,7 @@ def main():
         choice = get_int_user("Choisissez une option: ")
 
         if choice == 1:
-            menuGestionBatiment(db_file)
+            menuGestionBatiment(DB_FILE)
 
 
 

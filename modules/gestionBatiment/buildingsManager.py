@@ -1,18 +1,9 @@
 # gestionBatiment/buildingsManager.py
 
-import sqlite3
 from modules.contraintes.contraintes import clear_screen, pause_system
 from modules.database.database import Database
+from modules.gestionSalle.roomManager import RoomManager
 
-class Room:
-    def __init__(self, number, room_type, room_floor, capacity=60):
-        self.number = number
-        self.room_type = room_type
-        self.capacity = capacity
-        self.room_floor = room_floor
-
-    def __repr__(self):
-        return f"Salle {self.number} (etage={self.room_floor}, type={self.room_type}, capacité={self.capacity})"
 
 class Building:
     def __init__(self, name, floors=3, rooms=None):
@@ -24,8 +15,9 @@ class Building:
         return f"Bâtiment(nom={self.name}, Nombre_etage={self.floors}, {self.rooms})"
 
 class BuildingManager(Database):
-    def __init__(self, db_file):
-        super().__init__(db_file)
+    def __init__(self, DB_FILE):
+        super().__init__(DB_FILE)
+        self.room_manager = RoomManager(DB_FILE)
 
     def add_building(self, building):
         clear_screen()
@@ -56,7 +48,6 @@ class BuildingManager(Database):
         clear_screen()
         if not self.is_building_exist(old_name) and not self.is_building_exist(new_name):
             self.update_record("buildings", {"name": new_name}, f"name='{old_name}'")
-            #print(succes)
             #pause_system()
             print(f"Le nom du batiment '{old_name}' est remplacé par '{new_name}'.")
         else:
@@ -77,40 +68,21 @@ class BuildingManager(Database):
             print("Ce batiment n'existe pas dans la base !")
         pause_system()
 
+    def add_room_to_building(self, building_name, room):
+        """Utilise RoomManager pour ajouter une salle à un bâtiment."""
+        self.room_manager.add_room(building_name, room)
+
+    def list_building_rooms(self, building_name):
+        """Utilise RoomManager pour lister toutes les salles d'un bâtiment."""
+        self.room_manager.list_rooms(building_name)
+
     def list_buildings(self):
         clear_screen()
         print("Liste des batiments et les salles :")
         buildings = self.read_records("buildings")
         for building in buildings:
             print(f"ID : {building[0]}, Nom Batiment : {building[1]}, Nombre d'étages : {building[2]}")
-            self.list_rooms(building[0])
-        pause_system()
-
-    def list_rooms(self, building_id):
-        rooms = self.read_records("rooms", condition=f"building_id={building_id}")
-        for room in rooms:
-            print(f" Salle (Etage: {room[2]}, Numéro: {room[3]}, Type: {room[4]}, Capacité: {room[5]})")
-
-    def add_room_to_building(self, building_name, room):
-        """Pour ajouter une salle dans un batiment"""
-        clear_screen()
-        if self.is_room_exist(building_name, room.room_floor, room.number):
-            print(f"La salle '{room.number}' existe déjà dans le bâtiment '{building_name}' à l'étage {room.room_floor}.")
-        else:
-            building = self.read_records("buildings", columns=["id"], condition="name=?", params=(building_name,))
-            if building:
-                building_id = building[0][0]
-                self.create_record("rooms", {
-                    "building_id": building_id,
-                    "floor": room.room_floor,
-                    "number": room.number,
-                    "type": room.room_type,
-                    "capacity": room.capacity,
-                    "disponibility": "disponible"
-                })
-                print(f"La salle '{room.number}' a été ajoutée dans le bâtiment '{building_name}' avec succès.")
-            else:
-                print(f"Aucun bâtiment trouvé avec le nom '{building_name}'.")
+            self.list_building_rooms(building[1])
         pause_system()
 
     def is_room_exist(self, building_name, room_floor, room_number):
