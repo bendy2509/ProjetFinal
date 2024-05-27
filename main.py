@@ -4,6 +4,7 @@ import os
 # Ajouter le chemin du projet au sys.path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
+from modules.gestionSalle.gestionSalle import menuGestionSalle
 from modules.database.database import Database
 from modules.administrateur.administrateur import AdministratorManager
 from modules.gestionBatiment.buildingsManager import BuildingManager
@@ -26,11 +27,15 @@ def main():
         clear_screen()
         print("Menu Principal:")
         print("1. Menu gestion Batiment")
+        print("2. Menu gestion Salle")
 
         choice = get_int_user("Choisissez une option: ")
 
         if choice == 1:
             menuGestionBatiment(DB_FILE)
+
+        if choice == 2:
+            menuGestionSalle(DB_FILE)
 
 
 

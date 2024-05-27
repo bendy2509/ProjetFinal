@@ -16,8 +16,8 @@ class Room:
         return f"Salle {self.number} (etage={self.room_floor}, type={self.room_type}, capacité={self.capacity})"
 
 class RoomManager:
-    def __init__(self, db_file):
-        self.db = Database(db_file)
+    def __init__(self, DB_FILE):
+        self.db = Database(DB_FILE)
 
     def add_room(self, building_name, room):
         """Ajoute une salle à un bâtiment."""
@@ -47,9 +47,24 @@ class RoomManager:
             building_id = building[0][0]
             rooms = self.db.read_records("rooms", condition="building_id=?", params=(building_id,))
             for room in rooms:
-                print(room)
+                print(f" Salle (Etage: {room[2]}, Numéro: {room[3]}, Type: {room[4]}, Capacité: {room[5]}, Disponibilité: {room[6]})")
         else:
             print(f"Pas de bâtiment avec le nom '{building_name}'.")
+
+def list_rooms_of_building(self, building_name):
+    building = self.db.read_records("buildings", columns=["id"], condition=f"name='{building_name}'")
+    if building:
+        building_id = building[0][0]
+        rooms = self.db.read_records("rooms", condition=f"building_id={building_id}")
+        if rooms:
+            print(f"Salles dans le bâtiment '{building_name}':")
+            for room in rooms:
+                print(f"Salle {room['number']}, Étage: {room['floor']}, Type: {room['type']}, Capacité: {room['capacity']}, Disponibilité: {room['disponibility']}")
+        else:
+            print(f"Aucune salle trouvée dans le bâtiment '{building_name}'.")
+    else:
+        print(f"Pas de bâtiment avec le nom '{building_name}'.")
+    pause_system()
 
     def update_room_disponibility(self, building_name, floor, room_number, disponibility):
         """Met à jour la disponibilité d'une salle."""
