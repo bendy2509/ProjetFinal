@@ -23,10 +23,9 @@ def menuBatiment():
     print("4. Afficher les bâtiments")
     print("5. Supprimer un bâtiment (admin)")
     print("6. Retour au menu principal")
-    choice = get_int_user("Choisissez une option: ")
+    choice = input("Choisissez une option: ")
 
     return choice
-
 
 def to_add_building(manager):
     """Enregistre un nouveau bâtiment après vérification du nom."""
@@ -81,16 +80,16 @@ def menuGestionBatiment(DB_FILE):
     while True:
         choice = menuBatiment()
         clear_screen()
-        if choice == 1:
+        if choice == '1':
             if authenticate_admin(admin_manager):
                 to_add_building(manager)
             else:
                 print("Authentification échouée. Accès refusé.")
                 pause_system()
 
-        elif choice == 2:
+        elif choice == '2':
             add_room_to_building(manager=manager, admin_manager=admin_manager)
-        elif choice == 3:
+        elif choice == '3':
             if authenticate_admin(admin_manager):
                 old_name = input("Nom actuel du bâtiment: ")
                 new_name = input("Nouveau nom du bâtiment: ")
@@ -105,9 +104,9 @@ def menuGestionBatiment(DB_FILE):
                 print("Authentification échouée. Accès refusé.")
                 pause_system()
 
-        elif choice == 4:
+        elif choice == '4':
             manager.list_buildings()
-        elif choice == 5:
+        elif choice == '5':
             if authenticate_admin(admin_manager):
                 name = input("Nom du bâtiment à supprimer: ")
                 manager.delete_building(name)
@@ -115,12 +114,9 @@ def menuGestionBatiment(DB_FILE):
                 print("Authentification échouée. Accès refusé.")
                 pause_system()
 
-        elif choice == 6:
+        elif choice == '6':
             break
         else:
-            print("Choix invalide. Veuillez saisir un nombre entre 1 et 7. Réessayez !!")
+            print("Choix invalide. Veuillez saisir un nombre entre 1 et 6. Réessayez !!")
             pause_system()
 
-
-if __name__ == "__main__":
-    menuGestionBatiment()

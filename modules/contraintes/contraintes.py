@@ -1,11 +1,17 @@
-"""Definition des contraintes
-    get_int_user :
-                  Pour les choix entier des utilisateurs
-    
-    clear_screen : 
-                  Pour effacer l'ecran
-
 """
+Module définissant les contraintes pour les interactions utilisateur et les opérations du système.
+
+Fonctions :
+    - clear_screen : Efface l'écran de la console.
+    - pause_system : Met le système en pause.
+    - get_int_user : Demande à l'utilisateur une valeur entière valide.
+    - check_building_name : Vérifie si le nom du bâtiment est valide.
+    - validRoomFloor : Valide l'étage d'une salle.
+    - validRoomNumber : Valide le numéro de la salle en fonction de l'étage.
+    - is_valid_room_type : Vérifie si le type de salle est valide.
+    - authenticate_admin : Authentifie un administrateur.
+"""
+
 import os
 
 def clear_screen():
@@ -13,11 +19,16 @@ def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def pause_system():
-    """ Pour mettre le système sur pause."""
+    """Met le système en pause en attendant une action de l'utilisateur."""
     os.system('pause' if os.name == 'nt' else 'read -p "Appuyez sur Entrée pour continuer..."')
 
 def get_int_user(prompt):
-    """Demande à l'utilisateur une valeur entière jusqu'à ce qu'une valeur valide soit entrée."""
+    """
+    Demande à l'utilisateur une valeur entière jusqu'à ce qu'une valeur valide soit entrée.
+
+    :param prompt: Message à afficher pour demander l'entrée de l'utilisateur.
+    :return: La valeur entière entrée par l'utilisateur.
+    """
     while True:
         try:
             value = int(input(prompt))
@@ -29,29 +40,45 @@ def get_int_user(prompt):
             clear_screen()
 
 def check_building_name(name):
-    """Vérifie si le nom du bâtiment est valide"""
+    """
+    Vérifie si le nom du bâtiment est valide.
+
+    :param name: Nom du bâtiment à vérifier.
+    :return: True si le nom est valide, False sinon.
+    """
     valid_names = ["A", "B", "C", "D"]
     if name in valid_names:
         return True
     else:
         clear_screen()
-        print("Mauvais choix. Veuillez choisir entrer A, B, C, D")
+        print("Mauvais choix. Veuillez entrer A, B, C, D")
         pause_system()
         clear_screen()
         return False
 
 def validRoomFloor(floor):
-    """Pour valider l'étage d'une salle."""
+    """
+    Valide l'étage d'une salle.
+
+    :param floor: Numéro de l'étage à vérifier.
+    :return: True si l'étage est valide (1, 2 ou 3), False sinon.
+    """
     if 1 <= floor <= 3:
         return True
     clear_screen()
-    print("Mauvais choix. Veuiller entrer 1, 2 ou 3 pour l'étage.")
+    print("Mauvais choix. Veuillez entrer 1, 2 ou 3 pour l'étage.")
     pause_system()
     clear_screen()
     return False
 
-def validRoomNumber(room_number, floor_number, ):
-    """Tenir à ce que les salles soient dans la bonne étage avec le bon numéro."""
+def validRoomNumber(room_number, floor_number):
+    """
+    Valide le numéro de la salle en fonction de l'étage.
+
+    :param room_number: Numéro de la salle à vérifier.
+    :param floor_number: Numéro de l'étage associé.
+    :return: True si le numéro de la salle est valide pour l'étage, False sinon.
+    """
     room_ = {
         "floor_1": [n for n in range(101, 107)],
         "floor_2": [n for n in range(201, 207)],
@@ -64,24 +91,35 @@ def validRoomNumber(room_number, floor_number, ):
     elif floor_number == 3 and room_number in room_["floor_3"]:
         return True
     clear_screen()
-    print("Vous devez choisir entrer :")
-    print("Etage 1 : 101 à 106")
-    print("Etage 2 : 201 à 206")
-    print("Etage 3 : 301 à 306")
+    print("Vous devez choisir entre :")
+    print("Étage 1 : 101 à 106")
+    print("Étage 2 : 201 à 206")
+    print("Étage 3 : 301 à 306")
     pause_system()
     return False
 
 def is_valid_room_type(room_type):
-    clear_screen()
-    """Vérifie si le type de salle est valide."""
+    """
+    Vérifie si le type de salle est valide.
+
+    :param room_type: Type de salle à vérifier.
+    :return: True si le type de salle est valide, False sinon.
+    """
     valid_room_types = ["salle de cours", "salle virtuelle", "labo"]
-    if room_type not in valid_room_types:
-        print("Vous devez choisir entre 'salle de cours, salle virtuelle, labo'")
+    if room_type.lower() not in valid_room_types:
+        clear_screen()
+        print("Vous devez choisir entre 'salle de cours', 'salle virtuelle', 'labo'")
         pause_system()
-    return room_type.lower() in valid_room_types
+        return False
+    return True
 
 def authenticate_admin(admin_manager):
-    """Demande les informations d'authentification et vérifie l'authenticité de l'administrateur."""
+    """
+    Authentifie un administrateur en demandant les informations d'authentification.
+
+    :param admin_manager: Instance de AdminManager pour vérifier les informations d'authentification.
+    :return: True si l'authentification réussit, False sinon.
+    """
     print("Vous devez vous identifier !")
     admin_email = input("Email administrateur: ")
     admin_password = input("Mot de passe : ")

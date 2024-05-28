@@ -9,37 +9,35 @@ from modules.database.database import Database
 from modules.administrateur.administrateur import AdministratorManager
 from modules.gestionBatiment.buildingsManager import BuildingManager
 from modules.gestionBatiment.gestionBatiment import menuGestionBatiment
-from modules.contraintes.contraintes import clear_screen, get_int_user
-
-
-DB_FILE = "database.db"
-database = Database(DB_FILE)
-manager = BuildingManager(DB_FILE)
-admin_manager = AdministratorManager(DB_FILE)
-#admin_manager.add_administrator("Bendy", "SERVILUS", "Pistère", "4170 5257", "bendyservilus@gmail.com", "Servilus_2409")
+from modules.contraintes.contraintes import clear_screen, get_int_user, pause_system
 
 
 def main():
-    x = 1
-    y = 40
+    DB_FILE = "database.db"
+    # database = Database(DB_FILE)
+    # manager = BuildingManager(DB_FILE)
+    # admin_manager = AdministratorManager(DB_FILE)
+    # admin_manager.add_administrator("Bendy", "SERVILUS", "Pistère", "4170 5257", "bendyservilus@gmail.com", "Servilus_2409")
 
     while True:
         clear_screen()
         print("Menu Principal:")
-        print("1. Menu gestion Batiment")
+        print("1. Menu gestion Bâtiment")
         print("2. Menu gestion Salle")
+        print("3. Quitter")
 
-        choice = get_int_user("Choisissez une option (***) : ")
+        choice = input("Choisissez une option (***) : ")
 
-        if choice == 1:
+        if choice == '1':
             menuGestionBatiment(DB_FILE)
-
-        if choice == 2:
+        elif choice == '2':
             menuGestionSalle(DB_FILE)
-        
-        else:
+        elif choice == '3':
+            print("Au revoir!")
             break
-
+        else:
+            print("Choix invalide. Veuillez saisir un nombre entre 1 et 3.")
+            pause_system()
 
 
 if __name__ == "__main__":
