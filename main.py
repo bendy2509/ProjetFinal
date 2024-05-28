@@ -29,13 +29,16 @@ def main():
         print("1. Menu gestion Batiment")
         print("2. Menu gestion Salle")
 
-        choice = get_int_user("Choisissez une option: ")
+        choice = get_int_user("Choisissez une option (***) : ")
 
         if choice == 1:
             menuGestionBatiment(DB_FILE)
 
         if choice == 2:
             menuGestionSalle(DB_FILE)
+        
+        else:
+            break
 
 
 
