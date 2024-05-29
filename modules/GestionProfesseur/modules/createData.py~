@@ -1,0 +1,110 @@
+""" """
+
+import sql
+class Databases:
+    """ """
+    def __init__(self, dataname):
+        """ """
+        self.dataname = dataname
+        self.connexion = None
+        self.create_table_admins
+        self.create_table_professor
+        
+    
+    def connect(self):
+        """ """
+        try:
+            self.connexion = sqlite3.connect(self.datanem)
+            print("connexion ok! ")
+            
+        except sqlite3.Error as e:
+            print(f"connexion failed in sqlite3 : {e}")
+ 
+    def disconnect(self):
+        """Ferme la connexion à la base de données."""
+        if self.connexion:
+            self.connexion.close()
+            print("Disconnect to the databases! ")
+
+
+    def create_table_admins(self):
+        """ """
+        cursor = self.connexion.cursor()
+        cursor.execute("""CREATE TABLE IF NOT EXISTS admins(
+        code INTGER PRIMARY KEY AUTOINCREMENT,
+        nom TEXT,
+        prenom TEXT,
+        email TEXT UNIQUE,
+        password TEXT
+        )""")
+
+    def create_table_professor(self):
+        """ """
+        cursor = self.connexion.cursor()
+
+        cursor.execute("""CREATE TABLE IF NOT EXISTS professeurs(
+        code TEXT PRIMARY KEY,
+        nom TEXT ,
+        prenom TEXT ,
+        sexe TEXT,
+        email TEXT UNIQUE,
+        telephone TEXT UNIQUE
+        )""")
+
+    def addAdmins(self, coordonnes):
+        """ """
+        cursor = self.connexion.cursor()
+        try:
+            cursor.execute("INSERT INTO admins (nom, prenom, email, password) VALUES(?,?,?,?)",
+                           (coordonnes._nom,  coordonnes._prenom, coordonnes._email,  coordonnes._password))
+            self.connexion.commit()
+            print("\t" * 5, "saved ok !!!")
+            
+         except sqlite3.IntegrityError:
+            print("\t" * 5, f"L'administrateur { coordonnes._nom} { coordonnes._prenom} avec l'email { coordonnes._email} existe déjà.")
+
+    def add_professor(self, coordonnes):
+        """ Ajoute un professeur dans la base de données."""
+        cursor = self.connexion.cursor()  
+        try:
+            cursor.execute("INSERT INTO professeurs (code, nom, prenom, sexe, email, telephone) VALUES (?, ?, ?,?,?,?)",
+                            (coordonnes._code, coordonnes._nom,  coordonnes._prenom,  coordonnes._sexe,  coordonnes._email,  coordonnes._telephone))
+            self.connexion.commit()
+            print()
+            print("\t" * 5, "saved ok !!!")
+
+        except sqlite3.IntegrityError:
+            print("\t" * 5, f"Le professeur { coordonnes._nom} { coordonnes._prenom} avec l'email { coordonnes._email} existe déjà.")
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
