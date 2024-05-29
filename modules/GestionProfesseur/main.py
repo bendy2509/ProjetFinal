@@ -2,7 +2,7 @@ from modules.menu import *
 
 
 def main():
-    """ """
+    """ Menu gestion professeurs """
     mainUser()
 
 
