@@ -87,17 +87,17 @@ class Database:
             self.conn.commit()
             return cursor.fetchall()
 
-    def create_record(self, table, **kwargs):
+    def create_record(self, table, values):
         """
         Insère une nouvelle ligne dans la table spécifiée avec les valeurs données.
 
         :param table: Nom de la table.
         :param kwargs: Valeurs à insérer sous forme de paires clé-valeur.
         """
-        columns = ', '.join(kwargs.keys())
-        placeholders = ', '.join(['?' for _ in kwargs])
+        columns = ', '.join(values.keys())
+        placeholders = ', '.join(['?' for _ in values])
         query = f"INSERT OR IGNORE INTO {table} ({columns}) VALUES ({placeholders})"
-        affected_rows = self.execute_query(query, list(kwargs.values()))
+        affected_rows = self.execute_query(query, list(values.values()))
         if affected_rows == 0:
             clear_screen()
             print("Les données que vous essayez d'insérer existent déjà dans la base de données.")
