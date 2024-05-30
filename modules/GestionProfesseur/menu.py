@@ -1,7 +1,7 @@
 
 
-from modules.GestionProfesseur.getInfos import Coordinates
-from modules.GestionProfesseur.createData import *
+from modules.GestionProfesseur.modules.getInfos import Coordinates
+from modules.createData import *
 
 file_ = "dataProfesseur.db"
 professor = Professor(file_)

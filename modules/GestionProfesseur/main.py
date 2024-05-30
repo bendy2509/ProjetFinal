@@ -1,4 +1,4 @@
-from modules.menu import *
+from modules.GestionProfesseur.menu import *
 
 
 def main():
