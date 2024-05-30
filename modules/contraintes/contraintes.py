@@ -149,3 +149,12 @@ def is_valid_sexe(sexe):
         print("\nLe sexe doit etre f/F ou m/M. Veuillez réessayer...\n")
         return False
     return True
+
+def is_empty(text):
+    """Test champ vide"""
+    if not text.strip():
+        clear_screen()
+        print("Ce champ ne peut etre vide. Veuillez réessayer...")
+        pause_system()
+        return False
+    return True
