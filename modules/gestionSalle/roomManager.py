@@ -124,18 +124,26 @@ class RoomManager:
         :param room_number: Numéro de la salle à supprimer.
         """
         try:
+            # Vérifier si le bâtiment existe
             building = self.db.read_records("buildings", condition="name=?", params=(building_name,))
-            if building:
-                building_id = building[0][0]
-                room = self.db.read_records("rooms", condition="building_id=? AND number=?", params=(building_id, room_number))
-                if room:
-                    self.db.delete_record("rooms", f"id={room[0][0]}")
-                    print(f"La salle {room_number} a été supprimée avec succès.")
-                else:
-                    print(f"Cette salle n'existe pas pour le bâtiment '{building_name}'.")
-            else:
-                print("Ce bâtiment n'existe pas dans la base.")
-        except Exception as e:
-            print(f"Erreur lors de la suppression de la salle : {e}")
+            if not building:
+                print(f"Le bâtiment '{building_name}' n'existe pas dans la base de données.")
+                return
+
+            building_id = building[0][0]
+            
+            # Vérifier si la salle existe dans le bâtiment
+            room = self.db.read_records("rooms", condition="building_id=? AND number=?", params=(building_id, room_number))
+            if not room:
+                print(f"La salle '{room_number}' n'existe pas dans le bâtiment '{building_name}'.")
+                return
+
+            # Supprimer la salle
+            self.db.delete_record(table="rooms", condition="id=?", params=(room[0][0],))
+            print(f"La salle '{room_number}' a été supprimée avec succès du bâtiment '{building_name}'.")
+
+        except:
+            print("Erreur lors de la suppression de la salle")
         finally:
             pause_system()
+

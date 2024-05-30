@@ -140,21 +140,3 @@ class BuildingManager(Database):
             print(f"ID : {building[0]}, Nom Bâtiment : {building[1]}, Nombre d'étages : {building[2]}")
             self.list_building_rooms(building[1])
         pause_system()
-
-    def is_room_exist(self, building_name, room_floor, room_number):
-        """
-        Vérifie si une salle avec un numéro spécifique existe déjà dans un bâtiment pour un même étage.
-
-        :param building_name: Nom du bâtiment.
-        :param room_floor: Étage de la salle.
-        :param room_number: Numéro de la salle.
-        :return: True si la salle existe, False sinon.
-        """
-        building = self.read_records("buildings", columns=["id"], condition="name=?", params=(building_name,))
-        if building:
-            building_id = building[0][0]
-            condition = "building_id=? AND floor=? AND number=?"
-            params = (building_id, room_floor, room_number)
-            existing_room = self.read_records("rooms", columns=["id"], condition=condition, params=params)
-            return len(existing_room) > 0
-        return False
