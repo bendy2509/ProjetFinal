@@ -2,10 +2,10 @@
 import sys
 import os
 
-from getInfos import Coordinates
-from createData import *
+from modules.gestionProfesseur.getInfos import Coordinates
+from modules.gestionProfesseur.createData import *
 from modules.database.database import Database
-from menu import *
+from modules.gestionProfesseur import menu
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 def adminMenu():

@@ -16,7 +16,6 @@ class InvalidInputError(Exception):
         """
         super().init(message)
 
-
 class Coordinates:
     """Class to manage professor's coordinates."""
     

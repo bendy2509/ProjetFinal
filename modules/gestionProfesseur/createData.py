@@ -2,7 +2,7 @@
 import sqlite3
 import hashlib
 
-from getInfos import Coordinates
+from modules.gestionProfesseur.getInfos import Coordinates
 from modules.database.database import Database
 
 # class Databases:
