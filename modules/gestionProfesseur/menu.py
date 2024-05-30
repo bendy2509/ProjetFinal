@@ -1,12 +1,13 @@
 """   """
+import sys
+import os
 
-from modules.GestionProfesseur.getInfos import Coordinates
-from modules.GestionProfesseur.createData import *
+from getInfos import Coordinates
+from createData import *
 from modules.database.database import Database
-from modules.GestionProfesseur.menu import *
+from menu import *
 
-
-
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 def adminMenu():
     """ """
     # clearner = Coordinates()
@@ -52,7 +53,7 @@ def userMenu():
     print("\t" * 3, "*" * 75)
 
 def userChoice():
-    """ """
+    """Gère le choix de l'utilisateur dans le menu administrateur."""
     userMenu()
     while True:
         try :
@@ -130,9 +131,8 @@ def mainAdmin(professor, coordonates):
             userChoice()
         admin_choice = -1
 
-def menuDestionProfesseur(DB_FILE):
+def menuGestionProfesseur(DB_FILE):
     """ """
-
     professor = Professor(DB_FILE)
     coordonates = Coordinates()
     data = Database(DB_FILE)

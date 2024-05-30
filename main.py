@@ -10,7 +10,7 @@ from modules.administrateur.administrateur import AdministratorManager
 from modules.gestionBatiment.buildingsManager import BuildingManager
 from modules.gestionBatiment.gestionBatiment import menuGestionBatiment
 from modules.contraintes.contraintes import clear_screen, get_int_user, pause_system
-from modules.GestionProfesseur.menu import menuDestionProfesseur
+from modules.gestionProfesseur.menu import menuGestionProfesseur
 
 
 
@@ -36,8 +36,7 @@ def main():
         elif choice == '2':
             menuGestionSalle(DB_FILE)
         elif choice == '3':
-            menuDestionProfesseur(DB_FILE)
-            pass
+            menuGestionProfesseur(DB_FILE)
         elif choice == '4':
             print("Au revoir!")
             break
