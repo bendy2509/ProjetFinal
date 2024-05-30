@@ -47,13 +47,12 @@ class Database:
             ''')
             cursor.execute('''
                 CREATE TABLE IF NOT EXISTS rooms (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    number TEXT PRIMARY KEY,
                     building_id INTEGER,
                     floor INTEGER,
-                    number TEXT,
                     type TEXT,
                     capacity INTEGER DEFAULT 60,
-                    disponibility TEXT DEFAULT 'disponible',
+                    statut TEXT DEFAULT 'disponible',
                     FOREIGN KEY (building_id) REFERENCES buildings(id)
                 )
             ''')

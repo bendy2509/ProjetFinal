@@ -61,22 +61,22 @@ def menuGestionSalle(db_file):
         elif choice == '2':
             add_room_to_building(manager=manager, admin_manager=admin_manager)
 
-        elif choice == '3':
-            building_name = input("Nom du bâtiment: ")
-            room_number = input("Numéro de la salle: ")
-            if building_name.strip() and room_number.strip():
-                update_room(room_manager, building_name, room_number)
-            else:
-                print("Le nom du bâtiment et le numéro de la salle ne peuvent pas être vides.")
+        # elif choice == '3':
+        #     building_name = input("Nom du bâtiment: ")
+        #     room_number = input("Numéro de la salle: ")
+        #     if building_name.strip() and room_number.strip():
+        #         update_room(room_manager, building_name, room_number)
+        #     else:
+        #         print("Le nom du bâtiment et le numéro de la salle ne peuvent pas être vides.")
             
 
         elif choice == '4':
-            building_name = input("Nom du bâtiment: ")
             room_number = input("Numéro de la salle: ")
             if building_name.strip() and room_number.strip():
-                room_manager.delete_room_from_building(building_name, room_number)
+                room_manager.delete_room_from_building(room_number)
             else:
-                print("Le nom du bâtiment et le numéro de la salle ne peuvent pas être vides.")
+                print("Le numéro de la salle ne peut pas être vide.")
+                
         elif choice == '5':
             break
         else:

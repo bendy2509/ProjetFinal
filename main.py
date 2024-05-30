@@ -19,7 +19,7 @@ def main():
     # database = Database(DB_FILE)
     # manager = BuildingManager(DB_FILE)
     # admin_manager = AdministratorManager(DB_FILE)
-    # admin_manager.add_administrator("Bendy", "SERVILUS", "Pistère", "4170 5257", "bendyservilus@gmail.com", "Servilus_2409")
+    # admin_manager.add_administrator("Bendy", "SERVILUS", "Pistère", "4170 5257", "bendyservilus@gmail.com", "Servilus_2509")
 
     while True:
         clear_screen()

@@ -52,6 +52,7 @@ class BuildingManager(Database):
         if not self.is_building_exist(building.name):
             self.create_record("buildings", {"name": building.name, "floors": building.floors})
             # Récupérer l'ID du bâtiment nouvellement inséré
+            # Dans le cas ou on a passé des salles a l'instance buildings
             building_id = self.execute_query("SELECT last_insert_rowid()")[0][0]
             for room in building.rooms:
                 self.create_record("rooms", {
@@ -60,7 +61,7 @@ class BuildingManager(Database):
                     "number": room.number,
                     "type": room.room_type,
                     "capacity": room.capacity,
-                    "disponibility": "disponible"
+                    "statut": "disponible"
                 })
             print(f"Le bâtiment '{building.name}' a été ajouté avec succès.")
         else:
@@ -87,6 +88,17 @@ class BuildingManager(Database):
         clear_screen()
         if not self.is_building_exist(old_name) and not self.is_building_exist(new_name):
             self.update_record("buildings", {"name": new_name}, f"name='{old_name}'")
+
+            # Recupere l'ID du batiment
+            building_id = self.read_records(table="buildings", columns=['id'], condition="name=?", params=(new_name,))[0][0]
+
+            #Recherche les salles concerner pour les mettre a jour
+            rooms = self.read_records(table="rooms", condition="building_id=?", params=(building_id))
+            if rooms:
+                for room in rooms:
+                    room_number = f"{new_name}-{room[0]}[2:]"
+                    self.update_record(table="rooms", values={"number": room_number}, condition=f"building_id={building_id}")
+
             print(f"Le nom du bâtiment '{old_name}' est remplacé par '{new_name}'.")
         else:
             print(f"Erreur !! Le Bâtiment '{new_name}' existe déjà ou le bâtiment '{old_name}' est introuvable.")
@@ -100,12 +112,13 @@ class BuildingManager(Database):
         """
         if self.is_building_exist(name):
             building = self.read_records(table="buildings", condition=f"name=?", params=(name,))
+            self.delete_record("buildings", f"name='{name}'")
+
             if len(building) > 0:
                 building_id = building[0][0]
                 # Supprimer toutes les salles associées au bâtiment
                 self.delete_record(table='rooms', condition=f"building_id={building_id}")
             
-            self.delete_record("buildings", f"name='{name}'")
             clear_screen()
             print(f"Le bâtiment '{name}' a été supprimé avec succès.")
         else:
@@ -137,6 +150,6 @@ class BuildingManager(Database):
         print("Liste des bâtiments et les salles :")
         buildings = self.read_records("buildings")
         for building in buildings:
-            print(f"ID : {building[0]}, Nom Bâtiment : {building[1]}, Nombre d'étages : {building[2]}")
+            print(f"Nom Bâtiment : {building[1]}, Nombre d'étages : {building[2]}")
             self.list_building_rooms(building[1])
         pause_system()
