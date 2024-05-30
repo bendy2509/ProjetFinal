@@ -1,12 +1,11 @@
+"""   """
+
+from modules.GestionProfesseur.getInfos import Coordinates
+from modules.GestionProfesseur.createData import *
+from modules.database.database import Database
+from modules.GestionProfesseur.menu import *
 
 
-from modules.GestionProfesseur.modules.getInfos import Coordinates
-from modules.createData import *
-
-file_ = "dataProfesseur.db"
-professor = Professor(file_)
-cordonates = Coordinates()
-data = Databases(file_)
 
 def adminMenu():
     """ """
@@ -68,7 +67,7 @@ def userChoice():
             print()
             print("\t" * 5 + f"Erreur: Veillez Saisir un entier compris entre [0, 3] ")             
 
-def findProfessor_():
+def findProfessor_(professor):
     """ """
     print()
     password = input("\t" * 5 + "Le du code Professeur : ")
@@ -93,7 +92,7 @@ def findProfessor_():
     print()
     input("\t" * 5 + "Pressez ENTER pour continuer...")
 
-def mainAdmin():
+def mainAdmin(professor, coordonates):
     """ """
     while True:
         admin_choice = adminChoice()
@@ -103,11 +102,11 @@ def mainAdmin():
             input("\t" * 5 + "Pressez ENTER pour continuer...")
 
         elif admin_choice == 2:
-            findProfessor_()
+            findProfessor_(professor)
 
         elif admin_choice == 3:
             Coordinates.clear_screen()
-            parameters = cordonates.get_coordinates()
+            parameters = coordonates.get_coordinates()
             professor.add_professor(parameters)
 
 
@@ -131,17 +130,21 @@ def mainAdmin():
             userChoice()
         admin_choice = -1
 
-def mainUser():
+def menuDestionProfesseur(DB_FILE):
     """ """
-    data.connect()
+
+    professor = Professor(DB_FILE)
+    coordonates = Coordinates()
+    data = Database(DB_FILE)
+
     while True:
-        user_choice = userChoice()
+        user_choice = userChoice(DB_FILE)
         if user_choice == 1:
             professor.get_all_professors()
             print()
             input("\t" * 5 + "Pressez ENTER pour continuer...")
         elif user_choice == 2:
-            findProfessor_()
+            findProfessor_(professor)
         elif user_choice == 3:
             Coordinates.clear_screen()
             admin_name = Coordinates.validate_name("nom")
@@ -149,7 +152,7 @@ def mainUser():
             confirmation = data._hash_password(admin_password)
             if confirmation:
                 Coordinates.clear_screen()
-                mainAdmin()
+                mainAdmin(professor,coordonates)
 
         elif user_choice == 0:
             Coordinates.clear_screen()

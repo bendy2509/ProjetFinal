@@ -68,6 +68,17 @@ class Database:
                     password TEXT NOT NULL
                 )
             ''')
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS professors(
+                    code TEXT PRIMARY KEY,
+                    nom TEXT ,
+                    prenom TEXT ,
+                    sexe TEXT,
+                    email TEXT UNIQUE,
+                    telephone TEXT UNIQUE,
+                    codeCours TEXT UNIQUE
+            )''')
+
             self.conn.commit()
             print("Tables created successfully")
 

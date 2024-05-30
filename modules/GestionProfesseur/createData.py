@@ -2,92 +2,93 @@
 import sqlite3
 import hashlib
 
-from modules.getInfos import Coordinates
+from modules.GestionProfesseur.getInfos import Coordinates
+from modules.database.database import Database
 
-class Databases:
-    """ """
-    def __init__(self, dataname):
-        """ """
-        self.dataname = dataname
-        self.connexion = None
-        self.connect()
-        self.create_tables
+# class Databases:
+#     """ """
+#     def __init__(self, dataname):
+#         """ """
+#         self.dataname = dataname
+#         self.connexion = None
+#         self.connect()
+#         self.create_tables
 
-    def connect(self):
-        """ """
-        try:
-            self.connexion = sqlite3.connect(self.dataname) 
-        except sqlite3.Error as e:
-            print("\t" * 5 + f"connexion failed in sqlite3 : {e}")
+#     def connect(self):
+#         """ """
+#         try:
+#             self.connexion = sqlite3.connect(self.dataname) 
+#         except sqlite3.Error as e:
+#             print("\t" * 5 + f"connexion failed in sqlite3 : {e}")
 
-    def create_tables(self):
-        """ """
-        if self.connexion is not None:
-            cursor = self.connexion.cursor()
-            cursor.execute("""CREATE TABLE IF NOT EXISTS admins(
-            code INTGER PRIMARY KEY,
-            nom TEXT,
-            prenom TEXT,
-            email TEXT UNIQUE,
-            password TEXT UNIQUE
-            )""")
+#     def create_tables(self):
+#         """ """
+#         if self.connexion is not None:
+#             cursor = self.connexion.cursor()
+#             cursor.execute("""CREATE TABLE IF NOT EXISTS admins(
+#             code INTGER PRIMARY KEY,
+#             nom TEXT,
+#             prenom TEXT,
+#             email TEXT UNIQUE,
+#             password TEXT UNIQUE
+#             )""")
 
-            cursor.execute("""CREATE TABLE IF NOT EXISTS professors(
-            code TEXT PRIMARY KEY,
-            nom TEXT ,
-            prenom TEXT ,
-            sexe TEXT,
-            email TEXT UNIQUE,
-            telephone TEXT UNIQUE,
-            codeCours TEXT UNIQUE
-            )""")   
-        else:
-            print("\t" * 5 + "Erreur: connexion à la base de données non initialisée.")
+#             cursor.execute("""CREATE TABLE IF NOT EXISTS professors(
+#             code TEXT PRIMARY KEY,
+#             nom TEXT ,
+#             prenom TEXT ,
+#             sexe TEXT,
+#             email TEXT UNIQUE,
+#             telephone TEXT UNIQUE,
+#             codeCours TEXT UNIQUE
+#             )""")   
+#         else:
+#             print("\t" * 5 + "Erreur: connexion à la base de données non initialisée.")
 
-    def execute_query(self, query,  type_request, parameters=()):
-        """ """
-        self.create_tables()
-        if self.connexion is None:
-            print("\t" * 5 + "Erreur: connexion à la base de données non initialisée.")
-            return
+#     def execute_query(self, query,  type_request, parameters=()):
+#         """ """
+#         self.create_tables()
+#         if self.connexion is None:
+#             print("\t" * 5 + "Erreur: connexion à la base de données non initialisée.")
+#             return
         
-        try:
-            cursor = self.connexion.cursor()
-            if type_request == "add":
-                cursor.execute(query, parameters)
-                self.connexion.commit()
-                print()
-                print("\t" * 5 + "Enregistrement fait avec succes !")
-                input("\t" * 5 + "Pressez ENTER pour continuer...")
+#         try:
+#             cursor = self.connexion.cursor()
+#             if type_request == "add":
+#                 cursor.execute(query, parameters)
+#                 self.connexion.commit()
+#                 print()
+#                 print("\t" * 5 + "Enregistrement fait avec succes !")
+#                 input("\t" * 5 + "Pressez ENTER pour continuer...")
 
-            else:
-                cursor.execute(query, parameters)
-                self.connexion.commit()
-                print()
-                print("\t" * 5 + "La suppréssion faite avec succes !")
-        except sqlite3.Error as e:
-            print("\t" * 5 + "Erreur lors de l'exécution de la requête :", e)
+#             else:
+#                 cursor.execute(query, parameters)
+#                 self.connexion.commit()
+#                 print()
+#                 print("\t" * 5 + "La suppréssion faite avec succes !")
+#         except sqlite3.Error as e:
+#             print("\t" * 5 + "Erreur lors de l'exécution de la requête :", e)
 
-    def disconnect(self):
-        """Ferme la connexion à la base de données."""
-        if self.connexion:
-            self.connexion.close()
-            print("\t" * 5 + "Déconnexion de la base de données !")
+#     def disconnect(self):
+#         """Ferme la connexion à la base de données."""
+#         if self.connexion:
+#             self.connexion.close()
+#             print("\t" * 5 + "Déconnexion de la base de données !")
 
-    def _hash_password(self, password):
-        """Hache le mot de passe fourni"""
-        return hashlib.sha256(password.encode()).hexdigest()
+#     def _hash_password(self, password):
+#         """Hache le mot de passe fourni"""
+#         return hashlib.sha256(password.encode()).hexdigest()
 
-    def loging_admin(self, username, password):
-        """Vérifie les informations de connexion de l'administrateur"""
-        hashed_password = self._hash_password(password)
-        cursor = self.connexion.cursor()
-        cursor.execute("SELECT * FROM admins WHERE email = ? AND password = ?", (username, hashed_password))
-        admin = cursor.fetchall()
-        return bool(admin)
+#     def loging_admin(self, username, password):
+#         """Vérifie les informations de connexion de l'administrateur"""
+#         hashed_password = self._hash_password(password)
+#         cursor = self.connexion.cursor()
+#         cursor.execute("SELECT * FROM admins WHERE email = ? AND password = ?", (username, hashed_password))
+#         admin = cursor.fetchall()
+#         return bool(admin)
 
-class Professor(Databases):
-    """Classe de gestion des professeurs héritant de la classe Databases"""
+class Professor(Database):
+    """Classe de gestion des professeurs héritant de la classe Database"""
 
     def __init__(self, database_name):
         """ """
@@ -168,26 +169,26 @@ class Professor(Databases):
         """ """
         return f"Codep : {self._codep}, Nom : {self._nom}, Prenom : {self._prenom}, sexe : {self._sexe}, Email : {self._email}, Telephone : {self._telephone}"
 
-class Admins(Databases):
-    """ """
-    def __init__(self,  nom, prenom, email, password):
-        """ """
-        self._nom = nom
-        self._prenom = prenom
-        self._email = email
-        self._password = password
+# class Admins(Database):
+#     """ """
+#     def __init__(self,  nom, prenom, email, password):
+#         """ """
+#         self._nom = nom
+#         self._prenom = prenom
+#         self._email = email
+#         self._password = password
 
-    def addAdmins(self, Coordinates):
-        """ """
-        cursor = self.connexion.cursor()
-        try:
-            cursor.execute("INSERT INTO admins (nom, prenom, email, password) VALUES(?,?,?,?)",
-                           (Coordinates._nom,  Coordinates._prenom, Coordinates._email,  Coordinates._password))
-            self.connexion.commit()
-            print("\t" * 5, "saved ok !!!")
-        except sqlite3.IntegrityError:
-            print("\t" * 5, f"L'administrateur { Coordinates._nom} { Coordinates._prenom} avec l'email { Coordinates._email} existe déjà.")
+#     def addAdmins(self, Coordinates):
+#         """ """
+#         cursor = self.connexion.cursor()
+#         try:
+#             cursor.execute("INSERT INTO admins (nom, prenom, email, password) VALUES(?,?,?,?)",
+#                            (Coordinates._nom,  Coordinates._prenom, Coordinates._email,  Coordinates._password))
+#             self.connexion.commit()
+#             print("\t" * 5, "saved ok !!!")
+#         except sqlite3.IntegrityError:
+#             print("\t" * 5, f"L'administrateur { Coordinates._nom} { Coordinates._prenom} avec l'email { Coordinates._email} existe déjà.")
 
-    def __str__(self):
-        """ """
-        return f"Nom : {self._nom}, Prenom : {self._prenom}, Email : {self._email}, Password : {self._password}"
+#     def __str__(self):
+#         """ """
+#         return f"Nom : {self._nom}, Prenom : {self._prenom}, Email : {self._email}, Password : {self._password}"

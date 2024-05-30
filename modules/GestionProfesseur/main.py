@@ -1,11 +1,11 @@
-from modules.GestionProfesseur.menu import *
+# from modules.GestionProfesseur.menu import *
 
 
-def main():
-    """ Menu gestion professeurs """
-    mainUser()
+# def main():
+#     """ Menu gestion professeurs """
+#     mainUser()
 
 
-# function main
-if __name__ == "__main__":
-    main()
+# # function main
+# if __name__ == "__main__":
+#     main()

@@ -10,6 +10,8 @@ from modules.administrateur.administrateur import AdministratorManager
 from modules.gestionBatiment.buildingsManager import BuildingManager
 from modules.gestionBatiment.gestionBatiment import menuGestionBatiment
 from modules.contraintes.contraintes import clear_screen, get_int_user, pause_system
+from modules.GestionProfesseur.menu import menuDestionProfesseur
+
 
 
 def main():
@@ -24,19 +26,23 @@ def main():
         print("Menu Principal:")
         print("1. Menu gestion Bâtiment")
         print("2. Menu gestion Salle")
-        print("3. Quitter")
+        print("3. Menu gestion Professeur")
+        print("4. Quitter")
 
-        choice = input("Choisissez une option (***) : ")
+        choice = input("Choisissez une option (****) : ")
 
         if choice == '1':
             menuGestionBatiment(DB_FILE)
         elif choice == '2':
             menuGestionSalle(DB_FILE)
         elif choice == '3':
+            menuDestionProfesseur(DB_FILE)
+            pass
+        elif choice == '4':
             print("Au revoir!")
             break
         else:
-            print("Choix invalide. Veuillez saisir un nombre entre 1 et 3.")
+            print("Choix invalide. Veuillez saisir un nombre entre 1 et 4.")
             pause_system()
 
 
