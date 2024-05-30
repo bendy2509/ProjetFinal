@@ -20,7 +20,7 @@ def clear_screen():
 
 def pause_system():
     """Met le système en pause en attendant une action de l'utilisateur."""
-    os.system('pause' if os.name == 'nt' else 'read -p "Appuyez sur Entrée pour continuer..."')
+    os.system('pause' if os.name == 'nt' else input("Appuyez sur Entrée pour continuer..."))
 
 def get_int_user(prompt):
     """
