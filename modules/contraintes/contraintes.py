@@ -124,3 +124,28 @@ def authenticate_admin(admin_manager):
     admin_email = input("Email administrateur: ")
     admin_password = input("Mot de passe : ")
     return admin_manager.authenticate_administrator(admin_email, admin_password)
+
+def validate_phone_number(number):
+    """Fonction test numero telephone"""
+    if len(number) == 14 and number.startswith("(509)") and number[9] == "-":
+        if number[5] in ["2", "3", "4", "5"]:
+            return True
+        else:
+            clear_screen()
+            print("Le chiffre après (509) doit être 2, 3, 4 ou 5. Veuillez réessayer...\n")
+            pause_system()
+            return False
+    else:
+        clear_screen()
+        print("Format de numéro de téléphone invalide. Veuillez réessayer...\n")
+        pause_system()
+        return False
+
+def is_valid_sexe(sexe):
+    """Fonction test sexe"""
+    list_valid = ["f", "F", "m", "M"]
+    if sexe not in list_valid:
+        os.system("cls")
+        print("\nLe sexe doit etre f/F ou m/M. Veuillez réessayer...\n")
+        return False
+    return True
