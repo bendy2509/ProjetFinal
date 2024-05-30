@@ -2,6 +2,7 @@
 import sys
 import os
 
+from modules.contraintes.contraintes import clear_screen
 from modules.gestionProfesseur.getInfos import Coordinates
 from modules.gestionProfesseur.createData import *
 from modules.database.database import Database
@@ -42,7 +43,6 @@ def adminChoice():
 
 def userMenu():
     """ """
-    Coordinates.clear_screen()
     print("\t" * 3, "*" * 75)
     print()
     print("\t" * 4 + "*" +  "\t"  + "1. Lister les professeurs.", "\t" * 3 + "*")
@@ -54,8 +54,10 @@ def userMenu():
 
 def userChoice():
     """Gère le choix de l'utilisateur dans le menu administrateur."""
-    userMenu()
+    
     while True:
+        clear_screen()
+        userMenu()
         try :
             user_choice = int(input("\t" * 4 +  "\t" + "   Faites votre choix : "))
             if 0 <= user_choice <= 3:
@@ -63,14 +65,14 @@ def userChoice():
             print()
             print("\t" * 5 + "Veillez Saisir un entier compris entre [0, 3]") 
 
-        except ValueError as error:
-        
-            print()
-            print("\t" * 5 + f"Erreur: Veillez Saisir un entier compris entre [0, 3] ")             
+        except ValueError:
+            clear_screen()
+            print("\t" * 5 + "Erreur: Veillez Saisir un entier compris entre [0, 3] ")             
+            pause_system()
 
 def findProfessor_(professor):
     """ """
-    print()
+    clear_screen()
     password = input("\t" * 5 + "Le du code Professeur : ")
     while password == "":
         print("Le code ne doit pa vide.")
@@ -89,9 +91,7 @@ def findProfessor_(professor):
 
         print()
         print("\t", "*" * 120 )
-
-    print()
-    input("\t" * 5 + "Pressez ENTER pour continuer...")
+    pause_system()
 
 def mainAdmin(professor, coordonates):
     """ """
@@ -138,13 +138,13 @@ def menuGestionProfesseur(DB_FILE):
     data = Database(DB_FILE)
 
     while True:
-        user_choice = userChoice(DB_FILE)
+        user_choice = userChoice()
         if user_choice == 1:
             professor.get_all_professors()
-            print()
-            input("\t" * 5 + "Pressez ENTER pour continuer...")
+
         elif user_choice == 2:
             findProfessor_(professor)
+
         elif user_choice == 3:
             Coordinates.clear_screen()
             admin_name = Coordinates.validate_name("nom")

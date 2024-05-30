@@ -103,7 +103,7 @@ class Database:
         Insère une nouvelle ligne dans la table spécifiée avec les valeurs données.
 
         :param table: Nom de la table.
-        :param kwargs: Valeurs à insérer sous forme de paires clé-valeur.
+        :param values: Valeurs à insérer sous forme de paires clé-valeur.
         """
         columns = ', '.join(values.keys())
         placeholders = ', '.join(['?' for _ in values])

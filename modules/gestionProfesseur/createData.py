@@ -2,90 +2,9 @@
 import sqlite3
 import hashlib
 
+from modules.contraintes.contraintes import clear_screen, pause_system
 from modules.gestionProfesseur.getInfos import Coordinates
 from modules.database.database import Database
-
-# class Databases:
-#     """ """
-#     def __init__(self, dataname):
-#         """ """
-#         self.dataname = dataname
-#         self.connexion = None
-#         self.connect()
-#         self.create_tables
-
-#     def connect(self):
-#         """ """
-#         try:
-#             self.connexion = sqlite3.connect(self.dataname) 
-#         except sqlite3.Error as e:
-#             print("\t" * 5 + f"connexion failed in sqlite3 : {e}")
-
-#     def create_tables(self):
-#         """ """
-#         if self.connexion is not None:
-#             cursor = self.connexion.cursor()
-#             cursor.execute("""CREATE TABLE IF NOT EXISTS admins(
-#             code INTGER PRIMARY KEY,
-#             nom TEXT,
-#             prenom TEXT,
-#             email TEXT UNIQUE,
-#             password TEXT UNIQUE
-#             )""")
-
-#             cursor.execute("""CREATE TABLE IF NOT EXISTS professors(
-#             code TEXT PRIMARY KEY,
-#             nom TEXT ,
-#             prenom TEXT ,
-#             sexe TEXT,
-#             email TEXT UNIQUE,
-#             telephone TEXT UNIQUE,
-#             codeCours TEXT UNIQUE
-#             )""")   
-#         else:
-#             print("\t" * 5 + "Erreur: connexion à la base de données non initialisée.")
-
-#     def execute_query(self, query,  type_request, parameters=()):
-#         """ """
-#         self.create_tables()
-#         if self.connexion is None:
-#             print("\t" * 5 + "Erreur: connexion à la base de données non initialisée.")
-#             return
-        
-#         try:
-#             cursor = self.connexion.cursor()
-#             if type_request == "add":
-#                 cursor.execute(query, parameters)
-#                 self.connexion.commit()
-#                 print()
-#                 print("\t" * 5 + "Enregistrement fait avec succes !")
-#                 input("\t" * 5 + "Pressez ENTER pour continuer...")
-
-#             else:
-#                 cursor.execute(query, parameters)
-#                 self.connexion.commit()
-#                 print()
-#                 print("\t" * 5 + "La suppréssion faite avec succes !")
-#         except sqlite3.Error as e:
-#             print("\t" * 5 + "Erreur lors de l'exécution de la requête :", e)
-
-#     def disconnect(self):
-#         """Ferme la connexion à la base de données."""
-#         if self.connexion:
-#             self.connexion.close()
-#             print("\t" * 5 + "Déconnexion de la base de données !")
-
-#     def _hash_password(self, password):
-#         """Hache le mot de passe fourni"""
-#         return hashlib.sha256(password.encode()).hexdigest()
-
-#     def loging_admin(self, username, password):
-#         """Vérifie les informations de connexion de l'administrateur"""
-#         hashed_password = self._hash_password(password)
-#         cursor = self.connexion.cursor()
-#         cursor.execute("SELECT * FROM admins WHERE email = ? AND password = ?", (username, hashed_password))
-#         admin = cursor.fetchall()
-#         return bool(admin)
 
 class Professor(Database):
     """Classe de gestion des professeurs héritant de la classe Database"""
@@ -99,16 +18,14 @@ class Professor(Database):
         query = "INSERT INTO professors (code, nom, prenom, sexe, email, telephone, codeCours) VALUES (?, ?, ?, ?, ?, ?, ?)"
         parameters = coordonates
         self.execute_query(query, "add", parameters)
+        
 
     def get_all_professors(self):
-        """ """ 
-        Coordinates.clear_screen()
-        cursor = self.connexion.cursor()
-        try:
-            cursor.execute("SELECT * FROM professors")
-            all_professor = cursor.fetchall()
-
-            print()
+        """ """
+        clear_screen()
+        all_professor = self.read_records(table="professors")
+        
+        if all_professor:
             print("\n" * 2)
             print("\t" * 4 + "  La liste des professeurs du systeme: ")
             print("\t", "*" * 120 )
@@ -117,15 +34,10 @@ class Professor(Database):
             for professor in all_professor:
                 print("\t" * 2, "{:<15}{:<15}{:<15}{:<10}{:<30}{:<15}{:<15}".format(professor[0],professor[1],
                 professor[2],professor[3],professor[4],professor[5], professor[6]))
-
-            print()
-            print("\t", "*" * 120 )
-            # print()
-            # input("Pressez ENTER pour continuer...")
-
-        except sqlite3.OperationalError as e:
-            print("\t" * 5, "Pas de Profeseurs enregistres pour l'instant or :", e)
-            return None
+        else:
+            print("Pas de professeurs dans la base !")
+        pause_system()
+        
 
     def search_professor(self, code):
         """Recherche un professeur par code"""
