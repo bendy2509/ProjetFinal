@@ -107,8 +107,7 @@ class Professor(Database):
         try:
             cursor.execute("SELECT * FROM professors")
             all_professor = cursor.fetchall()
-
-            print()
+            
             print("\n" * 2)
             print("\t" * 4 + "  La liste des professeurs du systeme: ")
             print("\t", "*" * 120 )
