@@ -20,7 +20,7 @@ def clear_screen():
 
 def pause_system():
     """Met le système en pause en attendant une action de l'utilisateur."""
-    os.system('pause' if os.name == 'nt' else input("Appuyez sur Entrée pour continuer..."))
+    os.system('pause' if os.name == 'nt' else input("\t" * 5 + "Appuyez sur Entrée pour continuer..."))
 
 def get_int_user(prompt):
     """
@@ -31,11 +31,11 @@ def get_int_user(prompt):
     """
     while True:
         try:
-            value = int(input(prompt))
+            value = int(input("\t" * 5 + prompt))
             return value
         except ValueError:
             clear_screen()
-            print("Veuillez entrer un nombre entier valide.")
+            print("\t" * 5 + "Veuillez entrer un nombre entier valide.")
             pause_system()
             clear_screen()
 
@@ -51,7 +51,7 @@ def check_building_name(name):
         return True
     else:
         clear_screen()
-        print("Mauvais choix. Veuillez entrer A, B, C, D")
+        print("\t" * 5 + "Mauvais choix. Veuillez entrer A, B, C, D")
         pause_system()
         clear_screen()
         return False
@@ -66,7 +66,7 @@ def validRoomFloor(floor):
     if 1 <= floor <= 3:
         return True
     clear_screen()
-    print("Mauvais choix. Veuillez entrer 1, 2 ou 3 pour l'étage.")
+    print("\t" * 5 + "Mauvais choix. Veuillez entrer 1, 2 ou 3 pour l'étage.")
     pause_system()
     clear_screen()
     return False
@@ -91,10 +91,10 @@ def validRoomNumber(room_number, floor_number):
     elif floor_number == 3 and room_number in room_["floor_3"]:
         return True
     clear_screen()
-    print("Vous devez choisir entre :")
-    print("Étage 1 : 101 à 106")
-    print("Étage 2 : 201 à 206")
-    print("Étage 3 : 301 à 306")
+    print("\t" * 5 + "Vous devez choisir entre :")
+    print("\t" * 5 + "Étage 1 : 101 à 106")
+    print("\t" * 5 + "Étage 2 : 201 à 206")
+    print("\t" * 5 + "Étage 3 : 301 à 306")
     pause_system()
     return False
 
@@ -108,7 +108,7 @@ def is_valid_room_type(room_type):
     valid_room_types = ["salle de cours", "salle virtuelle", "labo"]
     if room_type.lower() not in valid_room_types:
         clear_screen()
-        print("Vous devez choisir entre 'salle de cours', 'salle virtuelle', 'labo'")
+        print("\t" * 5 + "Vous devez choisir entre 'salle de cours', 'salle virtuelle', 'labo'")
         pause_system()
         return False
     return True
@@ -120,7 +120,7 @@ def authenticate_admin(admin_manager):
     :param admin_manager: Instance de AdminManager pour vérifier les informations d'authentification.
     :return: True si l'authentification réussit, False sinon.
     """
-    print("Vous devez vous identifier !")
+    print("\t" * 5 + "Vous devez vous identifier !")
     admin_email = input("Email administrateur: ")
-    admin_password = input("Mot de passe : ")
+    admin_password = input("\t" * 5 + "Mot de passe : ")
     return admin_manager.authenticate_administrator(admin_email, admin_password)

@@ -5,6 +5,8 @@ import re
 import os
 import random
 
+from modules.contraintes.contraintes import clear_screen, pause_system
+
 class InvalidInputError(Exception):
     """Classe d'exception personnalisée pour les entrées invalides."""
 
@@ -72,13 +74,16 @@ class Coordinates:
         :raises InvalidInputError: Si l'entrée est invalide.
         """
         while True:
+            clear_screen()
             try:
                 value = input("\t" * 5 + f"Entrez {field_name}: ")
                 if not value:
                     raise InvalidInputError(f"Le champ {field_name} ne doit pas être vide.")
                 return value
             except InvalidInputError as e:
+                clear_screen()
                 print("\t" * 5 + f"Erreur : {e}")
+                pause_system()
 
     @staticmethod
     def validate_name(field):
@@ -146,12 +151,16 @@ class Coordinates:
         self._gender = Coordinates.validate_gender()
         self._email = Coordinates.validate_email()
         self._phone = Coordinates.validate_phone()
-        self._code = Coordinates.generate_code(last_name=self._last_name, first_name=self._first_name, gender=self._gender)
         self._course_code = Coordinates.validate_name(field="code cours")
-        return f'"code": {self._code},
-                "nom" : {self._last_name},
-                "prenom": {self._first_name},
-                "sexe": {self._gender},
-                "email": {self._email},
-                "telephone": {self._phone},
-                "codeCours": {self._course_code}'
+        self._code = Coordinates.generate_code(last_name=self._last_name, first_name=self._first_name, gender=self._gender)
+        return {"code": self._code,
+            "nom" : self._last_name,
+            "prenom": self._first_name,
+            "sexe": self._gender,
+            "email": self._email,
+            "telephone": self._phone,
+            "codeCours": self._course_code
+        }
+
+
+        

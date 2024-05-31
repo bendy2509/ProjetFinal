@@ -109,7 +109,8 @@ class Database:
         placeholders = ', '.join(['?' for _ in values])
         query = f"INSERT OR IGNORE INTO {table} ({columns}) VALUES ({placeholders})"
         affected_rows = self.execute_query(query, list(values.values()))
-        print("Request ok !")
+        clear_screen()
+        print('\t' * 4 + "Request ok !")
         pause_system()
         if affected_rows == 0:
             clear_screen()
@@ -146,6 +147,7 @@ class Database:
         :param values: Valeurs à mettre à jour sous forme de paires clé-valeur.
         :param condition: Condition pour déterminer les lignes à mettre à jour.
         :return: Résultat de la requête SQL.
+        #ajout de params au parameters
         """
         set_values = ', '.join([f"{column} = ?" for column in values.keys()])
         query = f"UPDATE {table} SET {set_values} WHERE {condition}"
@@ -164,6 +166,8 @@ class Database:
             self.execute_query(query, params)
         else:
             self.execute_query(query)
+        clear_screen()
+        print('\t' * 4 + "Request ok !")
 
     def __del__(self):
         """
