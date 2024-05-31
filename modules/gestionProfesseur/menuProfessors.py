@@ -3,12 +3,12 @@ import sys
 import os
 
 from modules.contraintes.contraintes import clear_screen
-from modules.gestionProfesseur.getInfos import Coordinates
-from modules.gestionProfesseur.createData import *
+from gestionProfesseur.getInfosProfessors import Coordinates
+from modules.gestionProfesseur.professors import *
 from modules.database.database import Database
-from modules.gestionProfesseur import menu
+from gestionProfesseur import menuProfessors
 
-def menu():
+def menuProfessors():
     """ """
     print("\t" * 3, "*" * 68)
     print()
@@ -25,7 +25,7 @@ def menuChoice():
     """ """
     while True:
         clear_screen()
-        menu()
+        menuProfessors()
         try :
             admin_choice = int(input("\t" * 5 + "   Faites votre choix : "))
             if 0 <= admin_choice <= 5:
