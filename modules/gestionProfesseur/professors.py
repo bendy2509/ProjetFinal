@@ -3,7 +3,7 @@ import sqlite3
 import hashlib
 
 from modules.contraintes.contraintes import clear_screen, pause_system
-from modules.gestionProfesseur.getInfos import Coordinates
+from gestionProfesseur.getInfosProfessors import Coordinates
 from modules.database.database import Database
 
 class Professor(Database):

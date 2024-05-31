@@ -12,6 +12,8 @@ from modules.gestionBatiment.buildingsManager import BuildingManager
 from modules.gestionBatiment.gestionBatiment import menuGestionBatiment
 from modules.contraintes.contraintes import authenticate_admin, clear_screen, get_int_user, pause_system
 from modules.gestionProfesseur.menu import menuGestionProfesseur
+from modules.contraintes.contraintes import clear_screen, get_int_user, pause_system
+from gestionProfesseur.menuProfessors import menuGestionProfesseur
 
 
 

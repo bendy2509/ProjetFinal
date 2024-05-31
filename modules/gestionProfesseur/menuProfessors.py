@@ -3,12 +3,12 @@ import sys
 import os
 
 from modules.contraintes.contraintes import clear_screen
-from modules.gestionProfesseur.getInfos import Coordinates
-from modules.gestionProfesseur.createData import *
+from gestionProfesseur.getInfosProfessors import Coordinates
+from modules.gestionProfesseur.professors import *
 from modules.database.database import Database
-from modules.gestionProfesseur import menu
+from gestionProfesseur import menuProfessors
 
-def menu():
+def menuProfessors():
     """ """
     print("\t" * 3, "*" * 68)
     print()
@@ -25,7 +25,7 @@ def menuChoice():
     """ """
     while True:
         clear_screen()
-        menu()
+        menuProfessors()
         try :
             admin_choice = int(input("\t" * 5 + "   Faites votre choix : "))
             if 0 <= admin_choice <= 5:
@@ -86,8 +86,9 @@ def menuGestionProfesseur(DB_FILE):
             if len(isExist) == 0:
                 print("\t" * 4, "Pas de professeurs dans la base !")
                 pause_system()
+                continue
 
-            code = coordinates.validate_input(" le code du Professeur")
+            code = Coordinates.validate_name("le code du Professeur")
             coordinates_find = data.read_records("professors", condition="code=?", params=(code,))
             if len(coordinates_find) > 0:
                 clear_screen()
@@ -95,16 +96,16 @@ def menuGestionProfesseur(DB_FILE):
                 print("\t" * 4, f"L'information du professeur avec code {code} : ")
                 professor.format_coords(coordonates=coordinates_find)
                 print()
-                print("\t" * 4, " SOS !!  Il est recommande de reenter tous les champs en entrant les memes infos si necessaire : ")
+                print("\t" * 4, " SOS !!  Il est recommandé de ré-entrer tous les champs en entrant les mêmes infos si nécessaire : ")
                 pause_system()
-                params = coordinates.get_coordinates()
-                data.update_record(table="professors", values=params,condition=f"code= :{code}")
-
+                params = Coordinates().get_coordinates()
+                data.update_record(table="professors", values=params, condition="code = ?")
             else:
                 clear_screen()
-                print("\t" * 4, f"Pas de professeurs trouve avec le code '{code} ' dans la base !")
+                print("\t" * 4, f"Pas de professeurs trouvés avec le code '{code}' dans la base !")
                 pause_system()
- 
+            pause_system()
+    
         elif menuchoice == 5:
             isExist = data.read_records("professors")
             if len(isExist) == 0:

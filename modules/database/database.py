@@ -165,6 +165,7 @@ class Database:
         return self.execute_query(query, params)
 
 
+
     def delete_record(self, table, condition, params=None):
         """
         Supprime des lignes de la table spécifiée en fonction de la condition donnée.
