@@ -5,6 +5,8 @@ import re
 import os
 import random
 
+from modules.contraintes.contraintes import clear_screen, pause_system
+
 class InvalidInputError(Exception):
     """Classe d'exception personnalisée pour les entrées invalides."""
 
@@ -19,7 +21,7 @@ class InvalidInputError(Exception):
 class Coordinates:
     """Class to manage professor's coordinates."""
     
-    def __init__(self, code=None, last_name=None, first_name=None, gender=None, email=None, phone=None, course_code="Anglais"):
+    def __init__(self, code=None, last_name=None, first_name=None, gender=None, email=None, phone=None, course_code=None):
         self._code = code
         self._last_name = last_name
         self._first_name = first_name
@@ -52,6 +54,10 @@ class Coordinates:
     def phone(self):
         return self._phone
 
+    @property
+    def course_code(self):
+        return self.course_code
+
     @staticmethod
     def clear_screen():
         """Clears the console screen."""
@@ -68,13 +74,16 @@ class Coordinates:
         :raises InvalidInputError: Si l'entrée est invalide.
         """
         while True:
+            clear_screen()
             try:
                 value = input("\t" * 5 + f"Entrez {field_name}: ")
                 if not value:
                     raise InvalidInputError(f"Le champ {field_name} ne doit pas être vide.")
                 return value
             except InvalidInputError as e:
+                clear_screen()
                 print("\t" * 5 + f"Erreur : {e}")
+                pause_system()
 
     @staticmethod
     def validate_name(field):
@@ -135,12 +144,23 @@ class Coordinates:
         random_number = random.randint(100, 1000)
         return last_name[:3] + first_name[:2] + gender + str(random_number)
 
-    def get_coordinates(self):
+    def get_coordinates(self):# -> tuple[Any, str, str, Literal['F', 'M'], str, str, str]:
         """Gets and validates all the professor's coordinates."""
-        self._last_name = Coordinates.validate_name("nom")
-        self._first_name = Coordinates.validate_name("prénom")
+        self._last_name = Coordinates.validate_name(field="nom")
+        self._first_name = Coordinates.validate_name(field="prénom")
         self._gender = Coordinates.validate_gender()
         self._email = Coordinates.validate_email()
         self._phone = Coordinates.validate_phone()
-        self._code = Coordinates.generate_code(self._last_name, self._first_name, self._gender)
-        return (self._code, self._last_name, self._first_name, self._gender, self._email, self._phone, self._course_code)
+        self._course_code = Coordinates.validate_name(field="code cours")
+        self._code = Coordinates.generate_code(last_name=self._last_name, first_name=self._first_name, gender=self._gender)
+        return {"code": self._code,
+            "nom" : self._last_name,
+            "prenom": self._first_name,
+            "sexe": self._gender,
+            "email": self._email,
+            "telephone": self._phone,
+            "codeCours": self._course_code
+        }
+
+
+        

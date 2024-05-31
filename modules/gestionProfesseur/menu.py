@@ -8,155 +8,125 @@ from modules.gestionProfesseur.createData import *
 from modules.database.database import Database
 from modules.gestionProfesseur import menu
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-def adminMenu():
+def menu():
     """ """
-    # clearner = Coordinates()
-    Coordinates.clear_screen()
-    print("\t" * 5 + " ACCES D'ADMINISTRER ACCORDE ")
-    print("\t" * 2, "*" * 75)
+    print("\t" * 3, "*" * 68)
     print()
-    print("\t" * 4 + "*" + "\t" + "1. Lister les professeurs.", "\t" * 3 + "*")
-    print("\t" * 4 + "*" + "\t" +  "2. Rechercher un professeur.", "\t" * 3 + "*")
-    print("\t" * 4 + "*" + "\t" +  "3. Enregistrer un Professeur.", "\t" * 3 + "*")
-    print("\t" * 4 + "*" + "\t" +  "4. Modifier infos d'un Professeur.", "\t" * 2 + "*")
-    print("\t" * 4 + "*" + "\t" + "5. Suprimer un Professeur.", "\t" * 3 + "*")
-    print("\t" * 4 + "*" + "\t" +  "0. Tourner au menu principal.", "\t" * 3 + "*")
+    print("\t" * 4 + "*" + "\t" + "1. Listez les professeurs.", "\t" * 3 + "*")
+    print("\t" * 4 + "*" + "\t" + "2. Recherchez un professeur.", "\t" * 3 + "*")
+    print("\t" * 4 + "*" + "\t" + "3. Enregistrez un Professeur (Admin).", "\t" * 2  + "*")
+    print("\t" * 4 + "*" + "\t" + "4. Modifiez infos d'un Professeur (Admin).", "\t"   + "*")
+    print("\t" * 4 + "*" + "\t" + "5. Suprimez un Professeur (Admin).", "\t" * 2  + "*")
+    print("\t" * 4 + "*" + "\t" + "0. Tournez au menu principal.", "\t" * 3 + "*")
     print()
-    print("\t" * 2, "*" * 75)
+    print("\t" * 3, "*" * 68)
 
-def adminChoice():
+def menuChoice():
     """ """
-    adminMenu()
     while True:
+        clear_screen()
+        menu()
         try :
             admin_choice = int(input("\t" * 5 + "   Faites votre choix : "))
             if 0 <= admin_choice <= 5:
                 return admin_choice
+
+            clear_screen()
             print()
-            print("\t" * 5 + "Veillez Saisir un entier compris entre [0, 5]") 
-
-        except ValueError as error:
-            print()
-            print("\t" * 5 + f"Erreur: Veillez Saisir un entier compris entre [0, 5] ")             
-
-
-def userMenu():
-    """ """
-    print("\t" * 3, "*" * 75)
-    print()
-    print("\t" * 4 + "*" +  "\t"  + "1. Lister les professeurs.", "\t" * 3 + "*")
-    print("\t" * 4 + "*" +  "\t"  + "2. Rechercher un professeur.", "\t" * 3 + "*")
-    print("\t" * 4 + "*" +  "\t"  + "3. Connecter antant qu'Administrateur.", "\t" * 2 + "*")
-    print("\t" * 4 + "*" +  "\t"  + "0. Laisser le Programme.", "\t" * 3 + "*")
-    print()
-    print("\t" * 3, "*" * 75)
-
-def userChoice():
-    """Gère le choix de l'utilisateur dans le menu administrateur."""
-    
-    while True:
-        clear_screen()
-        userMenu()
-        try :
-            user_choice = int(input("\t" * 4 +  "\t" + "   Faites votre choix : "))
-            if 0 <= user_choice <= 3:
-                return user_choice
-            print()
-            print("\t" * 5 + "Veillez Saisir un entier compris entre [0, 3]") 
+            print("\t" * 5 + "Veillez Saisir un entier compris entre [0, 5]")
+            pause_system()
 
         except ValueError:
             clear_screen()
-            print("\t" * 5 + "Erreur: Veillez Saisir un entier compris entre [0, 3] ")             
-            pause_system()
-
-def findProfessor_(professor):
-    """ """
-    clear_screen()
-    password = input("\t" * 5 + "Le du code Professeur : ")
-    while password == "":
-        print("Le code ne doit pa vide.")
-        password = input("\t" * 5 + "Le du code Professeur : ")
-
-    professor_find = professor.search_professor(password)
-    print()
-    if professor_find:
-        print("\t" * 5, "Le professeur trouve : ")
-        print("\t", "*" * 120 )
-        print("\t" * 2, "{:<15}{:<15}{:<15}{:<10}{:<30}{:<15}{:<15}".format("CODE","NOM","PRENOM","SEXE","EMAIL","TELEPHONE", "CODE_COURS"))
-        print()
-        for coordonate in professor_find:
-            print("\t" * 2, "{:<15}{:<15}{:<15}{:<10}{:<30}{:<15}{:<15}".format(coordonate[0],coordonate[1],
-            coordonate[2],coordonate[3],coordonate[4],coordonate[5], coordonate[6]))
-
-        print()
-        print("\t", "*" * 120 )
-    pause_system()
-
-def mainAdmin(professor, coordonates):
-    """ """
-    while True:
-        admin_choice = adminChoice()
-        if admin_choice == 1:
-            professor.get_all_professors()
             print()
-            input("\t" * 5 + "Pressez ENTER pour continuer...")
+            print("\t" * 5 + f"Erreur: Veillez Saisir un entier compris entre [0, 5] ")
+            pause_system()          
 
-        elif admin_choice == 2:
-            findProfessor_(professor)
-
-        elif admin_choice == 3:
-            Coordinates.clear_screen()
-            parameters = coordonates.get_coordinates()
-            professor.add_professor(parameters)
-
-
-        elif admin_choice == 4:
-            pass
-
-        elif admin_choice == 5:
-            professor.get_all_professors()
-            codep = input("\t" * 5 + "Le  code du Professeur : ")
-            while codep == "":
-                print("Le code ne doit pas vide.")
-                codep = input("\t" * 5 + "Le  code du Professeur : ")
-            professor.delete_professor(codep)
-            print()
-            input("\t" * 5 + "Pressez ENTER pour continuer...")
-            professor.get_all_professors()
-            print()
-
-        else:
-            Coordinates.clear_screen()
-            userChoice()
-        admin_choice = -1
 
 def menuGestionProfesseur(DB_FILE):
     """ """
     professor = Professor(DB_FILE)
-    coordonates = Coordinates()
+    coordinates = Coordinates()
     data = Database(DB_FILE)
 
     while True:
-        user_choice = userChoice()
-        if user_choice == 1:
+        menuchoice = menuChoice()
+        if menuchoice == 1:
             professor.get_all_professors()
 
-        elif user_choice == 2:
-            findProfessor_(professor)
+        elif menuchoice == 2:
+            clear_screen()
+            isExist = data.read_records("professors")
+            if len(isExist) == 0:
+                print("\t" * 4, "Pas de professeurs dans la base !")
+                pause_system()
 
-        elif user_choice == 3:
-            Coordinates.clear_screen()
-            admin_name = Coordinates.validate_name("nom")
-            admin_password = input("\t" * 5 + "Code d'acces : ")
-            confirmation = data._hash_password(admin_password)
-            if confirmation:
-                Coordinates.clear_screen()
-                mainAdmin(professor,coordonates)
+            code = coordinates.validate_input(" le code  du Professeur")
+            coordinates_find = data.read_records("professors", condition="code=?", params=(code,))
+            if len(coordinates_find) > 0:
+                # clear_screen()
+                print("\n" * 2)
+                print("\t" * 4, f"L'information du professeur avec code {code} : ")
+                professor.format_coords(coordonates=coordinates_find)
 
-        elif user_choice == 0:
-            Coordinates.clear_screen()
-            print("\t" * 5 + "Vous quittez le programme.")
-            print()
+                pause_system()
+
+            else:
+                clear_screen()
+                print("\t" * 4, f"Pas de professeurs trouve avec le code '{code} ' dans la base !")
+                pause_system()
+ 
+
+        elif menuchoice == 3:
+            professor.add_professor()
+
+        elif menuchoice == 4:
+            clear_screen()
+            isExist = data.read_records("professors")
+            if len(isExist) == 0:
+                print("\t" * 4, "Pas de professeurs dans la base !")
+                pause_system()
+
+            code = coordinates.validate_input(" le code du Professeur")
+            coordinates_find = data.read_records("professors", condition="code=?", params=(code,))
+            if len(coordinates_find) > 0:
+                clear_screen()
+                print("\n")
+                print("\t" * 4, f"L'information du professeur avec code {code} : ")
+                professor.format_coords(coordonates=coordinates_find)
+                print()
+                print("\t" * 4, " SOS !!  Il est recommande de reenter tous les champs en entrant les memes infos si necessaire : ")
+                pause_system()
+                params = coordinates.get_coordinates()
+                data.update_record(table="professors", values=params,condition=f"code= :{code}")
+
+            else:
+                clear_screen()
+                print("\t" * 4, f"Pas de professeurs trouve avec le code '{code} ' dans la base !")
+                pause_system()
+ 
+        elif menuchoice == 5:
+            isExist = data.read_records("professors")
+            if len(isExist) == 0:
+                print("Pas de professeurs dans la base !")
+                pause_system()
+
+            professor.get_all_professors()
+            code = Coordinates.validate_input("le code du professeur")
+            coordinates_find = data.read_records("professors", condition="code=?", params=(code,))
+            if len(coordinates_find) > 0:
+                data.delete_record(table="professors", condition="code=?", params=(code,))
+                print("\n")
+                professor.get_all_professors()
+
+            else:
+                clear_screen()
+                print("\t" * 4, f"Pas de professeurs trouve avec le code '{code} ' dans la base !")
+                pause_system()
+
+        else:
+            clear_screen()
             break
+            
+        
 

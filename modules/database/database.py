@@ -108,6 +108,9 @@ class Database:
         placeholders = ', '.join(['?' for _ in values])
         query = f"INSERT OR IGNORE INTO {table} ({columns}) VALUES ({placeholders})"
         affected_rows = self.execute_query(query, list(values.values()))
+        clear_screen()
+        print('\t' * 4 + "Request ok !")
+        pause_system()
         if affected_rows == 0:
             clear_screen()
             print("Les données que vous essayez d'insérer existent déjà dans la base de données.")
@@ -175,6 +178,8 @@ class Database:
             self.execute_query(query, params)
         else:
             self.execute_query(query)
+        clear_screen()
+        print('\t' * 4 + "Request ok !")
 
     def __del__(self):
         """
