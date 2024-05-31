@@ -1,6 +1,7 @@
 """
 Module pour gérer les bâtiments et leurs salles associées.
 """
+from time import sleep
 from modules.contraintes.contraintes import clear_screen, pause_system
 from modules.database.database import Database
 from modules.gestionSalle.roomManager import RoomManager
@@ -68,14 +69,14 @@ class BuildingManager(Database):
             print(f"Le Bâtiment '{building.name}' existe déjà.")
         pause_system()
 
-    def is_building_exist(self, building_name):
+    def is_building_exist(self, name):
         """
-        Vérifie si un bâtiment avec un nom spécifique existe déjà.
+        Vérifie si un bâtiment existe dans la base de données.
 
-        :param building_name: Nom du bâtiment à vérifier.
+        :param name: Nom du bâtiment.
         :return: True si le bâtiment existe, False sinon.
         """
-        building = self.read_records("buildings", columns=["id"], condition="name=?", params=(building_name,))
+        building = self.read_records("buildings", condition="name=?", params=(name,))
         return len(building) > 0
     
     def update_building_name(self, old_name, new_name):
@@ -86,22 +87,26 @@ class BuildingManager(Database):
         :param new_name: Nouveau nom du bâtiment.
         """
         clear_screen()
-        if not self.is_building_exist(old_name) and not self.is_building_exist(new_name):
-            self.update_record("buildings", {"name": new_name}, f"name='{old_name}'")
+        if self.is_building_exist(old_name) and not self.is_building_exist(new_name):
+            sleep(0.2)
+            self.update_record("buildings", {"name": new_name}, "name=?", (old_name,))
 
-            # Recupere l'ID du batiment
-            building_id = self.read_records(table="buildings", columns=['id'], condition="name=?", params=(new_name,))[0][0]
+            # Récupère l'ID du bâtiment
+            building = self.read_records(table="buildings", columns=['id'], condition="name=?", params=(new_name,))
+            if building:
+                building_id = building[0][0]
 
-            #Recherche les salles concerner pour les mettre a jour
-            rooms = self.read_records(table="rooms", condition="building_id=?", params=(building_id))
-            if rooms:
-                for room in rooms:
-                    room_number = f"{new_name}-{room[0]}[2:]"
-                    self.update_record(table="rooms", values={"number": room_number}, condition=f"building_id={building_id}")
+                # Recherche les salles concernées pour les mettre à jour
+                rooms = self.read_records(table="rooms", condition="building_id=?", params=(building_id,))
+                if rooms:
+                    for room in rooms:
+                        old_room_number = room[0]
+                        new_room_number = f"{new_name}-{old_room_number.split('-')[-1]}"
+                        self.update_record("rooms", {"number": new_room_number}, "number=?", (old_room_number,))
 
-            print(f"Le nom du bâtiment '{old_name}' est remplacé par '{new_name}'.")
+            print(f"Le nom du bâtiment '{old_name}' a été remplacé par '{new_name}'.")
         else:
-            print(f"Erreur !! Le Bâtiment '{new_name}' existe déjà ou le bâtiment '{old_name}' est introuvable.")
+            print(f"Erreur !! Le bâtiment '{new_name}' existe déjà ou le bâtiment '{old_name}' est introuvable.")
         pause_system()
 
     def delete_building(self, name):

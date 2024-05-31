@@ -88,7 +88,7 @@ class RoomManager:
         else:
             print(f"Pas de bâtiment avec le nom '{building_name}'.")
 
-    def update_room_disponibility(self, room_number, disponibility):
+    def update_room_disponibility(self, room_number, statut):
         """
         Met à jour la disponibilité d'une salle.
 
@@ -96,7 +96,7 @@ class RoomManager:
         :param disponibility: Nouvelle disponibilité de la salle.
         """
         if self.room_exists(room_number):
-            self.db.update_record("rooms", {"disponibility": disponibility}, "number='{room_number}'")
+            self.db.update_record("rooms", {"statut": statut}, "number='{room_number}'")
             print(f"La disponibilité de la salle '{room_number}' a été mise à jour.")
 
     def room_exists(self, room_number):
