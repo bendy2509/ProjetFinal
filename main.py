@@ -10,7 +10,8 @@ from modules.administrateur.administrateur import AdministratorManager
 from modules.gestionBatiment.buildingsManager import BuildingManager
 from modules.gestionBatiment.gestionBatiment import menuGestionBatiment
 from modules.contraintes.contraintes import clear_screen, get_int_user, pause_system
-from gestionProfesseur.menuProfessors import menuGestionProfesseur
+# from modules.gestionProfesseur.menuProfessors import menuGestionProfesseur
+
 
 
 
