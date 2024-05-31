@@ -6,15 +6,10 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from modules.administrateur.gestionAdministrateur import menu_gestion_administrateurs
 from modules.gestionSalle.gestionSalle import menuGestionSalle
-from modules.database.database import Database
 from modules.administrateur.administrateur import AdministratorManager
-from modules.gestionBatiment.buildingsManager import BuildingManager
 from modules.gestionBatiment.gestionBatiment import menuGestionBatiment
 from modules.contraintes.contraintes import authenticate_admin, clear_screen, pause_system
-from modules.contraintes.contraintes import clear_screen, get_int_user, pause_system
 from modules.gestionProfesseur.menuProfessors import menuGestionProfesseur
-
-
 
 def main():
     DB_FILE = "database.db"
