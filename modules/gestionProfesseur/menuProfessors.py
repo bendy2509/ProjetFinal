@@ -3,10 +3,9 @@ import sys
 import os
 
 from modules.contraintes.contraintes import clear_screen
-from gestionProfesseur.getInfosProfessors import Coordinates
+from modules.gestionProfesseur.getInfosProfessors import Coordinates
 from modules.gestionProfesseur.professors import *
 from modules.database.database import Database
-from gestionProfesseur import menuProfessors
 
 def menuProfessors():
     """ """
