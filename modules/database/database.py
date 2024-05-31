@@ -153,6 +153,7 @@ class Database:
         query = f"UPDATE {table} SET {set_values} WHERE {condition}"
         return self.execute_query(query, list(values.values()))
 
+
     def delete_record(self, table, condition, params=None):
         """
         Supprime des lignes de la table spécifiée en fonction de la condition donnée.
