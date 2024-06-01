@@ -16,15 +16,29 @@ from modules.contraintes.contraintes import (
 
 def menuBatiment():
     clear_screen()
-    print("Menu Gestion Batiment :")
-    print("1. Enregistrer un bâtiment (admin)")
-    print("2. Ajouter une salle à un bâtiment (admin)")
-    print("3. Modifier le nom d'un bâtiment (admin)")
-    print("4. Afficher les bâtiments")
-    print("5. Supprimer un bâtiment (admin)")
-    print("6. Retour au menu principal")
+    print("===================================================")
+    print("|      ____   _    _   ____    _                  |")
+    print("|     / ___| | |  | | / ___|  | |                 |")
+    print("|    | |     | |__| | | |     | |                 |")
+    print("|    | |     |  __  | | |     | |                 |")
+    print("|    | |___  | |  | | | |___  | |____             |")
+    print("|    |_____| |_|  |_|  \____| |______|            |")
+    print("|                                                 |")
+    print("===================================================")
+    print("|                                                 |")
+    print("|                 Menu Gestion Bâtiment           |")
+    print("|                                                 |")
+    print("===================================================")
+    print("|                                                 |")
+    print("|  1. Enregistrer un bâtiment (admin)             |")
+    print("|  2. Ajouter une salle à un bâtiment (admin)     |")
+    print("|  3. Modifier le nom d'un bâtiment (admin)       |")
+    print("|  4. Afficher les bâtiments                      |")
+    print("|  5. Supprimer un bâtiment (admin)               |")
+    print("|  6. Retour au menu principal                    |")
+    print("|                                                 |")
+    print("===================================================")
     choice = input("Choisissez une option: ")
-
     return choice
 
 def to_add_building(manager):

@@ -1,7 +1,7 @@
 """
 Module pour gérer les salles dans un bâtiment.
 """
-from modules.contraintes.contraintes import pause_system
+from modules.contraintes.contraintes import clear_screen, pause_system
 from modules.database.database import Database
 
 class Room:
@@ -114,11 +114,13 @@ class RoomManager:
 
         :param room_number: Numéro(ID) de la salle à supprimer.
         """
+        clear_screen()
         try:        
             # Vérifier si la salle existe dans le bâtiment
             room = self.db.read_records("rooms", condition="number=?", params=(room_number))
             if not room:
                 print(f"La salle '{room_number}' n'existe pas.")
+                pause_system()
                 return
 
             # Supprimer la salle

@@ -74,14 +74,12 @@ class Coordinates:
         :raises InvalidInputError: Si l'entrée est invalide.
         """
         while True:
-            clear_screen()
             try:
                 value = input("\t" * 5 + f"Entrez {field_name}: ")
                 if not value:
                     raise InvalidInputError(f"Le champ {field_name} ne doit pas être vide.")
                 return value
             except InvalidInputError as e:
-                clear_screen()
                 print("\t" * 5 + f"Erreur : {e}")
                 pause_system()
 

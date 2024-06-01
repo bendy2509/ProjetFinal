@@ -1,15 +1,15 @@
-# administrateur.py
-
 import hashlib
-from modules.contraintes.contraintes import pause_system
+
+from modules.contraintes.contraintes import clear_screen, pause_system
 from modules.database.database import Database
+
 
 class AdministratorManager:
     def __init__(self, DB_FILE):
         """
-        Initialise une instance d'AdministratorManager.
+        Initialise une instance de AdministratorManager.
 
-        :param DB_FILE: Le fichier de base de données SQLite.
+        :param DB_FILE: Le chemin du fichier de base de données SQLite.
         """
         self.db = Database(DB_FILE)
 
@@ -25,13 +25,21 @@ class AdministratorManager:
         :param password: Mot de passe de l'administrateur (en clair, sera haché).
         """
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
-        query = """
-            INSERT INTO administrators (first_name, last_name, address, phone, email, password)
-            VALUES (?, ?, ?, ?, ?, ?)
-        """
-        params = (first_name, last_name, address, phone, email, hashed_password)
-        self.db.execute_query(query, params)
-        print(f"Administrateur {first_name} {last_name} ajouté avec succès.")
+        try:
+            self.db.create_record(
+                table="administrators",
+                values={
+                    "first_name": first_name,
+                    "last_name": last_name,
+                    "address": address,
+                    "phone": phone,
+                    "email": email,
+                    "password": hashed_password
+                },
+            )
+            print(f"Administrateur {first_name} {last_name} ajouté avec succès.")
+        except Exception:
+            print(f"Erreur lors de l'ajout de l'administrateur")
 
     def authenticate_administrator(self, email, password):
         """
@@ -41,15 +49,52 @@ class AdministratorManager:
         :param password: Mot de passe de l'administrateur.
         :return: True si l'authentification réussit, False sinon.
         """
+        hashed_password = hashlib.sha256(password.encode()).hexdigest()
         try:
-            hashed_password = hashlib.sha256(password.encode()).hexdigest()
             results = self.db.read_records(
                 table="administrators", 
                 condition="email=? AND password=?", 
                 params=(email, hashed_password)
             )
-            return len(results) > 0
-        except Exception as e:
-            print(f"Erreur lors de l'authentification : {e}")
+            if results:
+                return True
+            else:
+                print("Identifiants incorrects.")
+                return False
+        except:
+            print(f"Erreur lors de l'authentification")
             pause_system()
-        return False
+            return False
+
+    def list_administrators(self):
+        """
+        Liste tous les administrateurs dans la base de données.
+        """
+        clear_screen()
+        try:
+            administrators = self.db.read_records(table="administrators")
+            if administrators:
+                print("\t"*5, "Liste des administrateurs :\n")
+                print("\t" * 2, "{:<15}{:<15}{:<15}{:<15}{:<30}".format("NOM","PRENOM","ADRESSE","TELEPHONE","EMAIL"))
+                print()
+                for admin in administrators:
+                    print("\t" * 2, "{:<15}{:<15}{:<15}{:<15}{:<30}".format(admin[2],admin[1],
+                    admin[3],admin[4],admin[5]))
+            else:
+                print("Aucun administrateur trouvé.")
+        except:
+            print(f"Erreur lors de la récupération des administrateurs.")
+        finally:
+            pause_system()
+
+    def delete_administrator(self, email):
+        """
+        Supprime un administrateur de la base de données.
+
+        :param email: Adresse email de l'administrateur à supprimer.
+        """
+        try:
+            self.db.delete_record(table="administrators", condition="email=?", params=(email,))
+            print(f"Administrateur avec l'email {email} supprimé avec succès.")
+        except Exception as e:
+            print(f"Erreur lors de la suppression de l'administrateur : {e}")
