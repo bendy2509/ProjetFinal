@@ -98,7 +98,7 @@ def menuGestionProfesseur(DB_FILE):
                 print("\t" * 4, " SOS !!  Il est recommandé de ré-entrer tous les champs en entrant les mêmes infos si nécessaire : ")
                 pause_system()
                 params = Coordinates().get_coordinates()
-                data.update_record(table="professors", values=params, condition="code = ?")
+                data.update_record(table="professors", values=params, condition="code=?", condition_params=(code,))
             else:
                 clear_screen()
                 print("\t" * 4, f"Pas de professeurs trouvés avec le code '{code}' dans la base !")
