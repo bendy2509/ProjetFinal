@@ -16,7 +16,7 @@ class InvalidInputError(Exception):
 
         :param message: Le message d'erreur à afficher.
         """
-        super().init(message)
+        super().__init__(message)
 
 class Coordinates:
     """Class to manage professor's coordinates."""
@@ -76,11 +76,16 @@ class Coordinates:
         while True:
             try:
                 value = input("\t" * 5 + f"Entrez {field_name}: ")
-                if not value:
-                    raise InvalidInputError(f"Le champ {field_name} ne doit pas être vide.")
+                while value == "":
+                    clear_screen()
+                    print("\t" * 5 + f"Erreur : {field_name} ne doit pas être vide.")
+                    pause_system()
+                    clear_screen()
+                    value = input("\t" * 5 + f"Entrez {field_name}: ")
+
                 return value
             except InvalidInputError as e:
-                print("\t" * 5 + f"Erreur : {e}")
+                print("\t" * 5 + f"Erreur : {field_name} ne doit pas être vide.")
                 pause_system()
 
     @staticmethod
@@ -151,7 +156,7 @@ class Coordinates:
         self._phone = Coordinates.validate_phone()
         self._course_code = Coordinates.validate_name(field="code cours")
         self._code = Coordinates.generate_code(last_name=self._last_name, first_name=self._first_name, gender=self._gender)
- 
+
         return {"code": self._code,
             "nom" : self._last_name,
             "prenom": self._first_name,

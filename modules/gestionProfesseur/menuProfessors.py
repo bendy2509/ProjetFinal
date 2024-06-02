@@ -2,10 +2,14 @@
 import sys
 import os
 
-from modules.contraintes.contraintes import clear_screen
 from modules.gestionProfesseur.getInfosProfessors import Coordinates
 from modules.gestionProfesseur.professors import *
 from modules.database.database import Database
+from modules.administrateur.administrateur import AdministratorManager
+from modules.gestionBatiment.buildingsManager import Building, BuildingManager
+from modules.contraintes.contraintes import (
+    authenticate_admin, clear_screen, pause_system
+)
 
 def menuProfessors():
     """ """
@@ -58,6 +62,8 @@ def menuGestionProfesseur(DB_FILE):
     professor = Professor(DB_FILE)
     coordinates = Coordinates()
     data = Database(DB_FILE)
+    # manager = BuildingManager(DB_FILE)
+    admin_manager = AdministratorManager(DB_FILE)
 
     while True:
         menuchoice = menuChoice()
@@ -73,6 +79,7 @@ def menuGestionProfesseur(DB_FILE):
                 pause_system()
             else:
                 code = coordinates.validate_input(" le code  du Professeur")
+                
                 coordinates_find = data.read_records("professors", condition="code=?", params=(code,))
                 if len(coordinates_find) > 0:
                     clear_screen()
@@ -88,70 +95,69 @@ def menuGestionProfesseur(DB_FILE):
                     pause_system()
  
         elif menuchoice == 3:
-            professor.add_professor()
+            if authenticate_admin(admin_manager=admin_manager):
+                professor.add_professor()
+            else:
+                print("\t" * 5,"Authentification échouée. Accès refusé.")
+                pause_system()
 
         elif menuchoice == 4:
-            clear_screen()
-            isExist = data.read_records("professors")
-            if len(isExist) == 0:
+            if authenticate_admin(admin_manager=admin_manager):
                 clear_screen()
-                print("\t" * 4, "Pas de professeurs dans la base !")
-                pause_system()
-                continue
+                isExist = data.read_records("professors")
+                if len(isExist) == 0:
+                    clear_screen()
+                    print("\t" * 4, "Pas de professeurs dans la base !")
+                    pause_system()
+                    continue
 
-<<<<<<< HEAD
-=======
-            code = Coordinates.validate_name("le code du Professeur")
-            coordinates_find = data.read_records("professors", condition="code=?", params=(code,))
-            if len(coordinates_find) > 0:
-                clear_screen()
-                print("\n")
-                print("\t" * 4, f"L'information du professeur avec code {code} : ")
-                professor.format_coords(coordonates=coordinates_find)
-                print()
-                print("\t" * 4, " SOS !!  Il est recommandé de ré-entrer tous les champs en entrant les mêmes infos si nécessaire : ")
-                pause_system()
-                params = Coordinates().get_coordinates()
-                data.update_record(table="professors", values=params, condition="code=?", condition_params=(code,))
->>>>>>> 9eb1a2491105302fd6435da55a9ca46436f0d9ea
-            else:
                 code = Coordinates.validate_name("le code du Professeur")
                 coordinates_find = data.read_records("professors", condition="code=?", params=(code,))
                 if len(coordinates_find) > 0:
                     clear_screen()
                     print("\n")
-                    print("\t" * 4, f"L'information du professeur avec code ' {code} ' : ")
+                    print("\t" * 4, f"L'information du professeur avec code {code} : ")
                     professor.format_coords(coordonates=coordinates_find)
                     print()
                     print("\t" * 4, " SOS !!  Il est recommandé de ré-entrer tous les champs en entrant les mêmes infos si nécessaire : ")
                     pause_system()
                     params = Coordinates().get_coordinates()
-                    data.update_record(table="professors", values=params, condition="code=?", params=(code,))
+                    data.update_record(table="professors", values=params, condition="code=?", condition_params=(code,))
+
                 else:
                     clear_screen()
                     print("\t" * 4, f"Pas de professeurs trouvés avec le code '{code}' dans la base !")
                     pause_system()
+            else:
+                print("\t" * 5,"Authentification échouée. Accès refusé.")
+                pause_system()
+            
 
         elif menuchoice == 5:
-            isExist = data.read_records("professors")
-            if len(isExist) == 0:
-                clear_screen()
-                print("\t" * 4 + "Pas de professeurs dans la base !")
-                pause_system()
-
-            else:
-                professor.get_all_professors()
-                code = Coordinates.validate_input("le code du professeur")
-                coordinates_find = data.read_records("professors", condition="code=?", params=(code,))
-                if len(coordinates_find) > 0:
-                    data.delete_record(table="professors", condition="code=?", params=(code,))
-                    print("\n")
-                    professor.get_all_professors()
+            if authenticate_admin(admin_manager=admin_manager):
+                isExist = data.read_records("professors")
+                if len(isExist) == 0:
+                    clear_screen()
+                    print("\t" * 4 + "Pas de professeurs dans la base !")
+                    pause_system()
 
                 else:
-                    clear_screen()
-                    print("\t" * 4, f"Pas de professeurs trouve avec le code '{code} ' dans la base !")
-                    pause_system()
+                    professor.get_all_professors()
+                    code = Coordinates.validate_input("le code du professeur")
+                    coordinates_find = data.read_records("professors", condition="code=?", params=(code,))
+                    if len(coordinates_find) > 0:
+                        data.delete_record(table="professors", condition="code=?", params=(code,))
+                        print("\n")
+                        professor.get_all_professors()
+
+                    else:
+                        clear_screen()
+                        print("\t" * 4, f"Pas de professeurs trouve avec le code '{code} ' dans la base !")
+                        pause_system()
+
+            else:
+                print("\t" * 5,"Authentification échouée. Accès refusé.")
+                pause_system()
 
         else:
             clear_screen()

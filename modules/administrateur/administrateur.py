@@ -59,10 +59,10 @@ class AdministratorManager:
             if results:
                 return True
             else:
-                print("Identifiants incorrects.")
+                # print("Identifiants incorrects.")
                 return False
         except:
-            print(f"Erreur lors de l'authentification")
+            print("\t" * 4, f"Erreur lors de l'authentification")
             pause_system()
             return False
 
