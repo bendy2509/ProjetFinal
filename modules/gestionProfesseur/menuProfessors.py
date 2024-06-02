@@ -99,6 +99,21 @@ def menuGestionProfesseur(DB_FILE):
                 pause_system()
                 continue
 
+<<<<<<< HEAD
+=======
+            code = Coordinates.validate_name("le code du Professeur")
+            coordinates_find = data.read_records("professors", condition="code=?", params=(code,))
+            if len(coordinates_find) > 0:
+                clear_screen()
+                print("\n")
+                print("\t" * 4, f"L'information du professeur avec code {code} : ")
+                professor.format_coords(coordonates=coordinates_find)
+                print()
+                print("\t" * 4, " SOS !!  Il est recommandé de ré-entrer tous les champs en entrant les mêmes infos si nécessaire : ")
+                pause_system()
+                params = Coordinates().get_coordinates()
+                data.update_record(table="professors", values=params, condition="code=?", condition_params=(code,))
+>>>>>>> 9eb1a2491105302fd6435da55a9ca46436f0d9ea
             else:
                 code = Coordinates.validate_name("le code du Professeur")
                 coordinates_find = data.read_records("professors", condition="code=?", params=(code,))
