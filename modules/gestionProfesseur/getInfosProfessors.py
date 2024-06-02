@@ -10,7 +10,7 @@ from modules.contraintes.contraintes import clear_screen, pause_system
 class InvalidInputError(Exception):
     """Classe d'exception personnalisée pour les entrées invalides."""
 
-    def init(self, message):
+    def __init__(self, message):
         """
         Initialise l'exception avec un message spécifique.
 
@@ -151,6 +151,7 @@ class Coordinates:
         self._phone = Coordinates.validate_phone()
         self._course_code = Coordinates.validate_name(field="code cours")
         self._code = Coordinates.generate_code(last_name=self._last_name, first_name=self._first_name, gender=self._gender)
+ 
         return {"code": self._code,
             "nom" : self._last_name,
             "prenom": self._first_name,
