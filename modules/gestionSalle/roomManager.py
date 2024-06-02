@@ -82,11 +82,15 @@ class RoomManager:
             if rooms:
                 print(f"Salles dans le bâtiment '{building_name}':")
                 for room in rooms:
-                    print(f"Salle {room[0]}, Type: {room[3]}, Capacité: {room[4]}, Statut: {room[5]}")
+                    room_number = room[0]
+                    room_type = room[3]
+                    room_capacity = room[4]
+                    room_status = room[5]
+                    print(f"\tSalle {room_number}, Type: {room_type}, Capacité: {room_capacity}, Statut: {room_status}")
             else:
-                print(f"Aucune salle trouvée dans le bâtiment '{building_name}'.")
+                print(f"\tAucune salle trouvée dans le bâtiment '{building_name}'.")
         else:
-            print(f"Pas de bâtiment avec le nom '{building_name}'.")
+            print(f"\tPas de bâtiment avec le nom '{building_name}'.")
 
     def update_room_disponibility(self, room_number, statut):
         """
