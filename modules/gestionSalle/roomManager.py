@@ -1,14 +1,14 @@
 """
 Module pour gérer les salles dans un bâtiment.
 """
-from modules.contraintes.contraintes import pause_system
+from modules.contraintes.contraintes import clear_screen, pause_system
 from modules.database.database import Database
 
 class Room:
     """
     Classe représentant une salle.
     """
-    def __init__(self, number, room_type, room_floor, capacity=60):
+    def __init__(self, number, room_type, room_floor, statut, capacity=60):
         """
         Initialise une nouvelle salle.
 
@@ -21,6 +21,7 @@ class Room:
         self.room_type = room_type
         self.room_floor = room_floor
         self.capacity = capacity
+        self.statut = statut
 
     def __repr__(self):
         """
@@ -28,7 +29,7 @@ class Room:
 
         :return: Description textuelle de la salle.
         """
-        return f"Salle {self.number} (etage={self.room_floor}, type={self.room_type}, capacité={self.capacity})"
+        return f"Salle {self.number} (type={self.room_type}, capacité={self.capacity}, statut={self.statut})"
 
 class RoomManager:
     """
@@ -52,25 +53,25 @@ class RoomManager:
         building = self.db.read_records("buildings", columns=["id"], condition="name=?", params=(building_name,))
         if building:
             building_id = building[0][0]
-            if not self.room_exists(building_id, room.room_floor, room.number):
+            if not self.room_exists(room.number):
                 self.db.create_record("rooms", {
+                    "number": room.number,
                     "building_id": building_id,
                     "floor": room.room_floor,
-                    "number": room.number,
                     "type": room.room_type,
                     "capacity": room.capacity,
-                    "disponibility": "disponible"
+                    "statut": room.statut
                 })
                 print(f"La salle '{room.number}' a été ajoutée dans le bâtiment '{building_name}' avec succès.")
             else:
-                print(f"La salle '{room.number}' au {room.room_floor}e étage existe déjà dans le bâtiment '{building_name}'.")
+                print(f"La salle '{room.number}' existe déjà dans le bâtiment '{building_name}'.")
         else:
             print(f"Pas de bâtiment avec le nom '{building_name}'.")
         pause_system()
 
     def list_rooms(self, building_name):
         """
-        Liste toutes les salles d'un bâtiment (version alternative).
+        Liste toutes les salles d'un bâtiment.
 
         :param building_name: Nom du bâtiment.
         """
@@ -81,61 +82,57 @@ class RoomManager:
             if rooms:
                 print(f"Salles dans le bâtiment '{building_name}':")
                 for room in rooms:
-                    print(f"Salle {room[3]}, Étage: {room[2]}, Type: {room[4]}, Capacité: {room[5]}, Disponibilité: {room[6]}")
+                    room_number = room[0]
+                    room_type = room[3]
+                    room_capacity = room[4]
+                    room_status = room[5]
+                    print(f"\tSalle {room_number}, Type: {room_type}, Capacité: {room_capacity}, Statut: {room_status}")
             else:
-                print(f"Aucune salle trouvée dans le bâtiment '{building_name}'.")
+                print(f"\tAucune salle trouvée dans le bâtiment '{building_name}'.")
         else:
-            print(f"Pas de bâtiment avec le nom '{building_name}'.")
+            print(f"\tPas de bâtiment avec le nom '{building_name}'.")
 
-    def update_room_disponibility(self, building_name, floor, room_number, disponibility):
+    def update_room_disponibility(self, room_number, statut):
         """
         Met à jour la disponibilité d'une salle.
 
-        :param building_name: Nom du bâtiment.
-        :param floor: Étage de la salle.
         :param room_number: Numéro de la salle.
         :param disponibility: Nouvelle disponibilité de la salle.
         """
-        building = self.db.read_records("buildings", columns=["id"], condition="name=?", params=(building_name,))
-        if building:
-            building_id = building[0][0]
-            self.db.update_record("rooms", {"disponibility": disponibility}, "building_id=? AND floor=? AND number=?", (building_id, floor, room_number))
-            print(f"La disponibilité de la salle '{room_number}' au {floor}e étage du bâtiment '{building_name}' a été mise à jour.")
-        else:
-            print(f"Pas de bâtiment avec le nom '{building_name}'.")
+        if self.room_exists(room_number):
+            self.db.update_record("rooms", {"statut": statut}, "number='{room_number}'")
+            print(f"La disponibilité de la salle '{room_number}' a été mise à jour.")
 
-    def room_exists(self, building_id, floor, room_number):
+    def room_exists(self, room_number):
         """
         Vérifie si une salle existe déjà dans un bâtiment pour un étage donné.
 
-        :param building_id: ID du bâtiment.
-        :param floor: Étage de la salle.
-        :param room_number: Numéro de la salle.
-        :return: True si la salle existe, False sinon.
+        :param room_number: ID de la salle.
         """
-        room = self.db.read_records("rooms", condition="building_id=? AND floor=? AND number=?", params=(building_id, floor, room_number))
+        room = self.db.read_records("rooms", condition="number=?", params=(room_number,))
         return len(room) > 0
 
-    def delete_room_from_building(self, building_name, room_number):
+    def delete_room_from_building(self, room_number):
         """
         Supprime une salle d'un bâtiment.
 
-        :param building_name: Nom du bâtiment.
-        :param room_number: Numéro de la salle à supprimer.
+        :param room_number: Numéro(ID) de la salle à supprimer.
         """
-        try:
-            building = self.db.read_records("buildings", condition="name=?", params=(building_name,))
-            if building:
-                building_id = building[0][0]
-                room = self.db.read_records("rooms", condition="building_id=? AND number=?", params=(building_id, room_number))
-                if room:
-                    self.db.delete_record("rooms", f"id={room[0][0]}")
-                    print(f"La salle {room_number} a été supprimée avec succès.")
-                else:
-                    print(f"Cette salle n'existe pas pour le bâtiment '{building_name}'.")
-            else:
-                print("Ce bâtiment n'existe pas dans la base.")
-        except Exception as e:
-            print(f"Erreur lors de la suppression de la salle : {e}")
+        clear_screen()
+        try:        
+            # Vérifier si la salle existe dans le bâtiment
+            room = self.db.read_records("rooms", condition="number=?", params=(room_number))
+            if not room:
+                print(f"La salle '{room_number}' n'existe pas.")
+                pause_system()
+                return
+
+            # Supprimer la salle
+            self.db.delete_record(table="rooms", condition="number=?", params=(room[0][0],))
+            print(f"La salle '{room_number}' a été supprimée avec succès.")
+
+        except:
+            print("Erreur lors de la suppression de la salle")
         finally:
             pause_system()
+

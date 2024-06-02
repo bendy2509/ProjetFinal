@@ -47,13 +47,12 @@ class Database:
             ''')
             cursor.execute('''
                 CREATE TABLE IF NOT EXISTS rooms (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    number TEXT PRIMARY KEY,
                     building_id INTEGER,
                     floor INTEGER,
-                    number TEXT,
                     type TEXT,
                     capacity INTEGER DEFAULT 60,
-                    disponibility TEXT DEFAULT 'disponible',
+                    statut TEXT DEFAULT 'disponible',
                     FOREIGN KEY (building_id) REFERENCES buildings(id)
                 )
             ''')
@@ -68,6 +67,17 @@ class Database:
                     password TEXT NOT NULL
                 )
             ''')
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS professors(
+                    code TEXT PRIMARY KEY,
+                    nom TEXT ,
+                    prenom TEXT ,
+                    sexe TEXT,
+                    email TEXT UNIQUE,
+                    telephone TEXT UNIQUE,
+                    codeCours TEXT UNIQUE
+            )''')
+
             self.conn.commit()
             print("Tables created successfully")
 
@@ -92,12 +102,15 @@ class Database:
         Insère une nouvelle ligne dans la table spécifiée avec les valeurs données.
 
         :param table: Nom de la table.
-        :param kwargs: Valeurs à insérer sous forme de paires clé-valeur.
+        :param values: Valeurs à insérer sous forme de paires clé-valeur.
         """
         columns = ', '.join(values.keys())
         placeholders = ', '.join(['?' for _ in values])
         query = f"INSERT OR IGNORE INTO {table} ({columns}) VALUES ({placeholders})"
         affected_rows = self.execute_query(query, list(values.values()))
+        clear_screen()
+        print('\t' * 4 + "Request ok !")
+        pause_system()
         if affected_rows == 0:
             clear_screen()
             print("Les données que vous essayez d'insérer existent déjà dans la base de données.")
@@ -125,18 +138,33 @@ class Database:
         else:
             return self.execute_query(query)
 
-    def update_record(self, table, values, condition):
+    def update_record(self, table, values, condition, condition_params=None):
         """
         Met à jour des lignes dans la table spécifiée en fonction de la condition donnée.
 
-        :param table: Nom de la table.
-        :param values: Valeurs à mettre à jour sous forme de paires clé-valeur.
-        :param condition: Condition pour déterminer les lignes à mettre à jour.
-        :return: Résultat de la requête SQL.
+        :param table: Nom de la table où la mise à jour doit être effectuée.
+        :param values: Dictionnaire de paires colonne-valeur à mettre à jour.
+        :param condition: Condition SQL pour identifier les lignes à mettre à jour.
+        :param condition_params: Paramètres optionnels pour la condition SQL.
+        :return: Résultat de l'exécution de la requête SQL.
         """
+        # Construire la clause SET de la requête SQL en joignant les paires colonne-valeur
         set_values = ', '.join([f"{column} = ?" for column in values.keys()])
+
+        # Former la requête SQL complète
         query = f"UPDATE {table} SET {set_values} WHERE {condition}"
-        return self.execute_query(query, list(values.values()))
+
+        # Préparer les paramètres pour l'exécution de la requête
+        params = list(values.values())
+
+        # Ajouter les paramètres de la condition à la liste des paramètres s'ils existent
+        if condition_params:
+            params.extend(condition_params)
+
+        # Exécuter la requête avec les paramètres préparés
+        return self.execute_query(query, params)
+
+
 
     def delete_record(self, table, condition, params=None):
         """
@@ -151,6 +179,8 @@ class Database:
             self.execute_query(query, params)
         else:
             self.execute_query(query)
+        clear_screen()
+        print('\t' * 4 + "Request ok !")
 
     def __del__(self):
         """
