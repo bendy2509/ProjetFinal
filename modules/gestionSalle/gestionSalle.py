@@ -12,7 +12,7 @@ def menuSalle():
     print("|    | |     | |__| | | |     | |                 |")
     print("|    | |     |  __  | | |     | |                 |")
     print("|    | |___  | |  | | | |___  | |____             |")
-    print("|    |_____| |_|  |_|  \____| |______|            |")
+    print("|    |_____| |_|  |_|  \\____| |______|            |")
     print("|                                                 |")
     print("===================================================")
     print("|                                                 |")
@@ -30,7 +30,7 @@ def menuSalle():
     return choice
 
 
-def menuGestionSalle(db_file):
+def menuGestionSalle(db_file, invite):
     """
     Fonction principale pour gérer le menu de gestion des salles.
     """
@@ -46,17 +46,17 @@ def menuGestionSalle(db_file):
             room_manager.list_rooms(building_name)
             pause_system()
         elif choice == '2':
-            add_room_to_building(manager=manager, admin_manager=admin_manager)
+            add_room_to_building(manager=manager, admin_manager=admin_manager, invite=invite)
 
         elif choice == '3':
-            if authenticate_admin(admin_manager):
+            if invite:
                 room_number = input("Numéro de la salle à supprimer : ")
                 if building_name.strip() and room_number.strip():
                     room_manager.delete_room_from_building(room_number)
                 else:
                     print("Le numéro de la salle ne peut pas être vide.")
             else:
-                print("Authentification échouée. Accès refusé.")
+                print("Accès refusé. Veuillez connecter en tant qu'Administrateur.")
                 pause_system()
 
         elif choice == '4':

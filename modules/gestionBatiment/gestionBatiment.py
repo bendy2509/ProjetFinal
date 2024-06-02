@@ -22,7 +22,7 @@ def menuBatiment():
     print("|    | |     | |__| | | |     | |                 |")
     print("|    | |     |  __  | | |     | |                 |")
     print("|    | |___  | |  | | | |___  | |____             |")
-    print("|    |_____| |_|  |_|  \____| |______|            |")
+    print("|    |_____| |_|  |_|  \\____| |______|            |")
     print("|                                                 |")
     print("===================================================")
     print("|                                                 |")
@@ -55,9 +55,9 @@ def to_add_building(manager):
     building = Building(name, floors)
     manager.add_building(building)
 
-def add_room_to_building(manager, admin_manager, ):
+def add_room_to_building(manager, admin_manager, invite):
     """Ajoute une salle à un bâtiment après authentification de l'administrateur."""
-    if authenticate_admin(admin_manager):
+    if invite:
         building_name = input("Nom du bâtiment: ")
         room_floor = get_int_user("Entrer le numéro étage (1, 2 ou 3) : ")
 
@@ -80,11 +80,11 @@ def add_room_to_building(manager, admin_manager, ):
         room = Room(room_number, room_type, room_floor, "disponible", capacity)
         manager.add_room_to_building(building_name, room)
     else:
-        print("Authentification échouée. Accès refusé.")
+        print("Accès refusé. Veuillez connecter en tant qu'Administrateur.")
         pause_system()
 
 
-def menuGestionBatiment(DB_FILE):
+def menuGestionBatiment(DB_FILE, invite):
     """
     Fonction principale pour gérer le menu de gestion des bâtiments et
     effectuer les opérations en fonction du choix de l'utilisateur.
@@ -96,16 +96,16 @@ def menuGestionBatiment(DB_FILE):
         choice = menuBatiment()
         clear_screen()
         if choice == '1':
-            if authenticate_admin(admin_manager):
+            if invite:
                 to_add_building(manager)
             else:
-                print("Authentification échouée. Accès refusé.")
+                print("Accès refusé. Veuillez connecter en tant qu'Administrateur.")
                 pause_system()
 
         elif choice == '2':
-            add_room_to_building(manager=manager, admin_manager=admin_manager)
+            add_room_to_building(manager, admin_manager, invite)
         elif choice == '3':
-            if authenticate_admin(admin_manager):
+            if invite:
                 old_name = input("Nom actuel du bâtiment: ")
                 new_name = input("Nouveau nom du bâtiment: ")
                 while not check_building_name(new_name):
@@ -116,17 +116,17 @@ def menuGestionBatiment(DB_FILE):
                 else:
                     pause_system()
             else:
-                print("Authentification échouée. Accès refusé.")
+                print("Accès refusé. Veuillez connecter en tant qu'Administrateur.")
                 pause_system()
 
         elif choice == '4':
             manager.list_buildings()
         elif choice == '5':
-            if authenticate_admin(admin_manager):
+            if invite:
                 name = input("Nom du bâtiment à supprimer: ")
                 manager.delete_building(name)
             else:
-                print("Authentification échouée. Accès refusé.")
+                print("Accès refusé. Veuillez connecter en tant qu'Administrateur.")
                 pause_system()
 
         elif choice == '6':
