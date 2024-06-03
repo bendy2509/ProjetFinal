@@ -77,6 +77,15 @@ class Database:
                     telephone TEXT UNIQUE,
                     codeCours TEXT UNIQUE
             )''')
+            cursor.execute('''
+                    CREATE TABLE IF NOT EXISTS cours (
+                    code_cours TEXT PRIMARY KEY,
+                    nom TEXT,
+                    debut INTEGER,
+                    fin INTEGER,
+                    session INTEGER,
+                    annee INTEGER
+            )''')
 
             self.conn.commit()
             print("Tables created successfully")
