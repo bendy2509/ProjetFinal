@@ -1,5 +1,5 @@
 """
-Module pour gérer les bâtiments et leurs salles associées.
+Importation des modules 
 """
 from time import sleep
 from modules.contraintes.contraintes import clear_screen, pause_system
@@ -30,18 +30,23 @@ class Building:
         """
         return f"Bâtiment(nom={self.name}, Nombre_etage={self.floors}, {self.rooms})"
 
+    def for_pylint(self):
+        """
+        Pour pylint qui exige deux methodes publics au moins
+        """
+
 class BuildingManager(Database):
     """
     Classe pour gérer les opérations liées aux bâtiments dans la base de données.
     """
-    def __init__(self, DB_FILE):
+    def __init__(self, db_file):
         """
         Initialise le gestionnaire de bâtiments avec la base de données.
 
-        :param DB_FILE: Chemin vers le fichier de base de données SQLite.
+        :param db_file: Chemin vers le fichier de base de données SQLite.
         """
-        super().__init__(DB_FILE)
-        self.room_manager = RoomManager(DB_FILE)
+        super().__init__(db_file)
+        self.room_manager = RoomManager(db_file)
 
     def add_building(self, building):
         """
@@ -53,7 +58,6 @@ class BuildingManager(Database):
         if not self.is_building_exist(building.name):
             self.create_record("buildings", {"name": building.name, "floors": building.floors})
             # Récupérer l'ID du bâtiment nouvellement inséré
-            # Dans le cas ou on a passé des salles a l'instance buildings
             building_id = self.execute_query("SELECT last_insert_rowid()")[0][0]
             for room in building.rooms:
                 self.create_record("rooms", {
@@ -78,7 +82,7 @@ class BuildingManager(Database):
         """
         building = self.read_records("buildings", condition="name=?", params=(name,))
         return len(building) > 0
-    
+
     def update_building_name(self, old_name, new_name):
         """
         Met à jour le nom d'un bâtiment.
@@ -92,21 +96,34 @@ class BuildingManager(Database):
             self.update_record("buildings", {"name": new_name}, "name=?", (old_name,))
 
             # Récupère l'ID du bâtiment
-            building = self.read_records(table="buildings", columns=['id'], condition="name=?", params=(new_name,))
+            building = self.read_records(
+                table="buildings",
+                columns=['id'],
+                condition="name=?",
+                params=(new_name,)
+            )
             if building:
                 building_id = building[0][0]
 
                 # Recherche les salles concernées pour les mettre à jour
-                rooms = self.read_records(table="rooms", condition="building_id=?", params=(building_id,))
+                rooms = self.read_records(
+                    table="rooms",
+                    condition="building_id=?",
+                    params=(building_id,))
                 if rooms:
                     for room in rooms:
                         old_room_number = room[0]
                         new_room_number = f"{new_name}-{old_room_number.split('-')[-1]}"
-                        self.update_record("rooms", {"number": new_room_number}, "number=?", (old_room_number,))
-
+                        self.update_record(
+                            table="rooms",
+                            values={"number": new_room_number},
+                            condition="number=?",
+                            condition_params=(old_room_number,)
+                        )
             print(f"Le nom du bâtiment '{old_name}' a été remplacé par '{new_name}'.")
         else:
-            print(f"Erreur !! Le bâtiment '{new_name}' existe déjà ou le bâtiment '{old_name}' est introuvable.")
+            print(f"Erreur !! Le bâtiment '{new_name}' existe déjà ou le bâtiment \
+                  '{old_name}' est introuvable.")
         pause_system()
 
     def delete_building(self, name):
@@ -116,14 +133,13 @@ class BuildingManager(Database):
         :param name: Nom du bâtiment à supprimer.
         """
         if self.is_building_exist(name):
-            building = self.read_records(table="buildings", condition=f"name=?", params=(name,))
+            building = self.read_records(table="buildings", condition="name=?", params=(name,))
             self.delete_record("buildings", f"name='{name}'")
 
             if len(building) > 0:
                 building_id = building[0][0]
                 # Supprimer toutes les salles associées au bâtiment
                 self.delete_record(table='rooms', condition=f"building_id={building_id}")
-            
             clear_screen()
             print(f"Le bâtiment '{name}' a été supprimé avec succès.")
         else:

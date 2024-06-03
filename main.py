@@ -1,23 +1,47 @@
-import sys
-import os
+# import os
 
 # Ajouter le chemin du projet au sys.path
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+# sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
+""" 
+Importation des modules 
+
+"""
 from modules.administrateur.gestionAdministrateur import menu_gestion_administrateurs
 from modules.gestionSalle.gestionSalle import menuGestionSalle
 from modules.administrateur.administrateur import AdministratorManager
-from modules.gestionBatiment.gestionBatiment import menuGestionBatiment
-from modules.contraintes.contraintes import authenticate_admin, clear_screen, pause_system
+from modules.gestionBatiment.gestion_batiment import menu_gestion_batiment
+from modules.contraintes.contraintes import clear_screen, pause_system
 from modules.gestionProfesseur.menuProfessors import menuGestionProfesseur
 
-def main():
-    DB_FILE = "database.db"
-    # database = Database(DB_FILE)
-    # manager = BuildingManager(DB_FILE)
-    admin_manager = AdministratorManager(DB_FILE)
-    # admin_manager.add_administrator("Bendy", "SERVILUS", "Pistère", "4170 5257", "bendyservilus@gmail.com", "Servilus_2509")
+def display_main_menu():
+    """
+    Affiche le menu principal
+    
+    """
+    clear_screen()
+    print("===================================================")
+    print("|      ____   _    _   ____    _                  |")
+    print("|     / ___| | |  | | / ___|  | |                 |")
+    print("|    | |     | |__| | | |     | |                 |")
+    print("|    | |     |  __  | | |     | |                 |")
+    print("|    | |___  | |  | | | |___  | |____             |")
+    print("|    |_____| |_|  |_|  \\____| |______|            |")
+    print("|                                                 |")
+    print("|                      DSI-CHCL                   |")
+    print("===================================================")
+    print("|                                                 |")
+    print("|                 Menu Principal                  |")
+    print("|                                                 |")
+    print("===================================================")
+    print("|  1. Gestion des Bâtiments                       |")
+    print("|  2. Gestion des Salles                          |")
+    print("|  3. Gestion des Professeurs                     |")
+    print("|  4. Gestion des Administrateurs                 |")
+    print("|  5. Quitter                                     |")
+    print("===================================================")
 
+<<<<<<< HEAD
     while True:
         clear_screen()
         print("\t" * 4 + "===================================================")
@@ -60,8 +84,103 @@ def main():
             break
         else:
             print("\t" * 4 + "Choix invalide. Veuillez saisir un nombre entre 1 et 4.")
+=======
+def handle_main_menu_choice(choice, db_file, invite):
+    """Gère les choix du menu principal."""
+    if choice == '1':
+        menu_gestion_batiment(db_file, invite)
+    elif choice == '2':
+        menuGestionSalle(db_file, invite)
+    elif choice == '3':
+        menuGestionProfesseur(db_file)
+    elif choice == '4':
+        if invite:
+            menu_gestion_administrateurs(db_file)
+        else:
+            print("Accès interdit !! Veuillez connecter en tant qu'Administrateur.")
+>>>>>>> c80ad109130cc319e8163750548bbbd652ceaf80
             pause_system()
+    elif choice == '5':
+        print("Au revoir!")
+        return False
+    else:
+        print("Choix invalide. Veuillez saisir un nombre entre 1 et 5.")
+        pause_system()
+    return True
 
+def main_menu(db_file, invite=True):
+    """Affiche le menu principal et gère la navigation."""
+    while True:
+        display_main_menu()
+        choice = input("Choisissez une option (1-5) : ")
+        if not handle_main_menu_choice(choice, db_file, invite):
+            break
+
+def display_initial_menu():
+    """Affiche le menu de démarrage."""
+    clear_screen()
+    print("===================================================")
+    print("|      ____   _    _   ____    _                  |")
+    print("|     / ___| | |  | | / ___|  | |                 |")
+    print("|    | |     | |__| | | |     | |                 |")
+    print("|    | |     |  __  | | |     | |                 |")
+    print("|    | |___  | |  | | | |___  | |____             |")
+    print("|    |_____| |_|  |_|  \\____| |______|            |")
+    print("|                                                 |")
+    print("|                      DSI-CHCL                   |")
+    print("===================================================")
+    print("|                                                 |")
+    print("|                 Menu de configuration           |")
+    print("|                                                 |")
+    print("===================================================")
+    print("|  1. Connecter en tant qu'Administrateur         |")
+    print("|  2. Créer un compte Administrateur              |")
+    print("|  3. Connecter en tant qu'invité                 |")
+    print("|  4. Quitter                                     |")
+    print("===================================================")
+
+def handle_initial_menu_choice(choice, db_file, admin_manager):
+    """Gère les choix du menu de démarrage."""
+    if choice == '1':
+        email = input("Email : ")
+        password = input("Mot de passe : ")
+        if admin_manager.authenticate_administrator(email, password):
+            print("Connexion réussie.")
+            pause_system()
+            main_menu(db_file)
+        else:
+            print("Échec de la connexion. Vérifiez vos identifiants.")
+            pause_system()
+    elif choice == '2':
+        first_name = input("Prénom : ")
+        last_name = input("Nom : ")
+        address = input("Adresse : ")
+        phone = input("Téléphone : ")
+        email = input("Email : ")
+        password = input("Mot de passe : ")
+        admin_manager.add_administrator(first_name, last_name, address, phone, email, password)
+        pause_system()
+    elif choice == '3':
+        print("Connecté en tant qu'invité.")
+        pause_system()
+        main_menu(db_file, False)
+    elif choice == '4':
+        print("Au revoir!")
+        return False
+    else:
+        print("Choix invalide. Veuillez saisir un nombre entre 1 et 4.")
+        pause_system()
+    return True
+
+def initial_menu(db_file):
+    """Affiche le menu de démarrage et gère la navigation."""
+    admin_manager = AdministratorManager(db_file)
+    while True:
+        display_initial_menu()
+        choice = input("Choisissez une option (1-4) : ")
+        if not handle_initial_menu_choice(choice, db_file, admin_manager):
+            break
 
 if __name__ == "__main__":
-    main()
+    DB_FILE = "database.db"
+    initial_menu(DB_FILE)
