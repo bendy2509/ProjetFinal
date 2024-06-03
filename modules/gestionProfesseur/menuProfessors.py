@@ -6,7 +6,7 @@ from modules.gestionProfesseur.getInfosProfessors import Coordinates
 from modules.gestionProfesseur.professors import *
 from modules.database.database import Database
 from modules.administrateur.administrateur import AdministratorManager
-from modules.gestionBatiment.buildingsManager import Building, BuildingManager
+from modules.gestionBatiment.buildings_manager import Building, BuildingManager
 from modules.contraintes.contraintes import (
     authenticate_admin, clear_screen, pause_system
 )
