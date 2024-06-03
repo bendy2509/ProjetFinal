@@ -11,7 +11,7 @@ from modules.administrateur.gestionAdministrateur import menu_gestion_administra
 from modules.gestionSalle.gestionSalle import menuGestionSalle
 from modules.administrateur.administrateur import AdministratorManager
 from modules.gestionBatiment.gestion_batiment import menu_gestion_batiment
-from modules.contraintes.contraintes import clear_screen, pause_system
+from modules.contraintes.contraintes import clear_screen, get_validated_input, is_valid_email, is_valid_password, is_valid_phone, pause_system
 from modules.gestionProfesseur.menuProfessors import menuGestionProfesseur
 
 def display_main_menu():
@@ -38,7 +38,7 @@ def display_main_menu():
     print("|  2. Gestion des Salles                          |")
     print("|  3. Gestion des Professeurs                     |")
     print("|  4. Gestion des Administrateurs                 |")
-    print("|  5. Quitter                                     |")
+    print("|  5. Retour au menu de configuration             |")
     print("===================================================")
 
 def handle_main_menu_choice(choice, db_file, invite):
@@ -110,9 +110,9 @@ def handle_initial_menu_choice(choice, db_file, admin_manager):
         first_name = input("Prénom : ")
         last_name = input("Nom : ")
         address = input("Adresse : ")
-        phone = input("Téléphone : ")
-        email = input("Email : ")
-        password = input("Mot de passe : ")
+        phone = get_validated_input("Téléphone : ", is_valid_phone, "Numéro de téléphone invalide. Veuillez réessayer.")
+        email = get_validated_input("Email : ", is_valid_email, "Email invalide. Veuillez réessayer.")
+        password = get_validated_input("Mot de passe : ", is_valid_password, "Mot de passe invalide. Il doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre.")
         admin_manager.add_administrator(first_name, last_name, address, phone, email, password)
         pause_system()
     elif choice == '3':

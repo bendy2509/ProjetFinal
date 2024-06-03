@@ -13,6 +13,7 @@ Fonctions :
 """
 
 import os
+import re
 
 def clear_screen():
     """Efface l'écran de la console."""
@@ -21,6 +22,43 @@ def clear_screen():
 def pause_system():
     """Met le système en pause en attendant une action de l'utilisateur."""
     os.system('pause' if os.name == 'nt' else input("\t" * 5 + "Appuyez sur Entrée pour continuer..."))
+
+def is_valid_email(email):
+    """
+    Vérifie si l'email est valide.
+    """
+    return re.match(r"[^@]+@[^@]+\.[^@]+", email)
+
+def is_valid_phone(phone):
+    """
+    Vérifie si le numéro de téléphone est valide selon les formats spécifiés.
+    """
+    patterns = [
+        r"^\+509\d{4}-\d{2}-\d{2}$",
+        r"^\+509\d{8}$",
+        r"^\d{4}-\d{4}$",
+        r"^\d{4}-\d{2}-\d{2}$",
+        r"^\(509\)\d{4}-\d{4}$",
+        r"^\(509\)\d{8}$",
+    ]
+    return any(re.match(pattern, phone) for pattern in patterns)
+
+def is_valid_password(password):
+    """
+    Vérifie si le mot de passe est valide (au moins 8 caractères, une majuscule, une minuscule et un chiffre).
+    """
+    return len(password) >= 8 and re.search(r"[A-Z]", password) and re.search(r"[a-z]", password) and re.search(r"[0-9]", password)
+
+def get_validated_input(prompt, validation_func, error_message):
+    """
+    Demande une entrée utilisateur et valide cette entrée.
+    """
+    while True:
+        value = input(prompt)
+        if validation_func(value):
+            return value
+        else:
+            print(error_message)
 
 def get_int_user(prompt):
     """
