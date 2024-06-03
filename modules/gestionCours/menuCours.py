@@ -26,7 +26,7 @@ def menu_cours():
     print("\t" * 4 + "===================================================")
 
 def menu_gestion_cours():
-    db = Database("gestion_salles.db")
+    db = Database("gestion_cours.db")
     manager = Manager(db)
     
     while True:
