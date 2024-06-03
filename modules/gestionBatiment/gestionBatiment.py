@@ -16,15 +16,29 @@ from modules.contraintes.contraintes import (
 
 def menuBatiment():
     clear_screen()
-    print("Menu Gestion Batiment :")
-    print("1. Enregistrer un bâtiment (admin)")
-    print("2. Ajouter une salle à un bâtiment (admin)")
-    print("3. Modifier le nom d'un bâtiment (admin)")
-    print("4. Afficher les bâtiments")
-    print("5. Supprimer un bâtiment (admin)")
-    print("6. Retour au menu principal")
+    print("===================================================")
+    print("|      ____   _    _   ____    _                  |")
+    print("|     / ___| | |  | | / ___|  | |                 |")
+    print("|    | |     | |__| | | |     | |                 |")
+    print("|    | |     |  __  | | |     | |                 |")
+    print("|    | |___  | |  | | | |___  | |____             |")
+    print("|    |_____| |_|  |_|  \____| |______|            |")
+    print("|                                                 |")
+    print("===================================================")
+    print("|                                                 |")
+    print("|                 Menu Gestion Bâtiment           |")
+    print("|                                                 |")
+    print("===================================================")
+    print("|                                                 |")
+    print("|  1. Enregistrer un bâtiment (admin)             |")
+    print("|  2. Ajouter une salle à un bâtiment (admin)     |")
+    print("|  3. Modifier le nom d'un bâtiment (admin)       |")
+    print("|  4. Afficher les bâtiments                      |")
+    print("|  5. Supprimer un bâtiment (admin)               |")
+    print("|  6. Retour au menu principal                    |")
+    print("|                                                 |")
+    print("===================================================")
     choice = input("Choisissez une option: ")
-
     return choice
 
 def to_add_building(manager):
@@ -41,7 +55,6 @@ def to_add_building(manager):
     building = Building(name, floors)
     manager.add_building(building)
 
-
 def add_room_to_building(manager, admin_manager, ):
     """Ajoute une salle à un bâtiment après authentification de l'administrateur."""
     if authenticate_admin(admin_manager):
@@ -55,6 +68,8 @@ def add_room_to_building(manager, admin_manager, ):
         while not validRoomNumber(room_number, room_floor):
             clear_screen()
             room_number = get_int_user("Numéro de la salle: ")
+        room_number = f"{building_name}-{room_number}"
+
         room_type = input("Type de salle (salle de cours, salle virtuelle, labo): ")
         while not is_valid_room_type(room_type):
             clear_screen()
@@ -62,7 +77,7 @@ def add_room_to_building(manager, admin_manager, ):
 
         capacity = get_int_user("Nombre de places disponibles (taper 0 pour laisser par défaut soit 60): ")
         capacity = 60 if capacity == 0 else capacity
-        room = Room(room_number, room_type, room_floor, capacity=capacity)
+        room = Room(room_number, room_type, room_floor, "disponible", capacity)
         manager.add_room_to_building(building_name, room)
     else:
         print("Authentification échouée. Accès refusé.")
