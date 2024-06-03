@@ -13,6 +13,7 @@ from modules.administrateur.administrateur import AdministratorManager
 from modules.gestionBatiment.gestion_batiment import menu_gestion_batiment
 from modules.contraintes.contraintes import clear_screen, get_validated_input, is_valid_email, is_valid_password, is_valid_phone, pause_system
 from modules.gestionProfesseur.menuProfessors import menuGestionProfesseur
+from modules.gestionCours.menuCours import menu_gestion_cours
 
 def display_main_menu():
     """
@@ -34,32 +35,35 @@ def display_main_menu():
     print("|                 Menu Principal                  |")
     print("|                                                 |")
     print("===================================================")
-    print("|  1. Gestion des Bâtiments                       |")
+    print("|  1. Gestion des cours                           |")
     print("|  2. Gestion des Salles                          |")
-    print("|  3. Gestion des Professeurs                     |")
-    print("|  4. Gestion des Administrateurs                 |")
-    print("|  5. Retour au menu de configuration             |")
+    print("|  3. Gestion des Bâtiments                       |")
+    print("|  4. Gestion des Professeurs                     |")
+    print("|  5. Gestion des Administrateurs                 |")
+    print("|  6. Retour au menu de configuration             |")
     print("===================================================")
 
 def handle_main_menu_choice(choice, db_file, invite):
     """Gère les choix du menu principal."""
     if choice == '1':
-        menu_gestion_batiment(db_file, invite)
+        menu_gestion_cours(db_file)
     elif choice == '2':
         menuGestionSalle(db_file, invite)
-    elif choice == '3':
-        menuGestionProfesseur(db_file)
+    if choice == '3':
+        menu_gestion_batiment(db_file, invite)
     elif choice == '4':
+        menuGestionProfesseur(db_file)
+    elif choice == '5':
         if invite:
             menu_gestion_administrateurs(db_file)
         else:
             print("Accès interdit !! Veuillez connecter en tant qu'Administrateur.")
             pause_system()
-    elif choice == '5':
+    elif choice == '6':
         print("Au revoir!")
         return False
     else:
-        print("Choix invalide. Veuillez saisir un nombre entre 1 et 5.")
+        print("Choix invalide. Veuillez saisir un nombre entre 1 et 6.")
         pause_system()
     return True
 

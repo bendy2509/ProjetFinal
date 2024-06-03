@@ -1,7 +1,6 @@
-# from os import system
+# cours.py
 from datetime import datetime
-from databases import DBManager
-from menu import menu_cours
+from modules.database.database import Database
 
 class Cours:
     """Gestion des cours"""
@@ -104,8 +103,8 @@ class Manager:
         code_cours = f"{nom}-session{session}-{annee}".upper()
         
         self.db_manager.execute_query(
-            "UPDATE cours SET nom = ?, debut = ?, fin = ?, session = ?, annee = ?, code_cours = ?",
-            (nom, debut, fin, session, annee, code_cours)
+            "UPDATE cours SET nom = ?, debut = ?, fin = ?, session = ?, annee = ?, code_cours = ? WHERE code_cours = ?",
+            (nom, debut, fin, session, annee, code_cours, code_cours)
         )
         print("Cours modifié avec succès.")
 
@@ -120,9 +119,6 @@ class Manager:
         else:
             print("Cours non trouvé.")
 
-# Initialisation de la base de données
-db_manager1 = DBManager("cours.db")
-
-# Affichage du menu et gestion des cours
-manager = Manager(db_manager1)
-menu_cours(manager)
+if __name__ == "__main__":
+    db = Database("testcours.db")
+    manager = Manager(db)
