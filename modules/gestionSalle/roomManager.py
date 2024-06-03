@@ -80,17 +80,20 @@ class RoomManager:
             building_id = building[0][0]
             rooms = self.db.read_records("rooms", condition=f"building_id={building_id}")
             if rooms:
-                print(f"Salles dans le bâtiment '{building_name}':")
+                # print(f"Salles dans le bâtiment '{building_name}':")
+                print("\t", "|", "\t", "{:<16}{:<19}{:<13}{:<10}".format("SALLE","TYPE","CAPACITE","STATUT  "), "|")
+                print("\t","-" * 68 )
+                print("\t", "|", " " * 64, "|")
                 for room in rooms:
-                    room_number = room[0]
-                    room_type = room[3]
-                    room_capacity = room[4]
-                    room_status = room[5]
-                    print(f"\tSalle {room_number}, Type: {room_type}, Capacité: {room_capacity}, Statut: {room_status}")
+                    print("\t", "|", "\t", "{:<13}{:<22}{:<13}{:<10}".format(room[0],room[3],room[4],room[5]), "|")
+                   # print(f"Salle {room[0]}, Type: {room[3]}, Capacité: {room[4]}, Statut: room[5]{}")
+
+                print("\t", "|", " " * 64, "|")
+                print("\t","-" * 68 )
             else:
-                print(f"\tAucune salle trouvée dans le bâtiment '{building_name}'.")
+                print(f"Aucune salle trouvée dans le bâtiment '{building_name}'.")
         else:
-            print(f"\tPas de bâtiment avec le nom '{building_name}'.")
+            print(f"Pas de bâtiment avec le nom '{building_name}'.")
 
     def update_room_disponibility(self, room_number, statut):
         """

@@ -159,8 +159,8 @@ def authenticate_admin(admin_manager):
     :return: True si l'authentification réussit, False sinon.
     """
     clear_screen()
-    print("\t" * 5 + "Vous devez vous identifier !")
-    admin_email = input("Email administrateur: ")
+    print("\t" * 4 + "Vous devez vous identifier !")
+    admin_email = input("\t" * 5 + "Email administrateur: ")
     admin_password = input("\t" * 5 + "Mot de passe : ")
     return admin_manager.authenticate_administrator(admin_email, admin_password)
 

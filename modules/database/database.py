@@ -110,11 +110,13 @@ class Database:
         affected_rows = self.execute_query(query, list(values.values()))
         clear_screen()
         print('\t' * 4 + "Request ok !")
-        pause_system()
+
         if affected_rows == 0:
             clear_screen()
-            print("Les données que vous essayez d'insérer existent déjà dans la base de données.")
+            print("\t" * 4 + "Les données que vous essayez d'insérer existent déjà dans la base de données.")
             pause_system()
+
+        pause_system()
 
     def read_records(self, table, columns=None, condition=None, params=None):
         """
@@ -163,8 +165,6 @@ class Database:
 
         # Exécuter la requête avec les paramètres préparés
         return self.execute_query(query, params)
-
-
 
     def delete_record(self, table, condition, params=None):
         """

@@ -23,15 +23,15 @@ class Professor(Database):
     def format_coords(self,coordonates):
         """ """
         print()
-        print("\t", "*" * 120 )
-        print("\t" * 2, "{:<15}{:<15}{:<15}{:<10}{:<30}{:<15}{:<15}".format("CODE","NOM","PRENOM","SEXE","EMAIL","TELEPHONE", "CODE_COURS"))
+        print("\t", "=" * 130 )
+        print("\t", "|", "\t", "{:<15}{:<15}{:<15}{:<10}{:<30}{:<15}{:<15}".format("CODE","NOM","PRENOM","SEXE","EMAIL","TELEPHONE", "CODE_COURS"),"\t", "|")
         print()
         for coordonate in coordonates:
-            print("\t" * 2, "{:<15}{:<15}{:<15}{:<10}{:<30}{:<15}{:<15}".format(coordonate[0],coordonate[1],
-            coordonate[2],coordonate[3],coordonate[4],coordonate[5], coordonate[6]))
+            print("\t", "|", "\t", "{:<15}{:<15}{:<15}{:<10}{:<30}{:<15}{:<15}".format(coordonate[0],coordonate[1],
+            coordonate[2],coordonate[3],coordonate[4],coordonate[5], coordonate[6]),"\t", "|")
 
         print()
-        print("\t", "*" * 120 )
+        print("\t", "=" * 130 )
 
     def get_all_professors(self):
         """ """
@@ -42,7 +42,7 @@ class Professor(Database):
             self.format_coords(all_professor)
 
         else:
-            print("Pas de professeurs dans la base !")
+            print("\t" * 4 + "Pas de professeurs dans la base !")
         pause_system()
 
     def __str__(self):

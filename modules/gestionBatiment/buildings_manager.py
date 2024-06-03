@@ -168,9 +168,17 @@ class BuildingManager(Database):
         Liste tous les bâtiments et leurs salles associées.
         """
         clear_screen()
-        print("Liste des bâtiments et les salles :")
+        print("\t" * 3, "Liste des bâtiments et les salles :")
         buildings = self.read_records("buildings")
+        print("\n")
+        print("\t" * 3, "-" * 35 )
         for building in buildings:
-            print(f"Nom Bâtiment : {building[1]}, Nombre d'étages : {building[2]}")
+            print("\t" * 3, "|", "{:<13}{:<2}{:15}".format("NOM BATIMENT", "|", "NOMBRE D'ETAGE  "),"|")
+            print("\t" * 3,"-" * 35 )
+            print("\t" * 3, "|", "    {:<9}{:<2}{:10}".format(building[1], "|", building[2]  ),"\t", "  |")
+            print("\t","=" * 68 )
+
+        #     print(f"Nom Bâtiment : {building[1]}, Nombre d'étages : {building[2]}")
             self.list_building_rooms(building[1])
+        print("\n")
         pause_system()
