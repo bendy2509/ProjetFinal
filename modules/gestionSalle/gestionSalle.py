@@ -36,7 +36,6 @@ def menuGestionSalle(db_file, invite):
     """
     room_manager = RoomManager(db_file)
     manager = BuildingManager(db_file)
-    admin_manager = AdministratorManager(db_file)
 
     while True:
         choice = menuSalle()
@@ -46,7 +45,7 @@ def menuGestionSalle(db_file, invite):
             room_manager.list_rooms(building_name)
             pause_system()
         elif choice == '2':
-            add_room_to_building(manager=manager, admin_manager=admin_manager, invite=invite)
+            add_room_to_building(manager=manager, invite=invite)
 
         elif choice == '3':
             if invite:

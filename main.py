@@ -102,7 +102,7 @@ def handle_initial_menu_choice(choice, db_file, admin_manager):
         if admin_manager.authenticate_administrator(email, password):
             print("Connexion réussie.")
             pause_system()
-            main_menu(db_file)
+            main_menu(db_file, True)
         else:
             print("Échec de la connexion. Vérifiez vos identifiants.")
             pause_system()
