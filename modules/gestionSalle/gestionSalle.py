@@ -1,7 +1,6 @@
 from modules.gestionBatiment.buildings_manager import BuildingManager
 from modules.gestionBatiment.gestion_batiment import add_room_to_building
 from modules.contraintes.contraintes import clear_screen, pause_system
-from modules.administrateur.administrateur import AdministratorManager
 from modules.gestionSalle.roomManager import RoomManager
 
 def menuSalle():

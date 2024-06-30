@@ -11,9 +11,14 @@ from modules.administrateur.gestionAdministrateur import menu_gestion_administra
 from modules.gestionSalle.gestionSalle import menuGestionSalle
 from modules.administrateur.administrateur import AdministratorManager
 from modules.gestionBatiment.gestion_batiment import menu_gestion_batiment
-from modules.contraintes.contraintes import clear_screen, get_validated_input, is_valid_email, is_valid_password, is_valid_phone, pause_system
 from modules.gestionProfesseur.menuProfessors import menuGestionProfesseur
 from modules.gestionCours.course_manager import menu_gestion_cours
+from modules.contraintes.contraintes import (
+    clear_screen, 
+    get_validated_input,is_valid_email,
+    is_valid_password,
+    is_valid_phone, pause_system
+)
 
 def display_main_menu():
     """
