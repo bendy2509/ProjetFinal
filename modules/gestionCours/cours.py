@@ -1,12 +1,11 @@
 # cours.py
-from datetime import datetime
+from modules.contraintes.contraintes import clear_screen, pause_system, saisir_annee, saisir_heure, saisir_nom_cours, saisir_session
 from modules.database.database import Database
 
 class Cours:
     """Gestion des cours"""
-    def __init__(self, db_manager, nom, debut, fin, session, annee, code_cours):
+    def __init__(self, nom, debut, fin, session, annee, code_cours):
         """Fonction init"""
-        self.db_manager = db_manager
         self.nom = nom
         self.debut = debut
         self.fin = fin
@@ -14,111 +13,67 @@ class Cours:
         self.annee = annee
         self.code_cours = code_cours
 
-class Manager:
-    """Gestion des fonctions"""
+class Course_Manager:
+    """Gestion des fonctions liées aux cours."""
 
-    def __init__(self, db_manager):
-        """Fonction init"""
-        self.db_manager = db_manager
+    def __init__(self, db_file):
+        """Initialise un gestionnaire de cours avec un gestionnaire de base de données."""
+        self.db_manager = Database(db_file)
 
     def enregistrer_cours(self):
-        """Méthode pour enregistrer un cours"""
+        """Enregistre un nouveau cours dans la base de données."""
+        clear_screen()
         print("\n", "*" * 10 , "Enregistrer Cours" , "*" * 10 ,"\n")
-        nom = input("Nom du cours : ")
-        debut = input("Heure de debut (ex : 2) : ")
-        fin = input("Heure de la fin (ex : 2) : ")
-        session = input("Session (1 ou 2) : ")
-        annee = input("Année académique : ")
-        code_cours = f"{nom}-session{session}-{annee}".upper()
+        pause_system()
+        
+        nom = saisir_nom_cours()
+        if nom is None:
+            return
+        
+        debut = saisir_heure("Heure de début (ex : 2) : ")
+        if debut is None:
+            return
+        
+        fin = saisir_heure("Heure de fin (ex : 2) : ")
+        if fin is None:
+            return
+        
+        session = saisir_session()
+        if session is None:
+            return
+        
+        annee = saisir_annee()
+        if annee is None:
+            return
+        code_cours = self._generer_code_cours(nom, session, annee)
 
-        try:
-            debut = int(debut)
-        except ValueError:
-            print("Erreur : Veuillez entrer une valeur entiere pour l'heure de début. Réessayer svp...\n")
-            return
-
-        try:
-            fin = int(fin)
-        except ValueError:
-            print("Erreur : Veuillez entrer une valeur entiere pour l'heure de la fin du cours. Réessayer svp...\n")
-            return
-
-        try:
-            session = int(session)
-        except ValueError:
-            print("Erreur : Veuillez entrer une valeur entiere pour la session. Réessayer svp...\n")
-            return
-
-        try:
-            annee = int(annee)
-        except ValueError:
-            print("Erreur : Veuillez entrer une valeur entiere pour l'année'. Réessayer svp...\n")
-            return
-
-        if debut < 0 or fin < 0 or debut >= 24 or fin >= 24:
-            print("Erreur : L'heure de début et de fin doit être entre 0 et 23.\n")
-            return
-        if fin <= debut:
-            print("Erreur : L'heure de fin doit être après l'heure de début.\n")
-            return
-        if session not in [1, 2]:
-            print("Erreur : La session doit être 1 ou 2.\n")
-            return
-        if annee < 2000 or annee > datetime.now().year:
-            print("Erreur : L'année académique doit être entre 2000 et l'année actuelle.\n")
-            return
-
-        self.db_manager.execute_query(
-            "INSERT INTO cours (code_cours, nom, debut, fin, session, annee) VALUES (?, ?, ?, ?, ?, ?)",
-            (code_cours, nom, debut, fin, session, annee)
+        self.db_manager.create_record(
+            "cours",
+            {
+                "code_cours": code_cours,
+                "nom": nom,
+                "debut": debut,
+                "fin": fin,
+                "session": session,
+                "annee": annee
+            }
         )
         print("Cours enregistré avec succès.")
 
+    def _generer_code_cours(self, nom, session, annee):
+        """Génère un code de cours unique à partir du nom, de la session et de l'année."""
+        return f"{nom}-session{session}-{annee}".upper()
+    
     def afficher_cours(self):
-        """Méthode pour afficher les cours"""
+        """Affiche la liste des cours enregistrés."""
+        clear_screen()
         print("\n", "*" * 10 , "Liste des Cours" , "*" * 10 ,"\n")
-        cours = self.db_manager.execute_query("SELECT * FROM cours")
-        for cour in cours:
-            print(cour)
-
-    def modifier_cours(self):
-        """Méthode pour modifier un cours"""
-        print("\n", "*" * 10 , "Modifier un Cours", "*" * 10 ,"\n")
-        code_cours = input("Entrer le code du cours à modifier : ")
-        cours = self.db_manager.execute_query("SELECT * FROM cours WHERE code_cours = ?", (code_cours,))
-        if not cours:
-            print("Cours non trouvé.")
-            return
-
-        nom = input("Nom du cours (laisser vide pour ne pas modifier) : ") or cours[0][1]
-        debut = input("Heure de début (laisser vide pour ne pas modifier) : ")
-        fin = input("Heure de fin (laisser vide pour ne pas modifier) : ")
-        session = input("Session (1 ou 2) (laisser vide pour ne pas modifier) : ")
-        annee = input("Année académique (laisser vide pour ne pas modifier) : ")
-
-        debut = int(debut) if debut else cours[0][2]
-        fin = int(fin) if fin else cours[0][3]
-        session = int(session) if session else cours[0][4]
-        annee = int(annee) if annee else cours[0][5]
-        code_cours = f"{nom}-session{session}-{annee}".upper()
         
-        self.db_manager.execute_query(
-            "UPDATE cours SET nom = ?, debut = ?, fin = ?, session = ?, annee = ?, code_cours = ? WHERE code_cours = ?",
-            (nom, debut, fin, session, annee, code_cours, code_cours)
-        )
-        print("Cours modifié avec succès.")
+        cours = self.db_manager.read_records("cours")
 
-    def rechercher_cours(self):
-        """Méthode pour rechercher un cours"""
-        print("\n", "*" * 10 , "Rechercher un Cours", "*" * 10 ,"\n")
-        code_cours = input("Entrer le code du cours à rechercher : ")
-        cours = self.db_manager.execute_query("SELECT * FROM cours WHERE code_cours = ?", (code_cours,))
-        if cours:
+        if not cours:
+            print("Aucun cours trouvé.")
+        else:
             for cour in cours:
                 print(cour)
-        else:
-            print("Cours non trouvé.")
-
-if __name__ == "__main__":
-    db = Database("testcours.db")
-    manager = Manager(db)
+        pause_system()

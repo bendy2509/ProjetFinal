@@ -1,6 +1,6 @@
 # menuCours.py
 from modules.database.database import Database
-from modules.gestionCours.cours import Manager
+from modules.gestionCours.cours import Course_Manager
 from modules.contraintes.contraintes import clear_screen, pause_system, authenticate_admin
 
 def menu_cours():
@@ -24,43 +24,27 @@ def menu_cours():
     print("\t" * 4 + "|  4. Rechercher un cours                         |")
     print("\t" * 4 + "|  0. Retour au menu principal                    |")
     print("\t" * 4 + "===================================================")
-
-def menu_gestion_cours():
-    db = Database("gestion_cours.db")
-    manager = Manager(db)
+    
+    return input("\t" * 5 + "   Faites votre choix : ")
+    
+def menu_gestion_cours(db_file, invite):
+    db = Database(db_file)
+    course_Manager = Course_Manager(db_file)
     
     while True:
-        clear_screen()
-        menu_cours()
-        try:
-            admin_choice = int(input("\t" * 5 + "   Faites votre choix : "))
-            if admin_choice == 1:
-                if authenticate_admin():
-                    manager.enregistrer_cours()
-                else:
-                    print("Authentification échouée.")
-                    pause_system()
-            elif admin_choice == 2:
-                manager.afficher_cours()
-                pause_system()
-            elif admin_choice == 3:
-                if authenticate_admin():
-                    manager.modifier_cours()
-                else:
-                    print("Authentification échouée.")
-                    pause_system()
-            elif admin_choice == 4:
-                manager.rechercher_cours()
-                pause_system()
-            elif admin_choice == 0:
-                break
+        choice = menu_cours()
+        if choice == '1':
+            if invite:
+                course_Manager.enregistrer_cours()
             else:
-                print("Option invalide. Veuillez réessayer.")
+                print("Accès refusé. Authentification requise.")
                 pause_system()
-        except ValueError:
-            clear_screen()
-            print("\t" * 5 + "Erreur: Veuillez saisir un entier compris entre [0, 5]")
-            pause_system()
 
-if __name__ == "__main__":
-    menu_gestion_cours()
+        elif choice == '2':
+            course_Manager.afficher_cours()
+
+        elif choice == '0':
+            break
+        else:
+            print("Erreur: Veuillez saisir un entier compris entre [0, 4]")
+            pause_system()

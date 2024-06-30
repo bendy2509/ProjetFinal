@@ -13,7 +13,7 @@ from modules.administrateur.administrateur import AdministratorManager
 from modules.gestionBatiment.gestion_batiment import menu_gestion_batiment
 from modules.contraintes.contraintes import clear_screen, get_validated_input, is_valid_email, is_valid_password, is_valid_phone, pause_system
 from modules.gestionProfesseur.menuProfessors import menuGestionProfesseur
-from modules.gestionCours.menuCours import menu_gestion_cours
+from modules.gestionCours.course_manager import menu_gestion_cours
 
 def display_main_menu():
     """
@@ -46,7 +46,7 @@ def display_main_menu():
 def handle_main_menu_choice(choice, db_file, invite):
     """Gère les choix du menu principal."""
     if choice == '1':
-        menu_gestion_cours(db_file)
+        menu_gestion_cours(db_file, invite)
     elif choice == '2':
         menuGestionSalle(db_file, invite)
     if choice == '3':
