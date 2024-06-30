@@ -12,6 +12,7 @@ Fonctions :
     - authenticate_admin : Authentifie un administrateur.
 """
 
+from datetime import datetime
 import os
 import re
 
@@ -189,11 +190,55 @@ def is_valid_sexe(sexe):
         return False
     return True
 
-def is_empty(text):
-    """Test champ vide"""
-    if not text.strip():
+def saisir_nom_cours():
+    """Saisit et valide le nom du cours."""
+    while True:
         clear_screen()
-        print("Ce champ ne peut etre vide. Veuillez réessayer...")
+        nom = input("Nom du cours : ").strip()
+        if nom:
+            return nom
+        print("Erreur : Le nom du cours ne peut pas être vide.")
         pause_system()
-        return False
-    return True
+
+def saisir_heure(message):
+    """Saisit et valide une heure (entier entre 0 et 23)."""
+    while True:
+        clear_screen()
+        try:
+            heure = int(input(message).strip())
+            if 0 <= heure < 24:
+                return heure
+            print("Erreur : L'heure doit être comprise entre 0 et 23.")
+            pause_system()
+        except ValueError:
+            print("Erreur : Veuillez entrer une valeur entière pour l'heure.")
+            pause_system()
+
+def saisir_session():
+    """Saisit et valide la session (1 ou 2)."""
+    while True:
+        clear_screen()
+        try:
+            session = int(input("Session (1 ou 2) : ").strip())
+            if session in [1, 2]:
+                return session
+            print("Erreur : La session doit être 1 ou 2.")
+            pause_system()
+        except ValueError:
+            print("Erreur : Veuillez entrer une valeur entière pour la session.")
+            pause_system()
+
+def saisir_annee():
+    """Saisit et valide l'année académique (entre 2000 et l'année actuelle)."""
+    while True:
+        clear_screen()
+        try:
+            annee = int(input("Année académique : ").strip())
+            current_year = datetime.now().year
+            if 2000 <= annee <= current_year:
+                return annee
+            print(f"Erreur : L'année académique doit être comprise entre 2000 et {current_year}.")
+            pause_system()
+        except ValueError:
+            print("Erreur : Veuillez entrer une valeur entière pour l'année académique.")
+            pause_system()
