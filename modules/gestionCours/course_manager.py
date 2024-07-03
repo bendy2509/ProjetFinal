@@ -26,7 +26,7 @@ def menu_cours():
     print("\t" * 4 + "===================================================")
     
     return input("\t" * 5 + "   Faites votre choix : ")
-    
+
 def menu_gestion_cours(db_file, invite):
     db = Database(db_file)
     course_Manager = Course_Manager(db_file)
@@ -43,8 +43,19 @@ def menu_gestion_cours(db_file, invite):
         elif choice == '2':
             course_Manager.afficher_cours()
 
+        elif choice == '3':
+            if invite:
+                course_Manager.modifier_cours()
+            else:
+                print("Accès refusé. Authentification requise.")
+                pause_system()
+
+        elif choice == '4':
+            course_Manager.rechercher_cours()
+
         elif choice == '0':
             break
+
         else:
             print("Erreur: Veuillez saisir un entier compris entre [0, 4]")
             pause_system()

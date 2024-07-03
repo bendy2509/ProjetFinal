@@ -127,7 +127,7 @@ def handle_initial_menu_choice(choice, db_file, admin_manager):
     elif choice == '3':
         print("Connecté en tant qu'invité.")
         pause_system()
-        main_menu(db_file, False)
+        main_menu(db_file, True)
     elif choice == '4':
         print("Au revoir!")
         return False
