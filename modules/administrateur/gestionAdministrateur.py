@@ -1,9 +1,8 @@
-from modules.gestionBatiment.buildings_manager import BuildingManager
-from modules.gestionBatiment.gestion_batiment import add_room_to_building
-from modules.contraintes.contraintes import clear_screen, pause_system
-from modules.gestionSalle.roomManager import RoomManager
 
-def menuSalle():
+from modules.contraintes.contraintes import clear_screen, pause_system
+from modules.administrateur.administrateur import AdministratorManager
+
+def menuAdmin():
     clear_screen()
     print("===================================================")
     print("|      ____   _    _   ____    _                  |")
@@ -15,48 +14,40 @@ def menuSalle():
     print("|                                                 |")
     print("===================================================")
     print("|                                                 |")
-    print("|                 Menu Gestion Salle              |")
+    print("|           Menu Gestion Administrateurs          |")
     print("|                                                 |")
     print("===================================================")
     print("|                                                 |")
-    print("|  1. Lister les salles d'un bâtiment             |")
-    print("|  2. Ajouter une salle dans un bâtiment (Admin)  |")
-    print("|  3. Supprimer une salle d'un bâtiment (Admin)   |")
+    print("|  1. Lister les administrateurs                  |")
+    print("|  2. Ajouter un administrateur                   |")
+    print("|  3. Supprimer un administrateur                 |")
     print("|  4. Retourner au menu principal                 |")
     print("|                                                 |")
     print("===================================================")
     choice = input("Choisissez une option: ")
     return choice
 
-
-def menuGestionSalle(db_file, invite):
-    """
-    Fonction principale pour gérer le menu de gestion des salles.
-    """
-    room_manager = RoomManager(db_file)
-    manager = BuildingManager(db_file)
+def menu_gestion_administrateurs(DB_FILE):
+    admin_manager = AdministratorManager(DB_FILE)
 
     while True:
-        choice = menuSalle()
+        clear_screen()
+        choice = menuAdmin()
 
         if choice == '1':
-            building_name = input("Nom du bâtiment: ")
-            room_manager.list_rooms(building_name)
-            pause_system()
+            admin_manager.list_administrators()
         elif choice == '2':
-            add_room_to_building(manager=manager, invite=invite)
-
+            # Demander les informations nécessaires pour ajouter un administrateur
+            first_name = input("Prénom : ")
+            last_name = input("Nom : ")
+            email = input("Email : ")
+            password = input("Mot de passe : ")
+            admin_manager.add_administrator(first_name, last_name, email, password)
+            pause_system()
         elif choice == '3':
-            if invite:
-                room_number = input("Numéro de la salle à supprimer : ")
-                if building_name.strip() and room_number.strip():
-                    room_manager.delete_room_from_building(room_number)
-                else:
-                    print("Le numéro de la salle ne peut pas être vide.")
-            else:
-                print("Accès refusé. Veuillez connecter en tant qu'Administrateur.")
-                pause_system()
-
+            email = input("Entrez l'email de l'administrateur à supprimer : ")
+            admin_manager.delete_administrator(email)
+            pause_system()
         elif choice == '4':
             break
         else:

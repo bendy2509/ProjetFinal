@@ -1,20 +1,15 @@
-import sys
-import os
-
-# Ajouter le chemin du projet au sys.path
-# sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+"""Module de gestion des bâtiments pour le projet CHCL-DSI."""
 
 from modules.gestionSalle.roomManager import Room
-from modules.administrateur.administrateur import AdministratorManager
-from modules.gestionBatiment.buildingsManager import Building, BuildingManager
-from modules.contraintes.contraintes import (
-    authenticate_admin, check_building_name, clear_screen,
+from modules.gestionBatiment.buildings_manager import Building, BuildingManager
+from modules.contraintes.contraintes import (check_building_name, clear_screen,
     get_int_user, is_valid_room_type, pause_system,
     validRoomFloor, validRoomNumber
 )
 
 
-def menuBatiment():
+def menu_batiment():
+    """Affiche le menu de gestion des bâtiments et renvoie le choix de l'utilisateur."""
     clear_screen()
     print("===================================================")
     print("|      ____   _    _   ____    _                  |")
@@ -22,7 +17,7 @@ def menuBatiment():
     print("|    | |     | |__| | | |     | |                 |")
     print("|    | |     |  __  | | |     | |                 |")
     print("|    | |___  | |  | | | |___  | |____             |")
-    print("|    |_____| |_|  |_|  \____| |______|            |")
+    print("|    |_____| |_|  |_|  \\____| |______|            |")
     print("|                                                 |")
     print("===================================================")
     print("|                                                 |")
@@ -48,16 +43,15 @@ def to_add_building(manager):
         name = input("Nom du bâtiment (A, B, C ou D): ")
         if check_building_name(name):
             break
-        else:
-            print("Veuillez réessayer !!")
-            pause_system()
+        print("Veuillez réessayer !!")
+        pause_system()
     floors = 3
     building = Building(name, floors)
     manager.add_building(building)
 
-def add_room_to_building(manager, admin_manager, ):
+def add_room_to_building(manager, invite):
     """Ajoute une salle à un bâtiment après authentification de l'administrateur."""
-    if authenticate_admin(admin_manager):
+    if invite:
         building_name = input("Nom du bâtiment: ")
         room_floor = get_int_user("Entrer le numéro étage (1, 2 ou 3) : ")
 
@@ -75,63 +69,66 @@ def add_room_to_building(manager, admin_manager, ):
             clear_screen()
             room_type = input("Type de salle (salle de cours, salle virtuelle, labo): ")
 
-        capacity = get_int_user("Nombre de places disponibles (taper 0 pour laisser par défaut soit 60): ")
+        capacity = get_int_user("Nombre de places disponibles \
+                                (taper 0 pour laisser par défaut soit 60): ")
         capacity = 60 if capacity == 0 else capacity
         room = Room(room_number, room_type, room_floor, "disponible", capacity)
         manager.add_room_to_building(building_name, room)
     else:
-        print("Authentification échouée. Accès refusé.")
+        print("Accès refusé. Veuillez connecter en tant qu'Administrateur.")
         pause_system()
 
+def update_building_name(manager, invite):
+    """Modifie le nom d'un bâtiment après authentification de l'administrateur."""
+    if invite:
+        old_name = input("Nom actuel du bâtiment: ")
+        new_name = input("Nouveau nom du bâtiment: ")
+        while not check_building_name(new_name):
+            new_name = input("Nouveau nom du bâtiment: ")
 
-def menuGestionBatiment(DB_FILE):
+        if check_building_name(new_name):
+            manager.update_building_name(old_name, new_name)
+        else:
+            pause_system()
+    else:
+        print("Accès refusé. Veuillez connecter en tant qu'Administrateur.")
+        pause_system()
+
+def delete_building(manager, invite):
+    """Supprime un bâtiment après authentification de l'administrateur."""
+    if invite:
+        name = input("Nom du bâtiment à supprimer: ")
+        manager.delete_building(name)
+    else:
+        print("Accès refusé. Veuillez connecter en tant qu'Administrateur.")
+        pause_system()
+
+def menu_gestion_batiment(db_file, invite):
     """
     Fonction principale pour gérer le menu de gestion des bâtiments et
     effectuer les opérations en fonction du choix de l'utilisateur.
     """
-    manager = BuildingManager(DB_FILE)
-    admin_manager = AdministratorManager(DB_FILE)
+    manager = BuildingManager(db_file)
 
     while True:
-        choice = menuBatiment()
+        choice = menu_batiment()
         clear_screen()
         if choice == '1':
-            if authenticate_admin(admin_manager):
+            if invite:
                 to_add_building(manager)
             else:
-                print("Authentification échouée. Accès refusé.")
+                print("Accès refusé. Veuillez connecter en tant qu'Administrateur.")
                 pause_system()
-
         elif choice == '2':
-            add_room_to_building(manager=manager, admin_manager=admin_manager)
+            add_room_to_building(manager, invite)
         elif choice == '3':
-            if authenticate_admin(admin_manager):
-                old_name = input("Nom actuel du bâtiment: ")
-                new_name = input("Nouveau nom du bâtiment: ")
-                while not check_building_name(new_name):
-                    new_name = input("Nouveau nom du bâtiment: ")
-
-                if check_building_name(new_name):
-                    manager.update_building_name(old_name, new_name)
-                else:
-                    pause_system()
-            else:
-                print("Authentification échouée. Accès refusé.")
-                pause_system()
-
+            update_building_name(manager, invite)
         elif choice == '4':
             manager.list_buildings()
         elif choice == '5':
-            if authenticate_admin(admin_manager):
-                name = input("Nom du bâtiment à supprimer: ")
-                manager.delete_building(name)
-            else:
-                print("Authentification échouée. Accès refusé.")
-                pause_system()
-
+            delete_building(manager, invite)
         elif choice == '6':
             break
         else:
             print("Choix invalide. Veuillez saisir un nombre entre 1 et 6. Réessayez !!")
             pause_system()
-
