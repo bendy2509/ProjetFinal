@@ -124,7 +124,7 @@ class RoomManager:
         clear_screen()
         try:        
             # Vérifier si la salle existe dans le bâtiment
-            room = self.db.read_records("rooms", condition="number=?", params=(room_number))
+            room = self.db.read_records("rooms", condition="number=?", params=(room_number,))
             if not room:
                 print(f"La salle '{room_number}' n'existe pas.")
                 pause_system()

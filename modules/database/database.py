@@ -78,15 +78,28 @@ class Database:
                     codeCours TEXT UNIQUE
             )''')
             cursor.execute('''
-                    CREATE TABLE IF NOT EXISTS cours (
+                CREATE TABLE IF NOT EXISTS cours (
                     code_cours TEXT PRIMARY KEY,
                     nom TEXT,
-                    debut INTEGER,
-                    fin INTEGER,
+                    teacher_code TEXT DEFAULT NULL,
+                    duration INTEGER,
                     session INTEGER,
-                    annee INTEGER
-            )''')
-
+                    annee INTEGER,
+                    FOREIGN KEY (teacher_code) REFERENCES professors(code)
+                )
+            ''')
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS schedules(
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    room_number TEXT NOT NULL,
+                    jour TEXT NOT NULL,
+                    debut INTEGER NOT NULL,
+                    fin INTEGER NOT NULL,
+                    cours_id TEXT NOT NULL,
+                    FOREIGN KEY (room_number) REFERENCES rooms(number),
+                    FOREIGN KEY (cours_id) REFERENCES cours(code_cours)
+                )
+            """)
             self.conn.commit()
             print("Tables created successfully")
 

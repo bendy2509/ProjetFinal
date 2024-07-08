@@ -7,6 +7,8 @@
 Importation des modules 
 
 """
+from modules.gestion_horaire.gestion_horaire import menu_gestion_horaires
+from modules.database.database import Database
 from modules.administrateur.gestionAdministrateur import menu_gestion_administrateurs
 from modules.gestionSalle.gestionSalle import menuGestionSalle
 from modules.administrateur.administrateur import AdministratorManager
@@ -14,11 +16,25 @@ from modules.gestionBatiment.gestion_batiment import menu_gestion_batiment
 from modules.gestionProfesseur.menuProfessors import menuGestionProfesseur
 from modules.gestionCours.course_manager import menu_gestion_cours
 from modules.contraintes.contraintes import (
+    authenticate_admin,
     clear_screen, 
     get_validated_input,is_valid_email,
     is_valid_password,
     is_valid_phone, pause_system
 )
+
+def create_account(admin_manager):
+    clear_screen()
+    first_name = input("Prénom : ")
+    last_name = input("Nom : ")
+    address = input("Adresse : ")
+    phone = get_validated_input("Téléphone : ", is_valid_phone, "Numéro de téléphone invalide. Veuillez réessayer.")
+    email = get_validated_input("Email : ", is_valid_email, "Email invalide. Veuillez réessayer.")
+    password = get_validated_input("Mot de passe : ", is_valid_password, "Mot de passe invalide. Il doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre.")
+    admin_manager.add_administrator(first_name, last_name, address, phone, email, password)
+
+    return
+
 
 def display_main_menu():
     """
@@ -45,7 +61,8 @@ def display_main_menu():
     print("|  3. Gestion des Bâtiments                       |")
     print("|  4. Gestion des Professeurs                     |")
     print("|  5. Gestion des Administrateurs                 |")
-    print("|  6. Retour au menu de configuration             |")
+    print("|  6. Pour tester avant (Pas encore terminé)      |")
+    print("|  0. Retour au menu de configuration             |")
     print("===================================================")
 
 def handle_main_menu_choice(choice, db_file, invite):
@@ -65,6 +82,8 @@ def handle_main_menu_choice(choice, db_file, invite):
             print("Accès interdit !! Veuillez connecter en tant qu'Administrateur.")
             pause_system()
     elif choice == '6':
+        menu_gestion_horaires(db_file, invite)
+    elif choice == '0':
         print("Au revoir!")
         return False
     else:
@@ -104,6 +123,8 @@ def display_initial_menu():
     print("===================================================")
 
 def handle_initial_menu_choice(choice, db_file, admin_manager):
+    database = Database(db_file)
+    clear_screen()
     """Gère les choix du menu de démarrage."""
     if choice == '1':
         email = input("Email : ")
@@ -116,18 +137,20 @@ def handle_initial_menu_choice(choice, db_file, admin_manager):
             print("Échec de la connexion. Vérifiez vos identifiants.")
             pause_system()
     elif choice == '2':
-        first_name = input("Prénom : ")
-        last_name = input("Nom : ")
-        address = input("Adresse : ")
-        phone = get_validated_input("Téléphone : ", is_valid_phone, "Numéro de téléphone invalide. Veuillez réessayer.")
-        email = get_validated_input("Email : ", is_valid_email, "Email invalide. Veuillez réessayer.")
-        password = get_validated_input("Mot de passe : ", is_valid_password, "Mot de passe invalide. Il doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre.")
-        admin_manager.add_administrator(first_name, last_name, address, phone, email, password)
-        pause_system()
+        administrators = database.read_records("administrators")
+        if len(administrators) == 0:
+            create_account(admin_manager)
+        else:
+            if authenticate_admin(admin_manager):
+                print("Authentification réussie...")
+                pause_system()
+                create_account(admin_manager)
+                
+            print("Authentification échouée. Vous ne pouvez pas créer de compte.")
     elif choice == '3':
         print("Connecté en tant qu'invité.")
         pause_system()
-        main_menu(db_file, False)
+        main_menu(db_file, True)
     elif choice == '4':
         print("Au revoir!")
         return False

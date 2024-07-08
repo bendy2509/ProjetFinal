@@ -22,13 +22,24 @@ def menu_cours():
     print("\t" * 4 + "|  2. Lister les cours                            |")
     print("\t" * 4 + "|  3. Modifier un cours (Admin)                   |")
     print("\t" * 4 + "|  4. Rechercher un cours                         |")
+    print("\t" * 4 + "|  5. Ajouter un professeur à un cours (Admin)    |")
     print("\t" * 4 + "|  0. Retour au menu principal                    |")
     print("\t" * 4 + "===================================================")
     
     return input("\t" * 5 + "   Faites votre choix : ")
 
+def menu_ajouter_professeur_au_cours(course_manager):
+    clear_screen()
+    print("\n", "*" * 10 , "Ajouter Professeur au Cours" , "*" * 10 ,"\n")
+
+    code_cours = input("Entrer le code du cours : ")
+    code_professeur = input("Entrer le code du professeur : ")
+
+    course_manager.ajouter_professeur_au_cours(code_cours, code_professeur)
+    pause_system()
+
 def menu_gestion_cours(db_file, invite):
-    db = Database(db_file)
+    # db = Database(db_file)
     course_Manager = Course_Manager(db_file)
     
     while True:
@@ -52,7 +63,12 @@ def menu_gestion_cours(db_file, invite):
 
         elif choice == '4':
             course_Manager.rechercher_cours()
-
+        elif choice == '5':
+            if invite:
+                menu_ajouter_professeur_au_cours(course_Manager)
+            else:
+                print("Accès refusé. Authentification requise.")
+                pause_system()
         elif choice == '0':
             break
 

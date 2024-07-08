@@ -38,6 +38,7 @@ def is_valid_phone(phone):
         r"^\+509\d{4}-\d{2}-\d{2}$",
         r"^\+509\d{8}$",
         r"^\d{4}-\d{4}$",
+        r"^\d{8}$",
         r"^\d{4}-\d{2}-\d{2}$",
         r"^\(509\)\d{4}-\d{4}$",
         r"^\(509\)\d{8}$",
@@ -195,23 +196,23 @@ def saisir_nom_cours():
     while True:
         clear_screen()
         nom = input("Nom du cours : ").strip()
-        if nom:
+        if nom and len(nom) >= 3:
             return nom
-        print("Erreur : Le nom du cours ne peut pas être vide.")
+        print("Erreur : Le nom du cours ne peut pas être vide et doit contenir au moins 3 caractères.")
         pause_system()
 
-def saisir_heure(message):
-    """Saisit et valide une heure (entier entre 0 et 23)."""
+def saisir_duration(message):
+    """Saisit et valide une duration (entier entre 0 et 23)."""
     while True:
         clear_screen()
         try:
-            heure = int(input(message).strip())
-            if 0 <= heure < 24:
-                return heure
-            print("Erreur : L'heure doit être comprise entre 0 et 23.")
+            duration = int(input(message).strip())
+            if 0 <= duration <= 4:
+                return duration
+            print("Erreur : La durée doit être comprise entre 0 et 5.")
             pause_system()
         except ValueError:
-            print("Erreur : Veuillez entrer une valeur entière pour l'heure.")
+            print("Erreur : Veuillez entrer une valeur entière pour la durée.")
             pause_system()
 
 def saisir_session():
