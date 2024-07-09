@@ -5,6 +5,7 @@ import re
 import os
 import random
 
+from modules.database.database import Database
 from modules.contraintes.contraintes import clear_screen, pause_system
 
 class InvalidInputError(Exception):
@@ -131,6 +132,43 @@ class Coordinates:
             phone = Coordinates.prompt_for_phone()
         return phone
 
+
+    @staticmethod
+    def validate_course_code():
+        """Validates the course code."""
+        course_code = input("\t" * 5 + "Entrez le code du cours : ").strip()
+        return course_code
+    
+    @staticmethod
+    def validate_course_code(DB_FILE):
+        """Validates the course code."""
+    
+        data = Database(DB_FILE)
+        clear_screen()
+        course_code = input("\t" * 5 + "Entrez le code du cours : ").strip()
+
+        # Vérifier l'existence du cours
+        cours_existe = data.read_records(
+            table="cours",
+            condition="code_cours=?",
+            params=(course_code,)
+        )
+        
+        
+        if not cours_existe:
+            print("\t" * 5 + "Erreur : Code cours non trouvé.")
+            pause_system()
+            return None
+        
+        course_assigned = Database.read_records(table="professors")
+        if course_assigned:
+            clear_screen()
+            print("Erreur : Un professeur est déjà assigné à ce cours.")
+            pause_system()
+            return None
+        
+        return course_code
+
     @staticmethod
     def validate_email():
         """Validates an email address using a regular expression."""
@@ -165,6 +203,5 @@ class Coordinates:
             "telephone": self._phone,
             "codeCours": self._course_code
         }
-
 
         

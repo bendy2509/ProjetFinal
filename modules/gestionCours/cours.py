@@ -1,4 +1,4 @@
-# cours.py
+                  # cours.py
 from modules.contraintes.contraintes import clear_screen, pause_system, saisir_annee, saisir_duration, saisir_nom_cours, saisir_session
 from modules.database.database import Database
 

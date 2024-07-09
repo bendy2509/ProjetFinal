@@ -1,6 +1,4 @@
 """   """
-import sys
-import os
 
 from modules.gestionProfesseur.getInfosProfessors import Coordinates
 from modules.gestionProfesseur.professors import *
@@ -10,6 +8,7 @@ from modules.gestionBatiment.buildings_manager import Building, BuildingManager
 from modules.contraintes.contraintes import (
     authenticate_admin, clear_screen, pause_system
 )
+
 
 def menuProfessors():
     """ """
@@ -56,14 +55,45 @@ def menuChoice():
             print("\t" * 5 + f"Erreur: Veillez Saisir un entier compris entre [0, 5] ")
             pause_system()          
 
+def is_exist_record():
+    """function to verify exist record"""
+    isExist = data.read_records("professors")
+    if len(isExist) == 0:
+        return False
+    
+    return True
 
-def menuGestionProfesseur(DB_FILE):
-    """ """
+def modify_professor():
+    """function for modify professors"""
+
+    code = Coordinates.validate_name("le code du Professeur")
+    coordinates_find = data.read_records("professors", condition="code=?", params=(code,))
+    if len(coordinates_find) > 0:
+        clear_screen()
+        print("\n")
+        print("\t" * 4, f"L'information du professeur avec code {code} : ")
+        professor.format_coords(coordonates=coordinates_find)
+        print()
+        print("\t" * 4, " SOS !!  Il est recommandé de ré-entrer tous les champs en entrant les mêmes infos si nécessaire : ")
+        pause_system()
+        params = Coordinates().get_coordinates()
+        data.update_record(table="professors", values=params, condition="code=?", condition_params=(code,))
+
+    else:
+        clear_screen()
+        print("\t" * 4, f"Pas de professeurs trouvés avec le code '{code}' dans la base !")
+        pause_system()
+
+
+def menuGestionProfesseur(DB_FILE, access):
+    """Fonction principale pour démarrer le programme."""
+
+    global professor, coordinates,data,admin_manager,is_authenticated
     professor = Professor(DB_FILE)
     coordinates = Coordinates()
     data = Database(DB_FILE)
-    # manager = BuildingManager(DB_FILE)
     admin_manager = AdministratorManager(DB_FILE)
+    is_authenticated = access
 
     while True:
         menuchoice = menuChoice()
@@ -72,12 +102,8 @@ def menuGestionProfesseur(DB_FILE):
 
         elif menuchoice == 2:
             clear_screen()
-            isExist = data.read_records("professors")
-            if len(isExist) == 0:
-                clear_screen()
-                print("\t" * 4, "Pas de professeurs dans la base !")
-                pause_system()
-            else:
+            isExist = is_exist_record()
+            if isExist :
                 code = coordinates.validate_input(" le code  du Professeur")
                 
                 coordinates_find = data.read_records("professors", condition="code=?", params=(code,))
@@ -93,55 +119,43 @@ def menuGestionProfesseur(DB_FILE):
                     clear_screen()
                     print("\t" * 4, f"Pas de professeurs trouve avec le code ' {code} ' dans la base !")
                     pause_system()
- 
-        elif menuchoice == 3:
-            if authenticate_admin(admin_manager=admin_manager):
-                professor.add_professor()
+
             else:
-                print("\t" * 5,"Authentification échouée. Accès refusé.")
+                clear_screen()
+                print("\t" * 4, "Pas de professeurs dans la base !")
+                pause_system()
+
+        elif menuchoice == 3:
+            if is_authenticated:
+                professor.add_professor()
+
+            else:
+                clear_screen()            
+                print("\t" * 5,"Accès reservé aux Administrateurs.")
                 pause_system()
 
         elif menuchoice == 4:
-            if authenticate_admin(admin_manager=admin_manager):
+            if is_authenticated:
                 clear_screen()
-                isExist = data.read_records("professors")
-                if len(isExist) == 0:
+                isExist = is_exist_record()
+                if isExist :
+                    modify_professor()
+
+                else:
                     clear_screen()
                     print("\t" * 4, "Pas de professeurs dans la base !")
                     pause_system()
-                    continue
-
-                code = Coordinates.validate_name("le code du Professeur")
-                coordinates_find = data.read_records("professors", condition="code=?", params=(code,))
-                if len(coordinates_find) > 0:
-                    clear_screen()
-                    print("\n")
-                    print("\t" * 4, f"L'information du professeur avec code {code} : ")
-                    professor.format_coords(coordonates=coordinates_find)
-                    print()
-                    print("\t" * 4, " SOS !!  Il est recommandé de ré-entrer tous les champs en entrant les mêmes infos si nécessaire : ")
-                    pause_system()
-                    params = Coordinates().get_coordinates()
-                    data.update_record(table="professors", values=params, condition="code=?", condition_params=(code,))
-
-                else:
-                    clear_screen()
-                    print("\t" * 4, f"Pas de professeurs trouvés avec le code '{code}' dans la base !")
-                    pause_system()
+                
             else:
-                print("\t" * 5,"Authentification échouée. Accès refusé.")
+                clear_screen()            
+                print("\t" * 5,"Accès reservé aux Administrateurs.")
                 pause_system()
-            
 
         elif menuchoice == 5:
-            if authenticate_admin(admin_manager=admin_manager):
-                isExist = data.read_records("professors")
-                if len(isExist) == 0:
-                    clear_screen()
-                    print("\t" * 4 + "Pas de professeurs dans la base !")
-                    pause_system()
+            if is_authenticated:
+                isExist = is_exist_record()
+                if isExist:
 
-                else:
                     professor.get_all_professors()
                     code = Coordinates.validate_input("le code du professeur")
                     coordinates_find = data.read_records("professors", condition="code=?", params=(code,))
@@ -155,13 +169,17 @@ def menuGestionProfesseur(DB_FILE):
                         print("\t" * 4, f"Pas de professeurs trouve avec le code '{code} ' dans la base !")
                         pause_system()
 
+                else:
+                    clear_screen()
+                    print("\t" * 4, "Pas de professeurs dans la base !")
+                    pause_system()
+
             else:
-                print("\t" * 5,"Authentification échouée. Accès refusé.")
+                clear_screen()            
+                print("\t" * 5,"Accès reservé aux Administrateurs.")
                 pause_system()
 
         else:
             clear_screen()
             break
-            
-        
 
