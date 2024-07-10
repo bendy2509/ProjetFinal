@@ -134,15 +134,8 @@ class Coordinates:
 
 
     @staticmethod
-    def validate_course_code():
-        """Validates the course code."""
-        course_code = input("\t" * 5 + "Entrez le code du cours : ").strip()
-        return course_code
-    
-    @staticmethod
     def validate_course_code(DB_FILE):
-        """Validates the course code."""
-    
+        """Valide le code du cours."""
         data = Database(DB_FILE)
         clear_screen()
         course_code = input("\t" * 5 + "Entrez le code du cours : ").strip()
@@ -153,21 +146,23 @@ class Coordinates:
             condition="code_cours=?",
             params=(course_code,)
         )
-        
-        
         if not cours_existe:
             print("\t" * 5 + "Erreur : Code cours non trouvé.")
             pause_system()
             return None
-        
-        course_assigned = Database.read_records(table="professors")
+
+        course_assigned = data.read_records(table="professors")
         if course_assigned:
-            clear_screen()
-            print("Erreur : Un professeur est déjà assigné à ce cours.")
-            pause_system()
-            return None
-        
+
+            for items in course_assigned:
+                 if items[6] == course_code:
+                    clear_screen()
+                    print("\t" * 5, "Erreur : Un professeur est déjà assigné à ce cours.")
+                    pause_system()
+                    return None
+
         return course_code
+
 
     @staticmethod
     def validate_email():
@@ -185,23 +180,30 @@ class Coordinates:
         random_number = random.randint(100, 1000)
         return last_name[:3] + first_name[:2] + gender + str(random_number)
 
-    def get_coordinates(self):# -> tuple[Any, str, str, Literal['F', 'M'], str, str, str]:
-        """Gets and validates all the professor's coordinates."""
-        self._last_name = Coordinates.validate_name(field="nom")
-        self._first_name = Coordinates.validate_name(field="prénom")
-        self._gender = Coordinates.validate_gender()
-        self._email = Coordinates.validate_email()
-        self._phone = Coordinates.validate_phone()
-        self._course_code = Coordinates.validate_name(field="code cours")
-        self._code = Coordinates.generate_code(last_name=self._last_name, first_name=self._first_name, gender=self._gender)
+    def get_coordinates(self):
+        """Obtient et valide toutes les coordonnées du professeur."""
+        DB_FILE = "database.db"
+        while True:
+            isvalue = Coordinates.validate_course_code(DB_FILE)
+            if isvalue:
+                self._course_code = isvalue
+                self._last_name = Coordinates.validate_name(field="nom")
+                self._first_name = Coordinates.validate_name(field="prénom")
+                self._gender = Coordinates.validate_gender()
+                self._email = Coordinates.validate_email()
+                self._phone = Coordinates.validate_phone()
+                self._code = Coordinates.generate_code(last_name=self._last_name, first_name=self._first_name, gender=self._gender)
 
-        return {"code": self._code,
-            "nom" : self._last_name,
-            "prenom": self._first_name,
-            "sexe": self._gender,
-            "email": self._email,
-            "telephone": self._phone,
-            "codeCours": self._course_code
-        }
+                return {
+                    "code": self._code,
+                    "nom": self._last_name,
+                    "prenom": self._first_name,
+                    "sexe": self._gender,
+                    "email": self._email,
+                    "telephone": self._phone,
+                    "codeCours": self._course_code
+                }
 
-        
+            Coordinates.clear_screen()
+            print("\t" * 4, "Le cours doit exister et ne doit être attribué à aucun professeur pour pouvoir passer à l'étape suivante.")
+            pause_system()
