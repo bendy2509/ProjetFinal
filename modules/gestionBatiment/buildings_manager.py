@@ -2,7 +2,7 @@
 Importation des modules 
 """
 from time import sleep
-from modules.contraintes.contraintes import clear_screen, pause_system
+from modules.contraintes.contraintes import afficher_affiches, clear_screen, pause_system
 from modules.database.database import Database
 from modules.gestionSalle.roomManager import RoomManager
 
@@ -170,15 +170,13 @@ class BuildingManager(Database):
         clear_screen()
         print("\t" * 3, "Liste des bâtiments et les salles :")
         buildings = self.read_records("buildings")
-        print("\n")
-        print("\t" * 3, "-" * 35 )
         for building in buildings:
-            print("\t" * 3, "|", "{:<13}{:<2}{:15}".format("NOM BATIMENT", "|", "NOMBRE D'ETAGE  "),"|")
-            print("\t" * 3,"-" * 35 )
-            print("\t" * 3, "|", "    {:<9}{:<2}{:10}".format(building[1], "|", building[2]  ),"\t", "  |")
-            print("\t","=" * 68 )
-
-        #     print(f"Nom Bâtiment : {building[1]}, Nombre d'étages : {building[2]}")
+            data = []
+            data.append(
+                {"NOM BATIMENT": building[1], "NOMBRE D'ETAGE": building[2]}
+            )
+            afficher_affiches(data=data, valeur_vide="...")
+            print(f"\n", "\t" * 3, f"Les salles du batiment {building[1]} sont :")
             self.list_building_rooms(building[1])
         print("\n")
         pause_system()

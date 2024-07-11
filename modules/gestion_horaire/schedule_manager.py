@@ -3,7 +3,7 @@ Modules pour la gestion d'horaires des salles
 """
 from modules.contraintes.contraintes import clear_screen, pause_system, saisir_duration
 from modules.database.database import Database
-from modules.gestionCours.course_manager import Course_Manager
+from modules.gestionCours.menu_gestion_cours import Course_Manager
 from modules.gestionSalle.roomManager import RoomManager
 
 class Schedule_Manager:

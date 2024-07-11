@@ -81,10 +81,11 @@ class Database:
                 CREATE TABLE IF NOT EXISTS cours (
                     code_cours TEXT PRIMARY KEY,
                     nom TEXT,
+                    faculte TEXT DEFAULT NULL,
                     teacher_code TEXT DEFAULT NULL,
-                    duration INTEGER,
-                    session INTEGER,
-                    annee INTEGER,
+                    duration INTEGER NOT NULL,
+                    session INTEGER NOT NULL,
+                    annee INTEGER NOT NULL,
                     FOREIGN KEY (teacher_code) REFERENCES professors(code)
                 )
             ''')
@@ -130,15 +131,11 @@ class Database:
         placeholders = ', '.join(['?' for _ in values])
         query = f"INSERT OR IGNORE INTO {table} ({columns}) VALUES ({placeholders})"
         affected_rows = self.execute_query(query, list(values.values()))
-        clear_screen()
-        print('\t' * 4 + "Request ok !")
-
+        
         if affected_rows == 0:
             clear_screen()
             print("\t" * 4 + "Les données que vous essayez d'insérer existent déjà dans la base de données.")
             pause_system()
-
-        pause_system()
 
     def read_records(self, table, columns=None, condition=None, params=None):
         """
