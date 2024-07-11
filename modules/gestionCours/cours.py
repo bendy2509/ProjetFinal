@@ -149,13 +149,14 @@ class Course_Manager:
             '3': lambda: saisir_duration("Saisir la nouvelle durée (q pour quitter) : "),
             '4': lambda: saisir_session(),
             '5': lambda: saisir_annee(),
-            '6': lambda: (saisir_nom_cours(), saisir_duration("Saisir la nouvelle durée (q pour quitter) : "), saisir_session(), saisir_annee())
+            '6': lambda: (saisir_nom_cours(), saisir_faculte(), saisir_duration("Saisir la nouvelle durée (q pour quitter) : "), saisir_session(), saisir_annee())
         }
 
         if choix in modificateurs:
             result = modificateurs[choix]()
             if choix == '6':
                 nom, fac, duration, session, annee = result
+
             else:
                 if not result:
                     return
@@ -172,6 +173,25 @@ class Course_Manager:
         else:
             print("Modification annulée.")
             return
+        
+        if nom is None:
+            nom = cours[0][1]
+            return 
+        if fac is None:
+            fac = cours[0][2]
+            return 
+        if prof is None:
+            prof = cours[0][3]
+            return 
+        if duration is None:
+            duration = cours[0][4]
+            return 
+        if session is None:
+            session = cours[0][5]
+            return 
+        if annee is None:
+            annee = cours[0][6]
+            return 
 
         nouveau_code_cours = self._generer_code_cours(nom, session, fac, annee)
         if nouveau_code_cours != code_cours and self.verifier_existence_cours(nouveau_code_cours):
@@ -185,6 +205,7 @@ class Course_Manager:
             values={
                 "code_cours": cours.code_cours,
                 "nom": cours.nom,
+                "teacher_code": prof,
                 "faculte": cours.faculte,
                 "duration": cours.duration,
                 "session": cours.session,
@@ -244,8 +265,8 @@ class Course_Manager:
             pause_system()
             return
         
-            # Vérifier si un professeur est déjà assigné à ce cours
-        if cours_existe[0]["teacher_code"]:
+        # Vérifier si un professeur est déjà assigné à ce cours
+        if cours_existe[0][3]:
             print("Erreur : Un professeur est déjà assigné à ce cours.")
             pause_system()
             return

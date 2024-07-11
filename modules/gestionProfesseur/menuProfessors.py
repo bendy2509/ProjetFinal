@@ -181,7 +181,6 @@ def modify_professor():
         pause_system()
 
 
-
 def menuGestionProfesseur(DB_FILE, access):
     """Fonction principale pour démarrer le programme."""
 
@@ -261,9 +260,6 @@ def menuGestionProfesseur(DB_FILE, access):
                     if len(coordinates_find) > 0:
                         data.delete_record(table="professors", condition="code=?", params=(code,))
                         print("\n")
-                        clear_screen()
-                        print("\t" * 4, "suppression faite avec succes.")
-                        print()
                         professor.get_all_professors()
                         data.delete_record(table="cours", condition="teacher_code=?", params=(code,))
  

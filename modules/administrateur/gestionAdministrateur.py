@@ -1,20 +1,24 @@
 
-from modules.contraintes.contraintes import clear_screen, get_validated_input, is_valid_email, is_valid_password, is_valid_phone, pause_system
+from modules.contraintes.contraintes import authenticate_admin, clear_screen, get_validated_input, is_valid_email, is_valid_password, is_valid_phone, pause_system
 from modules.administrateur.administrateur import AdministratorManager
 
 def create_account(admin_manager):
     """
     Crée un compte administrateur en demandant les informations nécessaires à l'utilisateur.
     """
-    first_name = input("Prénom : ")
-    last_name = input("Nom : ")
-    address = input("Adresse : ")
-    phone = get_validated_input("Téléphone : ", is_valid_phone, "Numéro de téléphone invalide. Veuillez réessayer.")
-    email = get_validated_input("Email : ", is_valid_email, "Email invalide. Veuillez réessayer.")
-    password = get_validated_input("Mot de passe : ", is_valid_password, "Mot de passe invalide. \
-                                   Il doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre.")
-    
-    admin_manager.add_administrator(first_name, last_name, address, phone, email, password)
+    if authenticate_admin(admin_manager):
+        first_name = input("Prénom : ")
+        last_name = input("Nom : ")
+        address = input("Adresse : ")
+        phone = get_validated_input("Téléphone : ", is_valid_phone, "Numéro de téléphone invalide. Veuillez réessayer.")
+        email = get_validated_input("Email : ", is_valid_email, "Email invalide. Veuillez réessayer.")
+        password = get_validated_input("Mot de passe : ", is_valid_password, "Mot de passe invalide. \
+                                       Il doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre.")
+        
+        admin_manager.add_administrator(first_name, last_name, address, phone, email, password)
+    else:
+        print("Echec de l'authentification !!")
+        pause_system()
 
 def menuAdmin():
     clear_screen()
@@ -32,8 +36,8 @@ def menuAdmin():
     print("|                                                 |")
     print("===================================================")
     print("|                                                 |")
-    print("|  1. Lister les administrateurs                  |")
-    print("|  2. Ajouter un administrateur                   |")
+    print("|  1. Ajouter un administrateur                   |")
+    print("|  2. Lister les administrateurs                  |")
     print("|  3. Supprimer un administrateur                 |")
     print("|  4. Retourner au menu principal                 |")
     print("|                                                 |")
@@ -49,9 +53,9 @@ def menu_gestion_administrateurs(DB_FILE):
         choice = menuAdmin()
 
         if choice == '1':
-            admin_manager.list_administrators()
-        elif choice == '2':
             create_account(admin_manager)
+        elif choice == '2':
+            admin_manager.list_administrators()
         elif choice == '3':
             email = input("Entrez l'email de l'administrateur à supprimer : ")
             admin_manager.delete_administrator(email)

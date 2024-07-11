@@ -15,10 +15,7 @@ from modules.gestionBatiment.gestion_batiment import menu_gestion_batiment
 from modules.gestionProfesseur.menuProfessors import menuGestionProfesseur
 from modules.gestionCours.menu_gestion_cours import menu_gestion_cours
 from modules.contraintes.contraintes import (
-    clear_screen, 
-    get_validated_input,is_valid_email,
-    is_valid_password,
-    is_valid_phone, pause_system
+    clear_screen, pause_system
 )
 
 def display_main_menu():
@@ -87,7 +84,7 @@ def display_initial_menu():
     print("|    | |     | |__| | | |     | |                 |")
     print("|    | |     |  __  | | |     | |                 |")
     print("|    | |___  | |  | | | |___  | |____             |")
-    print("|    |_____| |_|  |_|  \\____| |______|           |")
+    print("|    |_____| |_|  |_|  \\____| |______|            |")
     print("|                                                 |")
     print("|                      DSI-CHCL                   |")
     print("===================================================")
@@ -115,6 +112,7 @@ def handle_initial_menu_choice(choice, db_file, admin_manager):
             pause_system()
     elif choice == '2':
         create_account(admin_manager)
+        
     elif choice == '3':
         print("Connecté en tant qu'invité.")
         pause_system()

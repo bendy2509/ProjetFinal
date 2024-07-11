@@ -137,7 +137,7 @@ class Coordinates:
     def validate_course_code(DB_FILE):
         """Valide le code du cours."""
         data = Database(DB_FILE)
-        # clear_screen()
+        clear_screen()
         course_code = input("\t" * 5 + "Entrez le code du cours : ").strip()
 
         # Vérifier l'existence du cours
@@ -204,11 +204,6 @@ class Coordinates:
                     "codeCours": self._course_code
                 }
 
-            clear_screen()
+            Coordinates.clear_screen()
             print("\t" * 4, "Le cours doit exister et ne doit être attribué à aucun professeur pour pouvoir passer à l'étape suivante.")
-            print("\t" * 4 + "Taper 'oui' si vous voulez reesayer a nouveau")
-            choice = input("\t" * 4 + "LE CHOIX : ")
-
-            if choice.lower() != 'oui':
-                pause_system()
-                return None
+            pause_system()

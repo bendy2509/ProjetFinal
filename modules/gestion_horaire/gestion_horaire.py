@@ -35,13 +35,12 @@ def menu_gestion_horaires(db_file, invite):
         choice = menu_horaires()
         if choice == '1':
             if invite:
-                
                 horaire_manager.ajouter_horaire()
             else:
                 print("Accès interdit.")
-            pause_system()
+                pause_system()
 
-        if choice == '2':
+        elif choice == '2':
             code_salle = input("Entrez le numéro de la salle : ")
             horaire_manager.afficher_horaire(code_salle)
 

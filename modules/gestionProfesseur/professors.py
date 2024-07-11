@@ -15,13 +15,11 @@ class Professor(Database):
         coordinates = Coordinates()
         clear_screen()
         parameters = coordinates.get_coordinates()
-
-        if parameters:
-            self.create_record(table="professors",values=parameters)
+        self.create_record(table="professors",values=parameters)
 
     def get_all_professors(self):
         """ """
-        # clear_screen()
+        clear_screen()
         all_professor = self.read_records(table="professors")
 
         if all_professor:
