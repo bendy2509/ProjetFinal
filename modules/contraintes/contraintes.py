@@ -34,16 +34,10 @@ def is_valid_phone(phone):
     """
     Vérifie si le numéro de téléphone est valide selon les formats spécifiés.
     """
-    patterns = [
-        r"^\+509\d{4}-\d{2}-\d{2}$",
-        r"^\+509\d{8}$",
-        r"^\d{4}-\d{4}$",
-        r"^\d{8}$",
-        r"^\d{4}-\d{2}-\d{2}$",
-        r"^\(509\)\d{4}-\d{4}$",
-        r"^\(509\)\d{8}$",
-    ]
-    return any(re.match(pattern, phone) for pattern in patterns)
+    expression = r"^((\+)|(011))?[\s-]?((509)|(\(509\)))?[\s-]?(3[1-9]|4[0-4]|4[6-9]|5[5])[\s-]?([0-9]{2})[\s-]?([0-9]{2})[\s-]?[0-9]{2}$"
+    if not re.fullmatch(expression, phone):
+        return False
+    return True
 
 def is_valid_password(password):
     """
@@ -59,8 +53,7 @@ def get_validated_input(prompt, validation_func, error_message):
         value = input(prompt)
         if validation_func(value):
             return value
-        else:
-            print(error_message)
+        print(error_message)
 
 def get_int_user(prompt):
     """
