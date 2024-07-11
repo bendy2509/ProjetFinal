@@ -1,7 +1,7 @@
 """
 Module pour gérer les salles dans un bâtiment.
 """
-from modules.contraintes.contraintes import clear_screen, pause_system
+from modules.contraintes.contraintes import afficher_affiches, clear_screen, pause_system
 from modules.database.database import Database
 
 class Room:
@@ -80,16 +80,13 @@ class RoomManager:
             building_id = building[0][0]
             rooms = self.db.read_records("rooms", condition=f"building_id={building_id}")
             if rooms:
-                # print(f"Salles dans le bâtiment '{building_name}':")
-                print("\t", "|", "\t", "{:<16}{:<19}{:<13}{:<10}".format("SALLE","TYPE","CAPACITE","STATUT  "), "|")
-                print("\t","-" * 68 )
-                print("\t", "|", " " * 64, "|")
+                data = []
                 for room in rooms:
-                    print("\t", "|", "\t", "{:<13}{:<22}{:<13}{:<10}".format(room[0],room[3],room[4],room[5]), "|")
-                   # print(f"Salle {room[0]}, Type: {room[3]}, Capacité: {room[4]}, Statut: room[5]{}")
-
-                print("\t", "|", " " * 64, "|")
-                print("\t","-" * 68 )
+                    data.append(
+                        {"CODE SALLE": room[0], "TYPE": room[3],"CAPACITE": room[4], "STATUT": room[5]}
+                    )
+                afficher_affiches(data=data, valeur_vide="...")
+                
             else:
                 print(f"Aucune salle trouvée dans le bâtiment '{building_name}'.")
         else:

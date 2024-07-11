@@ -34,16 +34,10 @@ def is_valid_phone(phone):
     """
     Vérifie si le numéro de téléphone est valide selon les formats spécifiés.
     """
-    patterns = [
-        r"^\+509\d{4}-\d{2}-\d{2}$",
-        r"^\+509\d{8}$",
-        r"^\d{4}-\d{4}$",
-        r"^\d{8}$",
-        r"^\d{4}-\d{2}-\d{2}$",
-        r"^\(509\)\d{4}-\d{4}$",
-        r"^\(509\)\d{8}$",
-    ]
-    return any(re.match(pattern, phone) for pattern in patterns)
+    expression = r"^((\+)|(011))?[\s-]?((509)|(\(509\)))?[\s-]?(3[1-9]|4[0-4]|4[6-9]|5[5])[\s-]?([0-9]{2})[\s-]?([0-9]{2})[\s-]?[0-9]{2}$"
+    if not re.fullmatch(expression, phone):
+        return False
+    return True
 
 def is_valid_password(password):
     """
@@ -59,8 +53,7 @@ def get_validated_input(prompt, validation_func, error_message):
         value = input(prompt)
         if validation_func(value):
             return value
-        else:
-            print(error_message)
+        print(error_message)
 
 def get_int_user(prompt):
     """
@@ -166,80 +159,121 @@ def authenticate_admin(admin_manager):
     admin_password = input("\t" * 5 + "Mot de passe : ")
     return admin_manager.authenticate_administrator(admin_email, admin_password)
 
-def validate_phone_number(number):
-    """Fonction test numero telephone"""
-    if len(number) == 14 and number.startswith("(509)") and number[9] == "-":
-        if number[5] in ["2", "3", "4", "5"]:
-            return True
-        else:
-            clear_screen()
-            print("Le chiffre après (509) doit être 2, 3, 4 ou 5. Veuillez réessayer...\n")
-            pause_system()
-            return False
-    else:
-        clear_screen()
-        print("Format de numéro de téléphone invalide. Veuillez réessayer...\n")
-        pause_system()
-        return False
-
 def is_valid_sexe(sexe):
     """Fonction test sexe"""
     list_valid = ["f", "F", "m", "M"]
     if sexe not in list_valid:
-        os.system("cls")
+        clear_screen()
         print("\nLe sexe doit etre f/F ou m/M. Veuillez réessayer...\n")
+        pause_system()
         return False
     return True
 
 def saisir_nom_cours():
     """Saisit et valide le nom du cours."""
     while True:
-        clear_screen()
-        nom = input("Nom du cours : ").strip()
+        nom = input("Entrer le nom du cours (q pour quitter): ").strip()
+        if nom == 'q':
+            return None
         if nom and len(nom) >= 3:
-            return nom
+            return nom.capitalize()
         print("Erreur : Le nom du cours ne peut pas être vide et doit contenir au moins 3 caractères.")
-        pause_system()
+
+def saisir_faculte():
+    while True:
+        fac = input("Entrer la faculté pour laquelle vous enregistrez le cours (q pour quitter): ").strip()
+        if fac == 'q':
+            return None
+        if fac and len(fac) >= 3:
+            return fac.capitalize()
+        print("Erreur : Le nom de la fac ne peut pas être vide et doit contenir au moins 3 caractères.")
 
 def saisir_duration(message):
     """Saisit et valide une duration (entier entre 0 et 23)."""
     while True:
-        clear_screen()
         try:
-            duration = int(input(message).strip())
-            if 0 <= duration <= 4:
+            duration = input(message).strip()
+            if duration == 'q':
+                return None
+            duration = int(duration)
+            if 1 <= duration <= 5:
                 return duration
-            print("Erreur : La durée doit être comprise entre 0 et 5.")
-            pause_system()
+            print("Erreur : La durée doit être comprise entre 1 et 5.")
         except ValueError:
             print("Erreur : Veuillez entrer une valeur entière pour la durée.")
-            pause_system()
 
 def saisir_session():
     """Saisit et valide la session (1 ou 2)."""
     while True:
-        clear_screen()
         try:
-            session = int(input("Session (1 ou 2) : ").strip())
+            session = input("Session (1 ou 2, taper q pour quitter) : ").strip()
+            if session == 'q':
+                return None
+            session = int(session)
             if session in [1, 2]:
                 return session
             print("Erreur : La session doit être 1 ou 2.")
-            pause_system()
         except ValueError:
             print("Erreur : Veuillez entrer une valeur entière pour la session.")
-            pause_system()
 
 def saisir_annee():
     """Saisit et valide l'année académique (entre 2000 et l'année actuelle)."""
     while True:
-        clear_screen()
         try:
-            annee = int(input("Année académique : ").strip())
+            annee = input("Année académique (q pour quitter): ").strip()
+            if annee == 'q':
+                return None
+            annee = int(annee)
             current_year = datetime.now().year
-            if 2000 <= annee <= current_year:
+            if annee >= current_year:
                 return annee
-            print(f"Erreur : L'année académique doit être comprise entre 2000 et {current_year}.")
-            pause_system()
+            print(f"Erreur : L'année académique doit être plus grande ou égale à {current_year}.")
         except ValueError:
             print("Erreur : Veuillez entrer une valeur entière pour l'année académique.")
-            pause_system()
+
+def afficher_ligne(donnees, longueurs_colonnes, valeurs_vide=None):
+    """
+    Affiche une ligne des données formatée.
+    
+    :param donnees: Liste des valeurs à afficher.
+    :param longueurs_colonnes: Liste des longueurs des colonnes pour l'alignement.
+    :param valeurs_vide: Valeur à utiliser si une valeur est vide (optionnel).
+    """
+    valeurs_formatees = []
+    for i, valeur in enumerate(donnees):
+        if not valeur and valeurs_vide:
+            valeur = valeurs_vide
+        valeurs_formatees.append(f"{str(valeur):<{longueurs_colonnes[i]}}")
+    print("\t" * 3, "| " + " | ".join(valeurs_formatees) + " |")
+
+def afficher_affiches(data, valeur_vide="...."):
+    """
+    Affiche les informations dans le dictionnaire sous forme de tableau formaté.
+    
+    :param data: Liste de dictionnaires contenant les données.
+    :param valeur_vide: Valeur à utiliser si une valeur est vide.
+    """
+    if not data:
+        print("Aucune donnée à afficher.")
+        return
+
+    # Extraire les clés pour les utiliser comme en-têtes de colonnes
+    headers = list(data[0].keys())
+    
+    # Calculer la largeur de chaque colonne pour un affichage aligné
+    col_widths = [max(len(str(row[key])) for row in data) for key in headers]
+    col_widths = [max(width, len(header)) for width, header in zip(col_widths, headers)]
+
+    # Afficher l'en-tête du tableau
+    header_row = "| " + " | ".join(f"{header:<{col_widths[i]}}" for i, header in enumerate(headers)) + " |"
+    separator = "-" * len(header_row)
+    
+    print("\n")
+    print("\t" * 3, separator)
+    print("\t" * 3, header_row)
+    print("\t" * 3, separator)
+    
+    # Afficher chaque ligne de données
+    for row in data:
+        afficher_ligne(list(row.values()), col_widths, valeur_vide)
+        print("\t" * 3, separator)

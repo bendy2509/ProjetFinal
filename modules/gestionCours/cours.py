@@ -1,12 +1,17 @@
-                  # cours.py
-from modules.contraintes.contraintes import clear_screen, pause_system, saisir_annee, saisir_duration, saisir_nom_cours, saisir_session
+# cours.py
+from modules.contraintes.contraintes import (
+    afficher_affiches, clear_screen,
+    pause_system, saisir_annee, saisir_duration, saisir_faculte,
+    saisir_nom_cours, saisir_session
+)
 from modules.database.database import Database
 
 class Cours:
     """Gestion des cours"""
-    def __init__(self, nom, duration, session, annee, code_cours):
+    def __init__(self, nom, faculte, duration, session, annee, code_cours):
         """Fonction init"""
         self.nom = nom
+        self.faculte = faculte
         self.duration = duration
         self.session = session
         self.annee = annee
@@ -22,14 +27,17 @@ class Course_Manager:
     def enregistrer_cours(self):
         """Enregistre un nouveau cours dans la base de données."""
         clear_screen()
-        print("\n", "*" * 10 , "Enregistrer Cours" , "*" * 10 ,"\n")
-        pause_system()
+        print("\n", "=" * 10 , "Enregistrement d'un Cours" , "=" * 10 ,"\n")
         
         nom = saisir_nom_cours()
         if nom is None:
             return
         
-        duration = saisir_duration("Veuillez saisir la durée (ex : 2) : ")
+        fac = saisir_faculte()
+        if fac is None:
+            return
+        
+        duration = saisir_duration("Veuillez saisir la durée du cours (q pour quitter) : ")
         if duration is None:
             return
         
@@ -41,15 +49,16 @@ class Course_Manager:
         if annee is None:
             return
 
-        code_cours = self._generer_code_cours(nom, session, annee)
+        code_cours = self._generer_code_cours(nom, session, fac, annee)
 
         if not self.verifier_existence_cours(code_cours):
-            cours = Cours(nom, duration, session, annee, code_cours)
+            cours = Cours(nom, fac, duration, session, annee, code_cours)
             self.db_manager.create_record(
                 "cours",
                 {
                     "code_cours": cours.code_cours,
                     "nom": cours.nom,
+                    "faculte": cours.faculte,
                     "duration": cours.duration,
                     "session": cours.session,
                     "annee": cours.annee
@@ -60,9 +69,32 @@ class Course_Manager:
             print("Erreur, un cours avec code existe deja dans la base.")
         pause_system()
 
-    def _generer_code_cours(self, nom, session, annee):
+    def cours_assignes_ou_non(self, assigner):
+        """
+        Pour afficher les cours qui sont assignés ou non
+
+        :param assigner: un boolean qui doit etre True pour les cours assignés,\
+        False dans le cas contraire
+        """
+        cours = self.db_manager.read_records("cours")
+        print("\n")
+
+        data = []
+        for cour in cours:
+            if not cour[3] and not assigner:
+                data.append(
+                    {"CODE COURS": cour[0], "NOM DU COURS": cour[1],"FACULTE": cour[2], "PROFESSEUR": cour[3], "DUREE": cour[4], "SESSION": cour[5], "ANNEE": cour[6]}
+                )
+            if cour[3] and assigner:
+                data.append(
+                    {"CODE COURS": cour[0], "NOM DU COURS": cour[1],"FACULTE": cour[2], "PROFESSEUR": cour[3], "DUREE": cour[4], "SESSION": cour[5], "ANNEE": cour[6]}
+                )
+        afficher_affiches(data=data, valeur_vide="...")
+        pause_system()
+
+    def _generer_code_cours(self, nom, session, fac, annee):
         """Génère un code de cours unique à partir du nom, de la session et de l'année."""
-        return f"{nom[:3]}-S{session}-{annee}".upper()
+        return f"{nom[:3]}-{fac[0:3]}-S{session}-{annee}".upper()
 
     def afficher_cours(self):
         """Affiche la liste des cours enregistrés."""
@@ -70,22 +102,20 @@ class Course_Manager:
         print("\t" * 5, "Liste des cours :")
         cours = self.db_manager.read_records("cours")
         print("\n")
-        print("\t" * 3, "-" * 75)
-        print("\t" * 3, "| {:<13} | {:15} | {:15} | {:<10} | {:<10} |".format("CODE COURS", "NOM", "PROFESSEUR", "DUREE", "SESSION", "ANNEE"))
-        print("\t" * 3, "-" * 75)
+
+        data = []
         for cour in cours:
-            if not (cour[2]):
-                print("\t" * 3, "| {:<13} | {:15} | {:15} | {:<10} | {:<10} |".format(cour[0], cour[1], "....", cour[3], cour[4], cour[5]))
-            else:
-                print("\t" * 3, "| {:<13} | {:15} | {:15} | {:<10} | {:<10} |".format(cour[0], cour[1], cour[2], cour[3], cour[4], cour[5]))
-            print("\t" * 3, "-" * 75)
+            data.append(
+                {"CODE COURS": cour[0], "NOM DU COURS": cour[1],"FACULTE": cour[2], "PROFESSEUR": cour[3], "DUREE": cour[4], "SESSION": cour[5], "ANNEE": cour[6]}
+            )
+        afficher_affiches(data=data, valeur_vide="...")
+
         pause_system()
 
     def modifier_cours(self):
         """Modifie un cours existant dans la base de données."""
         clear_screen()
-        print("\n", "*" * 10 , "Modifier un Cours" , "*" * 10 ,"\n")
-        pause_system()
+        print("\n", "=" * 10 , "Modifier un Cours" , "=" * 10 ,"\n")
 
         code_cours = input("Entrer le code du cours à modifier : ")
         cours = self.db_manager.read_records(table="cours", condition="code_cours=?", params=(code_cours,))
@@ -93,48 +123,69 @@ class Course_Manager:
             print("Erreur : Cours non trouvé.")
             pause_system()
             return
+        
+        data = []
+        for cour in cours:
+            data.append(
+                {"CODE COURS": cour[0], "NOM DU COURS": cour[1],"FACULTE": cour[2], "PROFESSEUR": cour[3], "DUREE": cour[4], "SESSION": cour[5], "ANNEE": cour[6]}
+            )
+        afficher_affiches(data=data, valeur_vide="...")
 
         print("Sélectionnez ce que vous voulez modifier : ")
         print("1. Nom du cours")
-        print("2. Durée du cours")
-        print("3. Session")
-        print("4. Année académique")
-        print("5. Modifier tout")
-        print("0. Annuler")
+        print("2. La faultés")
+        print("3. Durée du cours")
+        print("4. Session")
+        print("5. Année académique")
+        print("6. Modifier tout")
+        print("0. Annuler ou une autre touche pour quitter")
 
         choix = input("Votre choix : ")
+        nom, fac, prof, duration, session, annee = cours[0][1:7]
 
-        if choix == '0':
+        modificateurs = {
+            '1': lambda: saisir_nom_cours(),
+            '2': lambda: saisir_faculte(),
+            '3': lambda: saisir_duration("Saisir la nouvelle durée (q pour quitter) : "),
+            '4': lambda: saisir_session(),
+            '5': lambda: saisir_annee(),
+            '6': lambda: (saisir_nom_cours(), saisir_duration("Saisir la nouvelle durée (q pour quitter) : "), saisir_session(), saisir_annee())
+        }
+
+        if choix in modificateurs:
+            result = modificateurs[choix]()
+            if choix == '6':
+                nom, fac, duration, session, annee = result
+            else:
+                if not result:
+                    return
+                if choix == '1':
+                    nom = result
+                elif choix == '2':
+                    fac = result
+                elif choix == '3':
+                    duration = result
+                elif choix == '4':
+                    session = result
+                elif choix == '5':
+                    annee = result
+        else:
             print("Modification annulée.")
             return
 
-        nom = cours[0][1]
-        duration = cours[0][2]
-        session = cours[0][3]
-        annee = cours[0][4]
-
-        if choix == '1' or choix == '5':
-            nom = saisir_nom_cours()
-        if choix == '2' or choix == '5':
-            duration = saisir_duration("Saisir la nouvelle durée (ex : 2) : ")
-        if choix == '3' or choix == '5':
-            session = saisir_session()
-        if choix == '4' or choix == '5':
-            annee = saisir_annee()
-
-        nouveau_code_cours = self._generer_code_cours(nom, session, annee)
-
+        nouveau_code_cours = self._generer_code_cours(nom, session, fac, annee)
         if nouveau_code_cours != code_cours and self.verifier_existence_cours(nouveau_code_cours):
             print("Erreur : Un autre cours avec ce nouveau code existe déjà.")
             pause_system()
             return
 
-        cours = Cours(nom, duration, session, annee, nouveau_code_cours)
+        cours = Cours(nom, fac, duration, session, annee, nouveau_code_cours)
         self.db_manager.update_record(
             table="cours",
             values={
                 "code_cours": cours.code_cours,
                 "nom": cours.nom,
+                "faculte": cours.faculte,
                 "duration": cours.duration,
                 "session": cours.session,
                 "annee": cours.annee
@@ -143,25 +194,21 @@ class Course_Manager:
             condition_params=(code_cours,)
         )
         print("Cours modifié avec succès.")
+        pause_system()
 
     def rechercher_cours(self):
         """Méthode pour rechercher un cours"""
         clear_screen()
-        print("\n", "*" * 10 , "Rechercher un Cours", "*" * 10 ,"\n")
+        print("\n", "=" * 10 , "Rechercher un Cours", "=" * 10 ,"\n")
         code_cours = input("Entrer le code du cours à rechercher : ")
         cours = self.db_manager.read_records(table="cours", condition="code_cours=?", params=(code_cours,))
         if cours:
-            clear_screen()
-            print("\n")
-            print("\t" * 3, "-" * 75)
-            print("\t" * 3, "| {:<13} | {:15} | {:15} | {:<10} | {:<10} |".format("CODE COURS", "NOM", "PROFESSEUR", "DUREE", "SESSION", "ANNEE"))
-            print("\t" * 3, "-" * 75)
+            data = []
             for cour in cours:
-                if not (cour[2]):
-                    print("\t" * 3, "| {:<13} | {:15} | {:15} | {:<10} | {:<10} |".format(cour[0], cour[1], "....", cour[3], cour[4], cour[5]))
-                else:
-                    print("\t" * 3, "| {:<13} | {:15} | {:15} | {:<10} | {:<10} |".format(cour[0], cour[1], cour[2], cour[3], cour[4], cour[5]))
-                print("\t" * 3, "-" * 75)
+                data.append(
+                    {"CODE COURS": cour[0], "NOM DU COURS": cour[1],"FACULTE": cour[2], "PROFESSEUR": cour[3], "DUREE": cour[4], "SESSION": cour[5], "ANNEE": cour[6]}
+                )
+            afficher_affiches(data=data, valeur_vide="...")
         else:
             print("Cours non trouvé.")
         pause_system()
