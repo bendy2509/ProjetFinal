@@ -7,6 +7,7 @@
 Importation des modules 
 
 """
+from modules.gestion_horaire.gestion_horaire import menu_gestion_horaires
 from modules.administrateur.gestionAdministrateur import menu_gestion_administrateurs
 from modules.gestionSalle.gestionSalle import menuGestionSalle
 from modules.administrateur.administrateur import AdministratorManager
@@ -60,7 +61,7 @@ def main_menu(db_file, invite=True):
         elif choice == '3':
             menu_gestion_batiment(db_file, invite)
         elif choice == '4':
-            menuGestionProfesseur(db_file,invite)
+            menuGestionProfesseur(db_file, invite)
         elif choice == '5':
             if invite:
                 menu_gestion_administrateurs(db_file)
