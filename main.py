@@ -112,6 +112,7 @@ def handle_initial_menu_choice(choice, db_file, admin_manager):
             pause_system()
     elif choice == '2':
         create_account(admin_manager)
+        
     elif choice == '3':
         print("Connecté en tant qu'invité.")
         pause_system()
