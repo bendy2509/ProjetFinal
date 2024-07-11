@@ -202,6 +202,22 @@ def saisir_duration(message):
         except ValueError:
             print("Erreur : Veuillez entrer une valeur entière pour la durée.")
 
+def saisir_debut(message):
+    """Saisit et valide le début (entier entre 8 et 16)."""
+    while True:
+        try:
+            duration = input(message).strip()
+            if duration == 'q':
+                return None
+            duration = int(duration)
+
+            if 8 <= duration <= 16:
+                return duration
+            
+            print("Erreur : Le début doit être comprise entre 8h et 16h.")
+        except ValueError:
+            print("Erreur : Veuillez entrer une valeur entière pour le début.")
+
 def saisir_session():
     """Saisit et valide la session (1 ou 2)."""
     while True:
@@ -230,6 +246,18 @@ def saisir_annee():
             print(f"Erreur : L'année académique doit être plus grande ou égale à {current_year}.")
         except ValueError:
             print("Erreur : Veuillez entrer une valeur entière pour l'année académique.")
+
+def saisir_jour():
+    jours_valides = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"]
+    
+    while True:
+        jour = input("Jour (lundi, mardi, etc.) : ").strip().lower()
+        if jour in jours_valides:
+            return jour.lower()
+        elif jour == 'q':
+            return None
+        else:
+            print("Entrée invalide. Veuillez entrer un jour valide (lundi, mardi, etc.).")
 
 def afficher_ligne(donnees, longueurs_colonnes, valeurs_vide=None):
     """
