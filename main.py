@@ -89,7 +89,7 @@ def display_initial_menu():
     print("|    | |___  | |  | | | |___  | |____             |")
     print("|    |_____| |_|  |_|  \\____| |______|           |")
     print("|                                                 |")
-    print("|                      DSI-CHCL                   |")
+    print("|                      DSI-CHCL                    |")
     print("===================================================")
     print("|                                                 |")
     print("|                 Menu de configuration           |")
