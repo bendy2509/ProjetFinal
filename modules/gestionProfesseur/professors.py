@@ -18,7 +18,14 @@ class Professor(Database):
         coordinates = Coordinates()
         clear_screen()
         parameters = coordinates.get_coordinates()
-        self.create_record(table="professors",values=parameters)
+
+        if parameters:
+            self.create_record(table="professors",values=parameters)
+
+        else:
+            clear_screen()
+            print("\t" * 4, "Oups! Enregistrement echoue, une erreur s'est produite lors de votre saisie .")
+            pause_system()
 
     def format_coords(self,coordonates):
         """ """
@@ -35,11 +42,12 @@ class Professor(Database):
 
     def get_all_professors(self):
         """ """
-        clear_screen()
+        # clear_screen()
         all_professor = self.read_records(table="professors")
 
         if all_professor:
             self.format_coords(all_professor)
+            return all_professor
 
         else:
             print("\t" * 4 + "Pas de professeurs dans la base !")

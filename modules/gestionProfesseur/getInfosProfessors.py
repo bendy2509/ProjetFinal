@@ -137,7 +137,7 @@ class Coordinates:
     def validate_course_code(DB_FILE):
         """Valide le code du cours."""
         data = Database(DB_FILE)
-        clear_screen()
+        # clear_screen()
         course_code = input("\t" * 5 + "Entrez le code du cours : ").strip()
 
         # Vérifier l'existence du cours
@@ -168,7 +168,7 @@ class Coordinates:
     def validate_email():
         """Validates an email address using a regular expression."""
         regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
-        email = input("\t" * 5 + "Entrez l'adresse email : ").strip()
+        email = input("\t" * 5 + "Entrez l'adresse evalidate_course_codemail : ").strip()
         while not re.match(regex, email):
             print("\t" * 5 + "Veuillez entrer une adresse email correcte.")
             email = input("\t" * 5 + "Entrez l'adresse email : ").strip()
@@ -204,6 +204,11 @@ class Coordinates:
                     "codeCours": self._course_code
                 }
 
-            Coordinates.clear_screen()
+            clear_screen()
             print("\t" * 4, "Le cours doit exister et ne doit être attribué à aucun professeur pour pouvoir passer à l'étape suivante.")
-            pause_system()
+            print("\t" * 4 + "Taper 'oui' si vous voulez reesayer a nouveau")
+            choice = input("\t" * 4 + "LE CHOIX : ")
+
+            if choice.lower() != 'oui':
+                pause_system()
+                return None
