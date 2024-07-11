@@ -62,114 +62,117 @@ def is_exist_record():
         return None
     
     return isExist
-
+    
 def valide_coordinates_modify(code):
-    """"""
+    """
+    Valide et modifie les coordonnées d'un professeur.
+
+    :param code: Code du professeur à modifier
+    :return: Dictionnaire des coordonnées mises à jour
+    """
     coordinates_find = data.read_records("professors", condition="code=?", params=(code,))
-    while True:
 
+    def get_valid_name(field_name, current_value):
+        """
+        Valide que le nom/prénom commence par une lettre. Utilise la valeur actuelle si l'entrée est vide.
+
+        :param field_name: Nom du champ (nom ou prénom)
+        :param current_value: Valeur actuelle du champ
+        :return: Nouvelle valeur validée du champ ou valeur actuelle si l'entrée est vide
+        """
         while True:
             print()
-            nom = input("\t" * 5 + "Entrez le nom : ").strip()
-            if nom:
-                if nom[:1].isalpha():
-                    break
-                print("\t" * 5 + 'Erreur : Le nom devrait commencer par une lettre.')
-                pause_system()
-            else:
-                nom = coordinates_find[0][1]
-                break
-
-        while True:
-            print()
-            prenom = input("\t" * 5 + "Entrez le prenom : ").strip()
-            if prenom:
-                if prenom[:1].isalpha():
-                    break
-                print("\t" * 5 + 'Erreur : Le prénom devrait commencer par une lettre.')
-            else:
-                prenom = coordinates_find[0][2]
-                break
-
-        gender = Coordinates.validate_gender()
-
-        while True:
-            phone = Coordinates.validate_phone()
-
-            if phone != coordinates_find[0][5]:
-                all_professor = Professor.get_all_professors()
-                for items in all_professor:
-                    if items[5] == phone:
-                        print("\t" * 4, "Ce numero est deja atribué a un professeur de la table")
-                        pause_system()
-                        phone = Coordinates.validate_phone()
-
-                    else:
-                        break
-                        
-
-        email = Coordinates.validate_email()
-
-        course_code = input("\t" * 5 + "Entrez le code du cours : ").strip()
-
-        # Vérifier l'existence du cours
-        cours_existe = data.read_records(
-            table="cours",
-            condition="code_cours=?",
-            params=(course_code,)
-        )
-        if not cours_existe:
-            print("\t" * 5 + "Erreur : Code cours non trouvé.")
+            value = input("\t" * 5 + f"Entrez le {field_name} : ").strip()
+            if not value:
+                return current_value
+            if value[:1].isalpha():
+                return value
+            print("\t" * 5, f"{field_name.capitalize()} devrait commencer par une lettre.")
             pause_system()
-            clear_screen()
-            continue
 
-        if course_code == coordinates_find[0][6]:
-            codeCours = coordinates_find[0][6]
-        else:
-            # Vérifier si le cours est déjà assigné à un autre professeur
-            course_assigned = data.read_records(
-                table="professors",
-                condition="codeCours=?",
-                params=(course_code,)
-            )
-            if course_assigned:
-                Coordinates.clear_screen()
-                print("\t" * 5 + "Erreur : Un professeur est déjà assigné à ce cours.")
+    def get_unique_value(field_name, current_value, index):
+        """
+        Valide que le téléphone ou l'email est unique dans la base de données, sauf s'il est inchangé.
+
+        :param field_name: Nom du champ (phone ou email)
+        :param current_value: Valeur actuelle du champ
+        :param index: Index du champ dans les enregistrements de la base de données
+        :return: Nouvelle valeur validée du champ ou valeur actuelle si l'entrée est inchangée
+        """
+        while True:
+            print()
+            value = getattr(Coordinates, f"validate_{field_name}")()
+            if value == current_value:
+                return value
+            all_professors = data.read_records("professors")
+            if any(items[index] == value for items in all_professors):
+                print("\t" * 5, f"Ce {field_name} est déjà attribué à un professeur.")
                 pause_system()
-                return None
+            else:
+                return value
 
-        codeP = Coordinates.generate_code(last_name=nom, first_name=prenom, gender=gender)
+    def get_valid_course_code():
+        """
+        Valide que le code du cours existe et n'est pas déjà attribué à un autre professeur.
 
-        return {
-            "code": codeP,
-            "nom": nom,
-            "prenom": prenom,
-            "sexe": gender,
-            "email": email,
-            "telephone": phone,
-            "codeCours": codeCours
-        }
+        :return: Code du cours validé
+        """
+        while True:
+            print()
+            course_code = input("\t" * 5 + "Entrez le code du cours : ").strip()
+            if not data.read_records("cours", condition="code_cours=?", params=(course_code,)):
+                print("\tCode cours non trouvé.")
+                pause_system()
+                continue
+            if course_code != coordinates_find[0][6]:
+                if data.read_records("professors", condition="codeCours=?", params=(course_code,)):
+                    print("\t" * 5, "Un professeur est déjà assigné à ce cours.")
+                    pause_system()
+                    continue
+            return course_code
+
+    # Validation et modification des coordonnées du professeur
+    nom = get_valid_name("nom", coordinates_find[0][1])
+    prenom = get_valid_name("prénom", coordinates_find[0][2])
+    gender = Coordinates.validate_gender()
+    phone = get_unique_value("phone", coordinates_find[0][5], 5)
+    email = get_unique_value("email", coordinates_find[0][4], 4)
+    course_code = get_valid_course_code()
+
+    codeP = Coordinates.generate_code(last_name=nom, first_name=prenom, gender=gender)
+
+    # Retourne les nouvelles coordonnées
+    return {
+        "code": codeP,
+        "nom": nom,
+        "prenom": prenom,
+        "sexe": gender,
+        "email": email,
+        "telephone": phone,
+        "codeCours": course_code
+    }
+
 
 def modify_professor():
     """function for modify professors"""
-
+    DB_FILE = "database.db"
+    dB = Database(DB_FILE)
     code = Coordinates.validate_name("le code du Professeur")
-    coordinates_find = data.read_records("professors", condition="code=?", params=(code,))
+    coordinates_find =dB.read_records("professors", condition="code=?", params=(code,))
     if len(coordinates_find) > 0:
         clear_screen()
         print("\n")
-        print("\t" * 4, f"L'information du professeur avec code {code} : ")
+        print("\t" * 4, f"L'information du professeur avec code \" {code} \" : ")
         
         data = []
         data.append(
-            {"CODE": coordinates_find[0], "NOM": coordinates_find[1],"PRENOM": coordinates_find[2], "SEXE": coordinates_find[3], "EMAIL": coordinates_find[4], "TELEPHONE": coordinates_find[5], "CODE_COURS": coordinates_find[6]}
+            {"CODE": coordinates_find[0][0], "NOM": coordinates_find[0][1],"PRENOM": coordinates_find[0][2], "SEXE": coordinates_find[0][3], "EMAIL": coordinates_find[0][4], "TELEPHONE": coordinates_find[0][5], "CODE_COURS": coordinates_find[0][6]}
         )
         afficher_affiches(data=data, valeur_vide="...")
         print("\n", "\t" * 4, " SOS !!  Il est recommandé de ré-entrer tous les champs en entrant les mêmes infos si nécessaire : ")
         pause_system()
-        params = Coordinates().get_coordinates()
-        data.update_record(table="professors", values=params, condition="code=?", condition_params=(code,))
+        params = valide_coordinates_modify(code)
+        dB.update_record(table="professors", values=params, condition="code=?", condition_params=(code,))
 
 
     else:

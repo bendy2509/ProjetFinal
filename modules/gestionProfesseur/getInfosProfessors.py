@@ -168,7 +168,7 @@ class Coordinates:
     def validate_email():
         """Validates an email address using a regular expression."""
         regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
-        email = input("\t" * 5 + "Entrez l'adresse evalidate_course_codemail : ").strip()
+        email = input("\t" * 5 + "Entrez l'adresse email : ").strip()
         while not re.match(regex, email):
             print("\t" * 5 + "Veuillez entrer une adresse email correcte.")
             email = input("\t" * 5 + "Entrez l'adresse email : ").strip()
