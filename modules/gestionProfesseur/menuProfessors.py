@@ -26,9 +26,9 @@ def menuProfessors():
     print("\t" * 4 + "|        Menu Gestion Professeur                  |")
     print("\t" * 4 + "|                                                 |")
     print("\t" * 4 + "===================================================")
-    print("\t" * 4 + "|  1. Listez les professeurs                      |")
-    print("\t" * 4 + "|  2. Recherchez un professeur                    |")
-    print("\t" * 4 + "|  3. Enregistrez un Professeur (Admin)           |")
+    print("\t" * 4 + "|  1. Enregistrez un Professeur (Admin)           |")
+    print("\t" * 4 + "|  2. Listez les professeurs                      |")
+    print("\t" * 4 + "|  3. Recherchez un professeur                    |")
     print("\t" * 4 + "|  4. Modifiez infos d'un Professeur (Admin)      |")
     print("\t" * 4 + "|  5. Suprimez un Professeur (Admin)              |")
     print("\t" * 4 + "|  0. Tournez au menu principal                   |")
@@ -72,9 +72,13 @@ def modify_professor():
         clear_screen()
         print("\n")
         print("\t" * 4, f"L'information du professeur avec code {code} : ")
-        professor.format_coords(coordonates=coordinates_find)
-        print()
-        print("\t" * 4, " SOS !!  Il est recommandé de ré-entrer tous les champs en entrant les mêmes infos si nécessaire : ")
+        
+        data = []
+        data.append(
+            {"CODE": coordinates_find[0], "NOM": coordinates_find[1],"PRENOM": coordinates_find[2], "SEXE": coordinates_find[3], "EMAIL": coordinates_find[4], "TELEPHONE": coordinates_find[5], "CODE_COURS": coordinates_find[6]}
+        )
+        afficher_affiches(data=data, valeur_vide="...")
+        print("\n", "\t" * 4, " SOS !!  Il est recommandé de ré-entrer tous les champs en entrant les mêmes infos si nécessaire : ")
         pause_system()
         params = Coordinates().get_coordinates()
         data.update_record(table="professors", values=params, condition="code=?", condition_params=(code,))
@@ -97,10 +101,20 @@ def menuGestionProfesseur(DB_FILE, access):
 
     while True:
         menuchoice = menuChoice()
+
         if menuchoice == 1:
+            if is_authenticated:
+                professor.add_professor()
+
+            else:
+                clear_screen()            
+                print("\t" * 5,"Accès reservé aux Administrateurs.")
+                pause_system()
+  
+        elif menuchoice == 2:
             professor.get_all_professors()
 
-        elif menuchoice == 2:
+        elif menuchoice == 3:
             clear_screen()
             isExist = is_exist_record()
             if isExist :
@@ -111,27 +125,19 @@ def menuGestionProfesseur(DB_FILE, access):
                     clear_screen()
                     print("\n" * 2)
                     print("\t" * 4, f"L'information du professeur avec code ' {code} ' : ")
-                    professor.format_coords(coordonates=coordinates_find)
-
+                    data = []
+                    data.append(
+                        {"CODE": coordinates_find[0], "NOM": coordinates_find[1],"PRENOM": coordinates_find[2], "SEXE": coordinates_find[3], "EMAIL": coordinates_find[4], "TELEPHONE": coordinates_find[5], "CODE_COURS": coordinates_find[6]}
+                    )
+                    afficher_affiches(data=data, valeur_vide="...")
                     pause_system()
-
                 else:
                     clear_screen()
                     print("\t" * 4, f"Pas de professeurs trouve avec le code ' {code} ' dans la base !")
                     pause_system()
-
             else:
                 clear_screen()
                 print("\t" * 4, "Pas de professeurs dans la base !")
-                pause_system()
-
-        elif menuchoice == 3:
-            if is_authenticated:
-                professor.add_professor()
-
-            else:
-                clear_screen()            
-                print("\t" * 5,"Accès reservé aux Administrateurs.")
                 pause_system()
 
         elif menuchoice == 4:

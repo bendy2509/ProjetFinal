@@ -46,7 +46,8 @@ def display_main_menu():
     print("|  3. Gestion des Bâtiments                       |")
     print("|  4. Gestion des Professeurs                     |")
     print("|  5. Gestion des Administrateurs                 |")
-    print("|  6. Retour au menu de configuration             |")
+    print("|  6. Gestion des horaires                        |")
+    print("|  0. Retour au menu de configuration             |")
     print("===================================================")
 
 def main_menu(db_file, invite=True):
