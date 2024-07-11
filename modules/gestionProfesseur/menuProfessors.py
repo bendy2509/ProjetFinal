@@ -13,26 +13,26 @@ from modules.contraintes.contraintes import (
 def menuProfessors():
     """ """
     clear_screen()
-    print("\t" * 4 + "===================================================")
-    print("\t" * 4 + "|      ____   _    _   ____    _                  |")
-    print("\t" * 4 + "|     / ___| | |  | | / ___|  | |                 |")
-    print("\t" * 4 + "|    | |     | |__| | | |     | |                 |")
-    print("\t" * 4 + "|    | |     |  __  | | |     | |                 |")
-    print("\t" * 4 + "|    | |___  | |  | | | |___  | |____             |")
-    print("\t" * 4 + "|    |_____| |_|  |_|  \____| |______|            |")
-    print("\t" * 4 + "|                                                 |")
-    print("\t" * 4 + "===================================================")
-    print("\t" * 4 + "|                                                 |")
-    print("\t" * 4 + "|        Menu Gestion Professeur                  |")
-    print("\t" * 4 + "|                                                 |")
-    print("\t" * 4 + "===================================================")
-    print("\t" * 4 + "|  1. Enregistrez un Professeur (Admin)           |")
-    print("\t" * 4 + "|  2. Listez les professeurs                      |")
-    print("\t" * 4 + "|  3. Recherchez un professeur                    |")
-    print("\t" * 4 + "|  4. Modifiez infos d'un Professeur (Admin)      |")
-    print("\t" * 4 + "|  5. Suprimez un Professeur (Admin)              |")
-    print("\t" * 4 + "|  0. Tournez au menu principal                   |")
-    print("\t" * 4 + "===================================================")
+    print("===================================================")
+    print("|      ____   _    _   ____    _                  |")
+    print("|     / ___| | |  | | / ___|  | |                 |")
+    print("|    | |     | |__| | | |     | |                 |")
+    print("|    | |     |  __  | | |     | |                 |")
+    print("|    | |___  | |  | | | |___  | |____             |")
+    print("|    |_____| |_|  |_|  \____| |______|            |")
+    print("|                                                 |")
+    print("===================================================")
+    print("|                                                 |")
+    print("|        Menu Gestion Professeur                  |")
+    print("|                                                 |")
+    print("===================================================")
+    print("|  1. Enregistrez un Professeur (Admin)           |")
+    print("|  2. Listez les professeurs                      |")
+    print("|  3. Recherchez un professeur                    |")
+    print("|  4. Modifiez infos d'un Professeur (Admin)      |")
+    print("|  5. Suprimez un Professeur (Admin)              |")
+    print("|  0. Tournez au menu principal                   |")
+    print("===================================================")
 
 def menuChoice():
     """ """
@@ -164,11 +164,11 @@ def modify_professor():
         print("\n")
         print("\t" * 4, f"L'information du professeur avec code \" {code} \" : ")
         
-        data = []
-        data.append(
+        data_list = []
+        data_list.append(
             {"CODE": coordinates_find[0][0], "NOM": coordinates_find[0][1],"PRENOM": coordinates_find[0][2], "SEXE": coordinates_find[0][3], "EMAIL": coordinates_find[0][4], "TELEPHONE": coordinates_find[0][5], "CODE_COURS": coordinates_find[0][6]}
         )
-        afficher_affiches(data=data, valeur_vide="...")
+        afficher_affiches(data=data_list, valeur_vide="...")
         print("\n", "\t" * 4, " SOS !!  Il est recommandé de ré-entrer tous les champs en entrant les mêmes infos si nécessaire : ")
         pause_system()
         params = valide_coordinates_modify(code)
@@ -220,7 +220,7 @@ def menuGestionProfesseur(DB_FILE, access):
                     print("\t" * 4, f"L'information du professeur avec code ' {code} ' : ")
                     data = []
                     data.append(
-                        {"CODE": coordinates_find[0], "NOM": coordinates_find[1],"PRENOM": coordinates_find[2], "SEXE": coordinates_find[3], "EMAIL": coordinates_find[4], "TELEPHONE": coordinates_find[5], "CODE_COURS": coordinates_find[6]}
+                        {"CODE": coordinates_find[0][0], "NOM": coordinates_find[0][1],"PRENOM": coordinates_find[0][2], "SEXE": coordinates_find[0][3], "EMAIL": coordinates_find[0][4], "TELEPHONE": coordinates_find[0][5], "CODE_COURS": coordinates_find[0][6]}
                     )
                     afficher_affiches(data=data, valeur_vide="...")
                     pause_system()
@@ -265,6 +265,7 @@ def menuGestionProfesseur(DB_FILE, access):
                         print("\t" * 4, "suppression faite avec succes.")
                         print()
                         professor.get_all_professors()
+                        data.delete_record(table="cours", condition="teacher_code=?", params=(code,))
  
                     else:
                         clear_screen()
