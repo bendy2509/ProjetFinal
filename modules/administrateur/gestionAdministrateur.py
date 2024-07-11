@@ -32,8 +32,8 @@ def menuAdmin():
     print("|                                                 |")
     print("===================================================")
     print("|                                                 |")
-    print("|  1. Lister les administrateurs                  |")
-    print("|  2. Ajouter un administrateur                   |")
+    print("|  1. Ajouter un administrateur                   |")
+    print("|  2. Lister les administrateurs                  |")
     print("|  3. Supprimer un administrateur                 |")
     print("|  4. Retourner au menu principal                 |")
     print("|                                                 |")
@@ -49,9 +49,9 @@ def menu_gestion_administrateurs(DB_FILE):
         choice = menuAdmin()
 
         if choice == '1':
-            admin_manager.list_administrators()
-        elif choice == '2':
             create_account(admin_manager)
+        elif choice == '2':
+            admin_manager.list_administrators()
         elif choice == '3':
             email = input("Entrez l'email de l'administrateur à supprimer : ")
             admin_manager.delete_administrator(email)

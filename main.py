@@ -15,10 +15,7 @@ from modules.gestionBatiment.gestion_batiment import menu_gestion_batiment
 from modules.gestionProfesseur.menuProfessors import menuGestionProfesseur
 from modules.gestionCours.menu_gestion_cours import menu_gestion_cours
 from modules.contraintes.contraintes import (
-    clear_screen, 
-    get_validated_input,is_valid_email,
-    is_valid_password,
-    is_valid_phone, pause_system
+    clear_screen, pause_system
 )
 
 def display_main_menu():
