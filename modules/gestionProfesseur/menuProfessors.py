@@ -171,10 +171,6 @@ def modify_professor():
         params = Coordinates().get_coordinates()
         data.update_record(table="professors", values=params, condition="code=?", condition_params=(code,))
 
-        else:
-            clear_screen()
-            print("\t" * 4, "Oups! modification echouee, une erreur s'est produite lors de votre saisie.")
-            pause_system()
 
     else:
         clear_screen()
