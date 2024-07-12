@@ -6,7 +6,7 @@ from modules.database.database import Database
 from modules.administrateur.administrateur import AdministratorManager
 from modules.gestionBatiment.buildings_manager import Building, BuildingManager
 from modules.contraintes.contraintes import (
-    authenticate_admin, clear_screen, pause_system
+    authenticate_admin, clear_screen, pause_system,is_valid_email
 )
 
 
@@ -40,19 +40,19 @@ def menuChoice():
         clear_screen()
         menuProfessors()
         try :
-            admin_choice = int(input("\t" * 5 + "   Faites votre choix : "))
+            admin_choice = int(input("\tFaites votre choix : "))
             if 0 <= admin_choice <= 5:
                 return admin_choice
 
             clear_screen()
             print()
-            print("\t" * 5 + "Veillez Saisir un entier compris entre [0, 5]")
+            print("\tVeillez Saisir un entier compris entre [0, 5]")
             pause_system()
 
         except ValueError:
             clear_screen()
             print()
-            print("\t" * 5 + f"Erreur: Veillez Saisir un entier compris entre [0, 5] ")
+            print("\t"  + f"Erreur: Veillez Saisir un entier compris entre [0, 5] ")
             pause_system()          
 
 def is_exist_record():
@@ -81,13 +81,13 @@ def valide_coordinates_modify(code):
         :return: Nouvelle valeur validée du champ ou valeur actuelle si l'entrée est vide
         """
         while True:
-            print()
-            value = input("\t" * 5 + f"Entrez le {field_name} : ").strip()
+            print("\n")
+            value = input("\t" + f"Entrez le {field_name} : ").strip()
             if not value:
                 return current_value
             if value[:1].isalpha():
                 return value
-            print("\t" * 5, f"{field_name.capitalize()} devrait commencer par une lettre.")
+            print("\t", f"{field_name.capitalize()} devrait commencer par une lettre.")
             pause_system()
 
     def get_unique_value(field_name, current_value, index):
@@ -100,13 +100,14 @@ def valide_coordinates_modify(code):
         :return: Nouvelle valeur validée du champ ou valeur actuelle si l'entrée est inchangée
         """
         while True:
-            print()
+            print("\n")
             value = getattr(Coordinates, f"validate_{field_name}")()
             if value == current_value:
                 return value
             all_professors = data.read_records("professors")
             if any(items[index] == value for items in all_professors):
-                print("\t" * 5, f"Ce {field_name} est déjà attribué à un professeur.")
+                print("\n")
+                print("\t", f"Ce {field_name} est déjà attribué à un professeur.")
                 pause_system()
             else:
                 return value
@@ -118,15 +119,16 @@ def valide_coordinates_modify(code):
         :return: Code du cours validé
         """
         while True:
-            print()
-            course_code = input("\t" * 5 + "Entrez le code du cours : ").strip()
+            print("\n")
+            course_code = input("\t" + "Entrez le code du cours : ").strip()
             if not data.read_records("cours", condition="code_cours=?", params=(course_code,)):
                 print("\tCode cours non trouvé.")
                 pause_system()
                 continue
             if course_code != coordinates_find[0][6]:
+                print("\n")
                 if data.read_records("professors", condition="codeCours=?", params=(course_code,)):
-                    print("\t" * 5, "Un professeur est déjà assigné à ce cours.")
+                    print("\t", "Un professeur est déjà assigné à ce cours.")
                     pause_system()
                     continue
             return course_code
@@ -169,7 +171,16 @@ def modify_professor():
             {"CODE": coordinates_find[0][0], "NOM": coordinates_find[0][1],"PRENOM": coordinates_find[0][2], "SEXE": coordinates_find[0][3], "EMAIL": coordinates_find[0][4], "TELEPHONE": coordinates_find[0][5], "CODE_COURS": coordinates_find[0][6]}
         )
         afficher_affiches(data=data_list, valeur_vide="...")
-        print("\n", "\t" * 4, " SOS !!  Il est recommandé de ré-entrer tous les champs en entrant les mêmes infos si nécessaire : ")
+        print()
+        print("\n", "\t", " SOS !!  seulement les champs contenant un * sont aubligatoire. : ")
+        print()
+        print("\tnom")
+        print("\tprenom")
+        print("\tsexe *")
+        print("\tphone *")
+        print("\temail *")
+        print("\tcode cours *")
+        print()
         pause_system()
         params = valide_coordinates_modify(code)
         dB.update_record(table="professors", values=params, condition="code=?", condition_params=(code,))
@@ -177,7 +188,8 @@ def modify_professor():
 
     else:
         clear_screen()
-        print("\t" * 4, f"Pas de professeurs trouvés avec le code '{code}' dans la base !")
+        print()
+        print("\t", f"Pas de professeurs trouvés avec le code '{code}' dans la base !")
         pause_system()
 
 
@@ -199,7 +211,8 @@ def menuGestionProfesseur(DB_FILE, access):
                 professor.add_professor()
 
             else:
-                clear_screen()            
+                clear_screen()
+                print()          
                 print("\t" * 5,"Accès reservé aux Administrateurs.")
                 pause_system()
   
@@ -210,6 +223,7 @@ def menuGestionProfesseur(DB_FILE, access):
             clear_screen()
             isExist = is_exist_record()
             if isExist :
+                print()
                 code = coordinates.validate_input(" le code  du Professeur")
                 
                 coordinates_find = data.read_records("professors", condition="code=?", params=(code,))
@@ -225,11 +239,13 @@ def menuGestionProfesseur(DB_FILE, access):
                     pause_system()
                 else:
                     clear_screen()
-                    print("\t" * 4, f"Pas de professeurs trouve avec le code ' {code} ' dans la base !")
+                    print()
+                    print("\t", f"Pas de professeurs trouve avec le code ' {code} ' dans la base !")
                     pause_system()
             else:
                 clear_screen()
-                print("\t" * 4, "Pas de professeurs dans la base !")
+                print()
+                print("\t", "Pas de professeurs dans la base !")
                 pause_system()
 
         elif menuchoice == 4:
@@ -241,12 +257,14 @@ def menuGestionProfesseur(DB_FILE, access):
 
                 else:
                     clear_screen()
-                    print("\t" * 4, "Pas de professeurs dans la base !")
+                    print()
+                    print("\t", "Pas de professeurs dans la base !")
                     pause_system()
                 
             else:
-                clear_screen()            
-                print("\t" * 5,"Accès reservé aux Administrateurs.")
+                clear_screen()
+                print()          
+                print("\t","Accès reservé aux Administrateurs.")
                 pause_system()
 
         elif menuchoice == 5:
@@ -265,17 +283,17 @@ def menuGestionProfesseur(DB_FILE, access):
  
                     else:
                         clear_screen()
-                        print("\t" * 4, f"Pas de professeurs trouve avec le code '{code} ' dans la base !")
+                        print("\t", f"Pas de professeurs trouve avec le code '{code} ' dans la base !")
                         pause_system()
 
                 else:
                     clear_screen()
-                    print("\t" * 4, "Pas de professeurs dans la base !")
+                    print("\t", "Pas de professeurs dans la base !")
                     pause_system()
 
             else:
                 clear_screen()            
-                print("\t" * 5,"Accès reservé aux Administrateurs.")
+                print("\t","Accès reservé aux Administrateurs.")
                 pause_system()
 
         else:
