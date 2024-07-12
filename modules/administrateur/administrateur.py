@@ -1,6 +1,6 @@
 import hashlib
 
-from modules.contraintes.contraintes import clear_screen, pause_system
+from modules.contraintes.contraintes import afficher_affiches, clear_screen, pause_system
 from modules.database.database import Database
 
 
@@ -38,6 +38,8 @@ class AdministratorManager:
                 },
             )
             print(f"Administrateur {first_name} {last_name} ajouté avec succès.")
+            pause_system()
+            
         except Exception:
             print(f"Erreur lors de l'ajout de l'administrateur")
 
@@ -71,21 +73,20 @@ class AdministratorManager:
         Liste tous les administrateurs dans la base de données.
         """
         clear_screen()
-        try:
-            administrators = self.db.read_records(table="administrators")
-            if administrators:
-                print("\t"*5, "Liste des administrateurs :\n")
-                print("\t" * 2, "{:<15}{:<15}{:<15}{:<15}{:<30}".format("NOM","PRENOM","ADRESSE","TELEPHONE","EMAIL"))
-                print()
-                for admin in administrators:
-                    print("\t" * 2, "{:<15}{:<15}{:<15}{:<15}{:<30}".format(admin[2],admin[1],
-                    admin[3],admin[4],admin[5]))
-            else:
-                print("Aucun administrateur trouvé.")
-        except:
-            print(f"Erreur lors de la récupération des administrateurs.")
-        finally:
-            pause_system()
+        administrators = self.db.read_records(table="administrators")
+        if administrators:
+            print("\t"*5, "Liste des administrateurs :\n")
+            
+            data = []
+            for administrator in administrators:
+                data.append(
+                    {"NOM": administrator[2], "PRENOM": administrator[1],"ADRESSE": administrator[3], "TELEPHONE": administrator[4], "EMAIL": administrator[5]}
+                )
+            afficher_affiches(data=data, valeur_vide="...")
+
+        else:
+            print("Aucun administrateur trouvé.")
+        pause_system()
 
     def delete_administrator(self, email):
         """

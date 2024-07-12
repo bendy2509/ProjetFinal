@@ -2,7 +2,7 @@
 Importation des modules 
 """
 from time import sleep
-from modules.contraintes.contraintes import clear_screen, pause_system
+from modules.contraintes.contraintes import afficher_affiches, clear_screen, pause_system
 from modules.database.database import Database
 from modules.gestionSalle.roomManager import RoomManager
 
@@ -132,19 +132,45 @@ class BuildingManager(Database):
 
         :param name: Nom du bâtiment à supprimer.
         """
-        if self.is_building_exist(name):
-            building = self.read_records(table="buildings", condition="name=?", params=(name,))
-            self.delete_record("buildings", f"name='{name}'")
-
-            if len(building) > 0:
-                building_id = building[0][0]
-                # Supprimer toutes les salles associées au bâtiment
-                self.delete_record(table='rooms', condition=f"building_id={building_id}")
-            clear_screen()
-            print(f"Le bâtiment '{name}' a été supprimé avec succès.")
-        else:
+        if not self.is_building_exist(name):
             print("Ce bâtiment n'existe pas dans la base !")
+            pause_system()
+            return
+
+        # Obtenir les informations du bâtiment
+        building = self.read_records(table="buildings", condition="name=?", params=(name,))
+        if not building:
+            print(f"Aucune donnée trouvée pour le bâtiment '{name}'.")
+            pause_system()
+            return
+
+        building_id = building[0][0]
+
+        # Obtenir les salles associées au bâtiment
+        rooms = self.read_records(table="rooms", condition="building_id=?", params=(building_id,))
+        if rooms:
+            room_numbers = [room[0] for room in rooms]
+
+            # Vérifier s'il y a des horaires associés aux salles
+            schedules = self.read_records(table="schedules", condition=f"room_number IN ({','.join('?' * len(room_numbers))})", params=room_numbers)
+            if schedules:
+                self.delete_record(table="schedules", condition=f"room_number IN ({','.join('?' * len(room_numbers))})", params=room_numbers)
+                print("Les horaires associées ont été supprimées.")
+            else:
+                print("Aucune horaire associée trouvée.")
+
+            # Supprimer les salles
+            self.delete_record(table="rooms", condition="building_id=?", params=(building_id,))
+            print("Toutes les salles associées au bâtiment ont été supprimées.")
+        else:
+            print("Aucune salle trouvée dans le bâtiment.")
+
+        # Supprimer le bâtiment
+        self.delete_record("buildings", "name=?", params=(name,))
+        print(f"Le bâtiment '{name}' a été supprimé avec succès ainsi que toutes les salles et les horaires associées.")
+
         pause_system()
+
 
     def add_room_to_building(self, building_name, room):
         """
@@ -170,15 +196,13 @@ class BuildingManager(Database):
         clear_screen()
         print("\t" * 3, "Liste des bâtiments et les salles :")
         buildings = self.read_records("buildings")
-        print("\n")
-        print("\t" * 3, "-" * 35 )
         for building in buildings:
-            print("\t" * 3, "|", "{:<13}{:<2}{:15}".format("NOM BATIMENT", "|", "NOMBRE D'ETAGE  "),"|")
-            print("\t" * 3,"-" * 35 )
-            print("\t" * 3, "|", "    {:<9}{:<2}{:10}".format(building[1], "|", building[2]  ),"\t", "  |")
-            print("\t","=" * 68 )
-
-        #     print(f"Nom Bâtiment : {building[1]}, Nombre d'étages : {building[2]}")
+            data = []
+            data.append(
+                {"NOM BATIMENT": building[1], "NOMBRE D'ETAGE": building[2]}
+            )
+            afficher_affiches(data=data, valeur_vide="...")
+            print(f"\n", "\t" * 3, f"Les salles du batiment {building[1]} :")
             self.list_building_rooms(building[1])
         print("\n")
         pause_system()

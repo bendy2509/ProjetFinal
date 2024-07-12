@@ -49,7 +49,7 @@ def menuGestionSalle(db_file, invite):
         elif choice == '3':
             if invite:
                 room_number = input("Numéro de la salle à supprimer : ")
-                if building_name.strip() and room_number.strip():
+                if room_number.strip():
                     room_manager.delete_room_from_building(room_number)
                 else:
                     print("Le numéro de la salle ne peut pas être vide.")

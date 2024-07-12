@@ -78,15 +78,29 @@ class Database:
                     codeCours TEXT UNIQUE
             )''')
             cursor.execute('''
-                    CREATE TABLE IF NOT EXISTS cours (
+                CREATE TABLE IF NOT EXISTS cours (
                     code_cours TEXT PRIMARY KEY,
                     nom TEXT,
-                    debut INTEGER,
-                    fin INTEGER,
-                    session INTEGER,
-                    annee INTEGER
-            )''')
-
+                    faculte TEXT DEFAULT NULL,
+                    teacher_code TEXT DEFAULT NULL,
+                    duration INTEGER NOT NULL,
+                    session INTEGER NOT NULL,
+                    annee INTEGER NOT NULL,
+                    FOREIGN KEY (teacher_code) REFERENCES professors(code)
+                )
+            ''')
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS schedules(
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    room_number TEXT NOT NULL,
+                    jour TEXT NOT NULL,
+                    debut INTEGER NOT NULL,
+                    fin INTEGER NOT NULL,
+                    cours_id TEXT NOT NULL,
+                    FOREIGN KEY (room_number) REFERENCES rooms(number),
+                    FOREIGN KEY (cours_id) REFERENCES cours(code_cours)
+                )
+            """)
             self.conn.commit()
             print("Tables created successfully")
 
@@ -117,15 +131,11 @@ class Database:
         placeholders = ', '.join(['?' for _ in values])
         query = f"INSERT OR IGNORE INTO {table} ({columns}) VALUES ({placeholders})"
         affected_rows = self.execute_query(query, list(values.values()))
-        clear_screen()
-        print('\t' * 4 + "Request ok !")
-
+        
         if affected_rows == 0:
             clear_screen()
             print("\t" * 4 + "Les données que vous essayez d'insérer existent déjà dans la base de données.")
             pause_system()
-
-        pause_system()
 
     def read_records(self, table, columns=None, condition=None, params=None):
         """
@@ -188,13 +198,11 @@ class Database:
             self.execute_query(query, params)
         else:
             self.execute_query(query)
-        clear_screen()
-        print('\t' * 4 + "Request ok !")
+        print('\t' * 4 + "Suppression réussie !")
 
     def __del__(self):
         """
         Ferme la connexion à la base de données lors de la destruction de l'objet.
         """
-        clear_screen()
         if self.conn:
             self.conn.close()
