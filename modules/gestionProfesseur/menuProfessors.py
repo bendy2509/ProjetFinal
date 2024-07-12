@@ -120,7 +120,10 @@ def valide_coordinates_modify(code):
         """
         while True:
             print("\n")
-            course_code = input("\t" + "Entrez le code du cours : ").strip()
+            course_code = input("\t" + "Entrez le code du cours ou taper 'quit' pour quiter la modification : ").strip()
+            if course_code.lower() == 'quit':
+                break
+
             if not data.read_records("cours", condition="code_cours=?", params=(course_code,)):
                 print("\tCode cours non trouvé.")
                 pause_system()
