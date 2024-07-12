@@ -198,13 +198,11 @@ class Database:
             self.execute_query(query, params)
         else:
             self.execute_query(query)
-        clear_screen()
-        print('\t' * 4 + "Request ok !")
+        print('\t' * 4 + "Suppression réussie !")
 
     def __del__(self):
         """
         Ferme la connexion à la base de données lors de la destruction de l'objet.
         """
-        clear_screen()
         if self.conn:
             self.conn.close()

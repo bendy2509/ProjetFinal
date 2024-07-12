@@ -153,3 +153,36 @@ class Schedule_Manager:
         )
         return bool(horaires)
 
+    def supprimer_horaire_par_salle(self, salle):
+        """
+        Supprime tous les horaires pour une salle donnée.
+
+        :param salle: Numéro ou identifiant de la salle dont on veut supprimer les horaires.
+        """
+        try:
+            self.db_manager.delete_record(
+                table="schedules",
+                condition="room_number=?",
+                params=(salle,)
+            )
+            print(f"Tous les horaires pour la salle {salle} ont été supprimés.")
+        except Exception as e:
+            print(f"Erreur lors de la suppression des horaires pour la salle {salle}: {e}")
+        pause_system()
+
+    def supprimer_horaire_par_id(self, horaire_id):
+        """
+        Supprime un horaire en fonction de son identifiant.
+
+        :param horaire_id: Identifiant de l'horaire à supprimer.
+        """
+        try:
+            self.db_manager.delete_record(
+                table="schedules",
+                condition="id=?",
+                params=(horaire_id,)
+            )
+            print(f"L'horaire avec l'identifiant {horaire_id} a été supprimé.")
+        except Exception as e:
+            print(f"Erreur lors de la suppression de l'horaire avec l'identifiant {horaire_id}: {e}")
+        pause_system()
