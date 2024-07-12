@@ -68,7 +68,7 @@ def get_int_user(prompt):
             return value
         except ValueError:
             clear_screen()
-            print("\t" * 5 + "Veuillez entrer un nombre entier valide.")
+            print("\t" * 5 + "Veuillez entrer un nombre entier valide.\n")
             pause_system()
             clear_screen()
 
@@ -84,7 +84,7 @@ def check_building_name(name):
         return True
     else:
         clear_screen()
-        print("\t" * 5 + "Mauvais choix. Veuillez entrer A, B, C, D")
+        print("\t" * 5 + "Mauvais choix. Veuillez entrer A, B, C, D\n")
         pause_system()
         clear_screen()
         return False
@@ -99,7 +99,7 @@ def validRoomFloor(floor):
     if 1 <= floor <= 3:
         return True
     clear_screen()
-    print("\t" * 5 + "Mauvais choix. Veuillez entrer 1, 2 ou 3 pour l'étage.")
+    print("\t" * 5 + "Mauvais choix. Veuillez entrer 1, 2 ou 3 pour l'étage.\n")
     pause_system()
     clear_screen()
     return False
@@ -141,7 +141,7 @@ def is_valid_room_type(room_type):
     valid_room_types = ["salle de cours", "salle virtuelle", "labo"]
     if room_type.lower() not in valid_room_types:
         clear_screen()
-        print("\t" * 5 + "Vous devez choisir entre 'salle de cours', 'salle virtuelle', 'labo'")
+        print("\t" * 5 + "Vous devez choisir entre 'salle de cours', 'salle virtuelle', 'labo'\n")
         pause_system()
         return False
     return True
@@ -177,7 +177,7 @@ def saisir_nom_cours():
             return None
         if nom and len(nom) >= 3:
             return nom.capitalize()
-        print("Erreur : Le nom du cours ne peut pas être vide et doit contenir au moins 3 caractères.")
+        print("Erreur : Le nom du cours ne peut pas être vide et doit contenir au moins 3 caractères.\n")
 
 def saisir_faculte():
     while True:
@@ -186,7 +186,7 @@ def saisir_faculte():
             return None
         if fac and len(fac) >= 3:
             return fac.capitalize()
-        print("Erreur : Le nom de la fac ne peut pas être vide et doit contenir au moins 3 caractères.")
+        print("Erreur : Le nom de la fac ne peut pas être vide et doit contenir au moins 3 caractères.\n")
 
 def saisir_duration(message):
     """Saisit et valide une duration (entier entre 0 et 23)."""
@@ -198,9 +198,9 @@ def saisir_duration(message):
             duration = int(duration)
             if 1 <= duration <= 5:
                 return duration
-            print("Erreur : La durée doit être comprise entre 1 et 5.")
+            print("Erreur : La durée doit être comprise entre 1 et 5.\n")
         except ValueError:
-            print("Erreur : Veuillez entrer une valeur entière pour la durée.")
+            print("Erreur : Veuillez entrer une valeur entière pour la durée.\n")
 
 def saisir_session():
     """Saisit et valide la session (1 ou 2)."""
@@ -212,9 +212,9 @@ def saisir_session():
             session = int(session)
             if session in [1, 2]:
                 return session
-            print("Erreur : La session doit être 1 ou 2.")
+            print("Erreur : La session doit être 1 ou 2.\n")
         except ValueError:
-            print("Erreur : Veuillez entrer une valeur entière pour la session.")
+            print("Erreur : Veuillez entrer une valeur entière pour la session.\n")
 
 def saisir_annee():
     """Saisit et valide l'année académique (entre 2000 et l'année actuelle)."""
@@ -227,9 +227,9 @@ def saisir_annee():
             current_year = datetime.now().year
             if annee >= current_year:
                 return annee
-            print(f"Erreur : L'année académique doit être plus grande ou égale à {current_year}.")
+            print(f"Erreur : L'année académique doit être plus grande ou égale à {current_year}.\n")
         except ValueError:
-            print("Erreur : Veuillez entrer une valeur entière pour l'année académique.")
+            print("Erreur : Veuillez entrer une valeur entière pour l'année académique.\n")
 
 def afficher_ligne(donnees, longueurs_colonnes, valeurs_vide=None):
     """
@@ -254,7 +254,7 @@ def afficher_affiches(data, valeur_vide="...."):
     :param valeur_vide: Valeur à utiliser si une valeur est vide.
     """
     if not data:
-        print("Aucune donnée à afficher.")
+        print("Aucune donnée à afficher.\n")
         return
 
     # Extraire les clés pour les utiliser comme en-têtes de colonnes

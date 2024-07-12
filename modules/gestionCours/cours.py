@@ -27,8 +27,7 @@ class Course_Manager:
     def enregistrer_cours(self):
         """Enregistre un nouveau cours dans la base de données."""
         clear_screen()
-        print("\n", "=" * 10 , "Enregistrement d'un Cours" , "=" * 10 ,"\n")
-        
+        print("\n", "=" * 20 , "Enregistrement d'un Cours" , "=" * 20 ,"\n")
         nom = saisir_nom_cours()
         if nom is None:
             return
@@ -44,7 +43,7 @@ class Course_Manager:
         session = saisir_session()
         if session is None:
             return
-        
+
         annee = saisir_annee()
         if annee is None:
             return
@@ -66,7 +65,7 @@ class Course_Manager:
             )
             print("Cours enregistré avec succès.")
         else:
-            print("Erreur, un cours avec code existe deja dans la base.")
+            print("Erreur, un cours avec code existe deja dans la base.\n")
         pause_system()
 
     def cours_assignes_ou_non(self, assigner):
@@ -83,11 +82,13 @@ class Course_Manager:
         for cour in cours:
             if not cour[3] and not assigner:
                 data.append(
-                    {"CODE COURS": cour[0], "NOM DU COURS": cour[1],"FACULTE": cour[2], "PROFESSEUR": cour[3], "DUREE": cour[4], "SESSION": cour[5], "ANNEE": cour[6]}
+                    {"CODE COURS": cour[0], "NOM DU COURS": cour[1],"FACULTE": cour[2], \
+                     "PROFESSEUR": cour[3], "DUREE": cour[4], "SESSION": cour[5], "ANNEE": cour[6]}
                 )
             if cour[3] and assigner:
                 data.append(
-                    {"CODE COURS": cour[0], "NOM DU COURS": cour[1],"FACULTE": cour[2], "PROFESSEUR": cour[3], "DUREE": cour[4], "SESSION": cour[5], "ANNEE": cour[6]}
+                    {"CODE COURS": cour[0], "NOM DU COURS": cour[1],"FACULTE": cour[2], \
+                     "PROFESSEUR": cour[3], "DUREE": cour[4], "SESSION": cour[5], "ANNEE": cour[6]}
                 )
         afficher_affiches(data=data, valeur_vide="...")
         pause_system()
@@ -106,7 +107,8 @@ class Course_Manager:
         data = []
         for cour in cours:
             data.append(
-                {"CODE COURS": cour[0], "NOM DU COURS": cour[1],"FACULTE": cour[2], "PROFESSEUR": cour[3], "DUREE": cour[4], "SESSION": cour[5], "ANNEE": cour[6]}
+                {"CODE COURS": cour[0], "NOM DU COURS": cour[1],"FACULTE": cour[2], \
+                 "PROFESSEUR": cour[3], "DUREE": cour[4], "SESSION": cour[5], "ANNEE": cour[6]}
             )
         afficher_affiches(data=data, valeur_vide="...")
 
@@ -127,7 +129,8 @@ class Course_Manager:
         data = []
         for cour in cours:
             data.append(
-                {"CODE COURS": cour[0], "NOM DU COURS": cour[1],"FACULTE": cour[2], "PROFESSEUR": cour[3], "DUREE": cour[4], "SESSION": cour[5], "ANNEE": cour[6]}
+                {"CODE COURS": cour[0], "NOM DU COURS": cour[1],"FACULTE": cour[2], \
+                 "PROFESSEUR": cour[3], "DUREE": cour[4], "SESSION": cour[5], "ANNEE": cour[6]}
             )
         afficher_affiches(data=data, valeur_vide="...")
 
@@ -141,6 +144,7 @@ class Course_Manager:
         print("0. Annuler ou une autre touche pour quitter")
 
         choix = input("Votre choix : ")
+        clear_screen()
         nom, fac, prof, duration, session, annee = cours[0][1:7]
 
         modificateurs = {
@@ -171,7 +175,7 @@ class Course_Manager:
                 elif choix == '5':
                     annee = result
         else:
-            print("Modification annulée.")
+            print("Modification annulée.\n")
             return
         
         if nom is None:
@@ -222,12 +226,14 @@ class Course_Manager:
         clear_screen()
         print("\n", "=" * 10 , "Rechercher un Cours", "=" * 10 ,"\n")
         code_cours = input("Entrer le code du cours à rechercher : ")
-        cours = self.db_manager.read_records(table="cours", condition="code_cours=?", params=(code_cours,))
+        cours = self.db_manager.read_records(table="cours", \
+        condition="code_cours=?", params=(code_cours,))
         if cours:
             data = []
             for cour in cours:
                 data.append(
-                    {"CODE COURS": cour[0], "NOM DU COURS": cour[1],"FACULTE": cour[2], "PROFESSEUR": cour[3], "DUREE": cour[4], "SESSION": cour[5], "ANNEE": cour[6]}
+                    {"CODE COURS": cour[0], "NOM DU COURS": cour[1],"FACULTE": cour[2], \
+                     "PROFESSEUR": cour[3], "DUREE": cour[4], "SESSION": cour[5], "ANNEE": cour[6]}
                 )
             afficher_affiches(data=data, valeur_vide="...")
         else:
@@ -282,5 +288,6 @@ class Course_Manager:
 
     def verifier_existence_cours(self, code_cours):
         """Vérifie si un cours avec le code_cours existe déjà."""
-        cours = self.db_manager.read_records(table="cours", condition="code_cours = ?", params=(code_cours,))
+        cours = self.db_manager.read_records(table="cours", \
+        condition="code_cours = ?", params=(code_cours,))
         return bool(cours)
