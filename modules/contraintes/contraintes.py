@@ -34,16 +34,19 @@ def is_valid_phone(phone):
     """
     Vérifie si le numéro de téléphone est valide selon les formats spécifiés.
     """
-    expression = r"^((\+)|(011))?[\s-]?((509)|(\(509\)))?[\s-]?(3[1-9]|4[0-4]|4[6-9]|5[5])[\s-]?([0-9]{2})[\s-]?([0-9]{2})[\s-]?[0-9]{2}$"
+    expression = r"^((\+)|(011))?[\s-]?((509)|(\(509\)))?[\s-]?(3[1-9]|4[0-4]|4[6-9]\
+        |5[5])[\s-]?([0-9]{2})[\s-]?([0-9]{2})[\s-]?[0-9]{2}$"
     if not re.fullmatch(expression, phone):
         return False
     return True
 
 def is_valid_password(password):
     """
-    Vérifie si le mot de passe est valide (au moins 8 caractères, une majuscule, une minuscule et un chiffre).
+    Vérifie si le mot de passe est valide (au moins 8 caractères, \
+        une majuscule, une minuscule et un chiffre).
     """
-    return len(password) >= 8 and re.search(r"[A-Z]", password) and re.search(r"[a-z]", password) and re.search(r"[0-9]", password)
+    return len(password) >= 8 and re.search(r"[A-Z]", password) \
+        and re.search(r"[a-z]", password) and re.search(r"[0-9]", password)
 
 def get_validated_input(prompt, validation_func, error_message):
     """
@@ -150,7 +153,8 @@ def authenticate_admin(admin_manager):
     """
     Authentifie un administrateur en demandant les informations d'authentification.
 
-    :param admin_manager: Instance de AdminManager pour vérifier les informations d'authentification.
+    :param admin_manager: Instance de AdminManager pour vérifier \
+        les informations d'authentification.
     :return: True si l'authentification réussit, False sinon.
     """
     clear_screen()
@@ -177,16 +181,19 @@ def saisir_nom_cours():
             return None
         if nom and len(nom) >= 3:
             return nom.capitalize()
-        print("Erreur : Le nom du cours ne peut pas être vide et doit contenir au moins 3 caractères.\n")
+        print("Erreur : Le nom du cours ne peut pas être vide \
+              et doit contenir au moins 3 caractères.\n")
 
 def saisir_faculte():
     while True:
-        fac = input("Entrer la faculté pour laquelle vous enregistrez le cours (q pour quitter): ").strip()
+        fac = input("Entrer la faculté pour laquelle vous \
+                    enregistrez le cours (q pour quitter): ").strip()
         if fac == 'q':
             return None
         if fac and len(fac) >= 3:
             return fac.capitalize()
-        print("Erreur : Le nom de la fac ne peut pas être vide et doit contenir au moins 3 caractères.\n")
+        print("Erreur : Le nom de la fac ne peut pas être vide \
+              et doit contenir au moins 3 caractères.\n")
 
 def saisir_duration(message):
     """Saisit et valide une duration (entier entre 0 et 23)."""
@@ -213,7 +220,6 @@ def saisir_debut(message):
 
             if 8 <= duration <= 16:
                 return duration
-            
             print("Erreur : Le début doit être comprise entre 8h et 16h.")
         except ValueError:
             print("Erreur : Veuillez entrer une valeur entière pour le début.")
@@ -249,7 +255,6 @@ def saisir_annee():
 
 def saisir_jour():
     jours_valides = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"]
-    
     while True:
         jour = input("Jour (lundi, mardi, etc.) : ").strip().lower()
         if jour in jours_valides:
@@ -287,20 +292,18 @@ def afficher_affiches(data, valeur_vide="...."):
 
     # Extraire les clés pour les utiliser comme en-têtes de colonnes
     headers = list(data[0].keys())
-    
     # Calculer la largeur de chaque colonne pour un affichage aligné
     col_widths = [max(len(str(row[key])) for row in data) for key in headers]
     col_widths = [max(width, len(header)) for width, header in zip(col_widths, headers)]
 
     # Afficher l'en-tête du tableau
-    header_row = "| " + " | ".join(f"{header:<{col_widths[i]}}" for i, header in enumerate(headers)) + " |"
+    header_row = "| " + " | ".join(f"{header:<{col_widths[i]}}" \
+                                   for i, header in enumerate(headers)) + " |"
     separator = "-" * len(header_row)
-    
     print("\n")
     print("\t" * 3, separator)
     print("\t" * 3, header_row)
     print("\t" * 3, separator)
-    
     # Afficher chaque ligne de données
     for row in data:
         afficher_ligne(list(row.values()), col_widths, valeur_vide)
