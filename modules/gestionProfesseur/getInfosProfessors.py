@@ -6,7 +6,7 @@ import os
 import random
 
 from modules.database.database import Database
-from modules.contraintes.contraintes import clear_screen, pause_system
+from modules.contraintes.contraintes import clear_screen, pause_system,is_valid_email
 
 class InvalidInputError(Exception):
     """Classe d'exception personnalisée pour les entrées invalides."""
@@ -76,17 +76,17 @@ class Coordinates:
         """
         while True:
             try:
-                value = input("\t" * 5 + f"Entrez {field_name}: ")
+                value = input("\t" + f"Entrez {field_name}: ")
                 while value == "":
                     clear_screen()
-                    print("\t" * 5 + f"Erreur : {field_name} ne doit pas être vide.")
+                    print("\t" + f"Erreur : {field_name} ne doit pas être vide.")
                     pause_system()
                     clear_screen()
-                    value = input("\t" * 5 + f"Entrez {field_name}: ")
+                    value = input("\t" + f"Entrez {field_name}: ")
 
                 return value
             except InvalidInputError as e:
-                print("\t" * 5 + f"Erreur : {field_name} ne doit pas être vide.")
+                print("\t" + f"Erreur : {field_name} ne doit pas être vide.")
                 pause_system()
 
     @staticmethod
@@ -96,16 +96,16 @@ class Coordinates:
             value = Coordinates.validate_input(field)
             if value[:1].isalpha():
                 return value
-            print("\t" * 5 + f'Erreur : Le {field} devrait commencer par une lettre.')
+            print("\t" + f'Erreur : Le {field} devrait commencer par une lettre.')
 
     @staticmethod
     def validate_gender():
         """Prompts the user to choose a gender ('F' or 'M')."""
-        print("\t" * 5 + "Veuillez faire le choix du sexe ['F' ou 'M']")
-        gender = input("\t" * 5 + "Le sexe : ").strip().upper()
+        print("\t" + "Veuillez faire le choix du sexe ['F' ou 'M']")
+        gender = input("\t" + "Le sexe : ").strip().upper()
         while gender not in ("F", "M"):
-            print("\t" * 5 + "Veuillez choisir correctement le sexe ['F' ou 'M']")
-            gender = input("\t" * 5 + "Le sexe : ").strip().upper()
+            print("\t" + "Veuillez choisir correctement le sexe ['F' ou 'M']")
+            gender = input("\t" + "Le sexe : ").strip().upper()
         return gender
 
     @staticmethod
@@ -113,22 +113,27 @@ class Coordinates:
         """Prompts the user to input a phone number and ensures it contains only digits."""
         while True:
             try:
-                phone = input("\t" * 5 + "Entrez le téléphone : ").strip()
+                phone = input("\t" + "Entrez le téléphone : ").strip()
                 if phone[:4] == "+509" or phone[:3] == "509" or phone[:5] == "(509)" or phone[:6] == "+(509)":
                     if phone[1:].isdigit() or phone[6:].isdigit() :
                         return phone
                 int(phone)
                 return phone
             except ValueError:
-                print("\t" * 5 + "Veuillez entrer un numéro correct contenant uniquement des chiffres.")
+                print("\t" + "Veuillez entrer un numéro correct contenant uniquement des chiffres.")
 
     @staticmethod
     def validate_phone():
         """Validates a phone number using a regular expression."""
-        expression = r"^((\+)|(011))?[\s-]?((509)|(\(509\)))?[\s-]?(3[1-9]|4[0-4]|4[6-9]|5[5])[\s-]?([0-9]{2})[\s-]?([0-9]{2})[\s-]?[0-9]{2}$"
+        # Updated regex to include '22222222' format
+        expression = (
+            r"^((\+)|(011))?[\s-]?((509)|(\(509\)))?[\s-]?"
+            r"([2-9]{1}[0-9]{7}|(3[1-9]|4[0-4]|4[6-9]|5[5])[\s-]?"
+            r"([0-9]{2})[\s-]?([0-9]{2})[\s-]?[0-9]{2})$"
+        )
         phone = Coordinates.prompt_for_phone()
         while not re.fullmatch(expression, phone):
-            print("\t" * 5 + "Veuillez entrer un format de numéro correct.")
+            print("\t" + "Veuillez entrer un format de numéro correct.")
             phone = Coordinates.prompt_for_phone()
         return phone
 
@@ -138,7 +143,7 @@ class Coordinates:
         """Valide le code du cours."""
         data = Database(DB_FILE)
         clear_screen()
-        course_code = input("\t" * 5 + "Entrez le code du cours : ").strip()
+        course_code = input("\t" + "Entrez le code du cours : ").strip()
 
         # Vérifier l'existence du cours
         cours_existe = data.read_records(
@@ -147,7 +152,7 @@ class Coordinates:
             params=(course_code,)
         )
         if not cours_existe:
-            print("\t" * 5 + "Erreur : Code cours non trouvé.")
+            print("\t" + "Erreur : Code cours non trouvé.")
             pause_system()
             return None
 
@@ -157,7 +162,7 @@ class Coordinates:
             for items in course_assigned:
                  if items[6] == course_code:
                     clear_screen()
-                    print("\t" * 5, "Erreur : Un professeur est déjà assigné à ce cours.")
+                    print("\t", "Erreur : Un professeur est déjà assigné à ce cours.")
                     pause_system()
                     return None
 
@@ -167,11 +172,15 @@ class Coordinates:
     @staticmethod
     def validate_email():
         """Validates an email address using a regular expression."""
-        regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
-        email = input("\t" * 5 + "Entrez l'adresse email : ").strip()
+        # Updated regex to handle emails with subdomains like student.ueh.edu.ht
+        regex = (
+            r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+'
+            r'(\.[a-zA-Z]{2,})?$'
+        )
+        email = input("\t" + "Entrez l'adresse email : ").strip()
         while not re.match(regex, email):
-            print("\t" * 5 + "Veuillez entrer une adresse email correcte.")
-            email = input("\t" * 5 + "Entrez l'adresse email : ").strip()
+            print("\t" + "Veuillez entrer une adresse email correcte.")
+            email = input("\t" + "Entrez l'adresse email : ").strip()
         return email
 
     @staticmethod
@@ -204,6 +213,7 @@ class Coordinates:
                     "codeCours": self._course_code
                 }
 
-            Coordinates.clear_screen()
-            print("\t" * 4, "Le cours doit exister et ne doit être attribué à aucun professeur pour pouvoir passer à l'étape suivante.")
+            clear_screen()
+            print("\n")
+            print("\t", "Le cours doit exister et ne doit être attribué à aucun professeur pour pouvoir passer à l'étape suivante.")
             pause_system()

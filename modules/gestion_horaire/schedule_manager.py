@@ -1,7 +1,7 @@
 """
 Modules pour la gestion d'horaires des salles
 """
-from modules.contraintes.contraintes import clear_screen, pause_system, saisir_duration
+from modules.contraintes.contraintes import afficher_affiches, clear_screen, pause_system, saisir_debut, saisir_duration, saisir_jour
 from modules.database.database import Database
 from modules.gestionCours.menu_gestion_cours import Course_Manager
 from modules.gestionSalle.roomManager import RoomManager
@@ -24,8 +24,18 @@ class Schedule_Manager:
             pause_system()
             return
         
-        jour = input("Jour (lundi, mardi, etc.) : ").lower()
-        debut = saisir_duration("Durée (ex : 3) : ")
+        jour = saisir_jour()
+        if jour is None:
+            print("Vous venez d'annuler !")
+            pause_system()
+            return
+        
+        debut = saisir_debut("Heure de debut (de 8h a 16h) : ")
+        if debut is None:
+            print("Vous venez d'annuler !")
+            pause_system()
+            return
+        
         code_cours = input("Code du cours : ")
 
         if not self.course_manager.verifier_existence_cours(code_cours):
@@ -38,7 +48,7 @@ class Schedule_Manager:
             condition="code_cours=?",
             params=(code_cours,)
         )
-        fin = debut + cours[0][3]
+        fin = debut + cours[0][4]
 
         if self.verifier_disponibilite(salle, jour, debut, fin):
             print(f"La salle {salle} est occupée de {debut}h00 à {fin}h00 le {jour}.")
@@ -56,6 +66,7 @@ class Schedule_Manager:
             }
         )
         print("Horaire ajouté avec succès.")
+        pause_system()
 
     def afficher_horaire(self, salle):
         """
@@ -63,9 +74,8 @@ class Schedule_Manager:
 
         :param salle: Numéro ou identifiant de la salle dont on veut afficher l'horaire.
         """
-        jours = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"]
-        heures = range(8, 19)  # Horaires de 8h à 18h
-        horaire = {heure: {jour: "" for jour in jours} for heure in heures}
+        clear_screen()
+        print("\t" * 5, f"Horaire de la salle {salle} :")
 
         horaires = self.db_manager.read_records(
             table="schedules",
@@ -73,29 +83,40 @@ class Schedule_Manager:
             params=(salle,)
         )
 
+        if not horaires:
+            print("Aucune horaire trouvée pour cette salle.")
+            pause_system()
+            return
+
+        jours = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"]
+        heures = range(8, 17)  # Horaires de 8h à 16h
+        horaire = {heure: {jour: "..." for jour in jours} for heure in heures}
+
         # Remplissage de l'horaire avec les données de la base de données
         for entry in horaires:
-            jour, debut, fin, cours = entry[2], entry[3], entry[4], entry[5]
+            nom_cours = self.db_manager.read_records(
+                table='cours',
+                columns=['nom'],
+                condition="code_cours=?",
+                params=(entry[5],)
+            )
+            jour, debut, fin, cours = entry[2].lower(), entry[3], entry[4], nom_cours[0][0]
             for heure in range(debut, fin):
                 horaire[heure][jour] = cours
 
-        # Affichage de l'horaire
-        clear_screen()
-        if len(horaires) > 0:
-            print("\n", "*" * 10 , f"Horaire de la salle {salle}" , "*" * 10 ,"\n")
-            print("Heure | " + "\t | ".join(jours))
-            print("-" * 50)
-            for heure in heures:
-                cours_par_jour = [horaire[heure][jour] for jour in jours]
-                print(f"{heure:02d}h  | " + "\t | ".join(cours_par_jour))
+        data = []
+        for heure in heures:
+            ligne = {"Heure": f"{heure:02d}h"}
+            ligne.update({jour.capitalize(): horaire[heure][jour] for jour in jours})
+            data.append(ligne)
 
-            print("\n" + "-" * 50)
-            print("Légende :")
-            print("- Heures indiquées sans cours sont disponibles.")
-            print("- Cours indiqués sont occupés à cette heure.")
-        else:
-            print("Aucune horaire trouvée.")
-        
+        # Utiliser afficher_affiches pour afficher les horaires
+        afficher_affiches(data=data, valeur_vide="...")
+
+        print("Légende :")
+        print("- Heures indiquées sans cours sont disponibles.")
+        print("- Cours indiqués sont occupés à cette heure.")
+
         pause_system()
 
     def verifier_disponibilite(self, salle, jour, debut, fin):
@@ -132,3 +153,36 @@ class Schedule_Manager:
         )
         return bool(horaires)
 
+    def supprimer_horaire_par_salle(self, salle):
+        """
+        Supprime tous les horaires pour une salle donnée.
+
+        :param salle: Numéro ou identifiant de la salle dont on veut supprimer les horaires.
+        """
+        try:
+            self.db_manager.delete_record(
+                table="schedules",
+                condition="room_number=?",
+                params=(salle,)
+            )
+            print(f"Tous les horaires pour la salle {salle} ont été supprimés.")
+        except Exception as e:
+            print(f"Erreur lors de la suppression des horaires pour la salle {salle}: {e}")
+        pause_system()
+
+    def supprimer_horaire_par_id(self, horaire_id):
+        """
+        Supprime un horaire en fonction de son identifiant.
+
+        :param horaire_id: Identifiant de l'horaire à supprimer.
+        """
+        try:
+            self.db_manager.delete_record(
+                table="schedules",
+                condition="id=?",
+                params=(horaire_id,)
+            )
+            print(f"L'horaire avec l'identifiant {horaire_id} a été supprimé.")
+        except Exception as e:
+            print(f"Erreur lors de la suppression de l'horaire avec l'identifiant {horaire_id}: {e}")
+        pause_system()

@@ -271,8 +271,8 @@ class Course_Manager:
             pause_system()
             return
         
-            # Vérifier si un professeur est déjà assigné à ce cours
-        if cours_existe[0]["teacher_code"]:
+        # Vérifier si un professeur est déjà assigné à ce cours
+        if cours_existe[0][3]:
             print("Erreur : Un professeur est déjà assigné à ce cours.")
             pause_system()
             return

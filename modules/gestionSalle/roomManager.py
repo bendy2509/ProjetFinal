@@ -127,6 +127,14 @@ class RoomManager:
                 pause_system()
                 return
 
+            # Vérifier s'il y a des horaires associés aux salles
+            schedules = self.db.read_records(table="schedules", condition=f"room_number=?", params=(room[0][0],))
+            if schedules:
+                self.db.delete_record(table="schedules", condition=f"room_number=?", params=(room[0][0],))
+                print("Les horaires associées ont été supprimées.")
+            else:
+                print("Aucune horaire associée trouvée.")
+
             # Supprimer la salle
             self.db.delete_record(table="rooms", condition="number=?", params=(room[0][0],))
             print(f"La salle '{room_number}' a été supprimée avec succès.")
