@@ -1,4 +1,4 @@
-# import os
+#import os
 
 # Ajouter le chemin du projet au sys.path
 # sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -30,7 +30,7 @@ def display_main_menu():
     print("|    | |     | |__| | | |     | |                 |")
     print("|    | |     |  __  | | |     | |                 |")
     print("|    | |___  | |  | | | |___  | |____             |")
-    print("|    |_____| |_|  |_|  \\____| |______|            |")
+    print("|    |_____| |_|  |_| \ ____| |_____ |            |")
     print("|                                                 |")
     print("|                      DSI-CHCL                   |")
     print("===================================================")

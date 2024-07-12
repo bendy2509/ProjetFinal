@@ -22,7 +22,7 @@ def clear_screen():
 
 def pause_system():
     """Met le système en pause en attendant une action de l'utilisateur."""
-    os.system('pause' if os.name == 'nt' else input("\t" * 5 + "Appuyez sur Entrée pour continuer..."))
+    os.system('pause' if os.name == 'nt' else input("\t" + "Appuyez sur Entrée pour continuer..."))
 
 def is_valid_email(email):
     """
