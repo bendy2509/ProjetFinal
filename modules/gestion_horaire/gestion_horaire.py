@@ -1,38 +1,33 @@
-# Importez les modules nécessaires ici
+"""Gestion Horaire"""
 
 from modules.gestion_horaire.schedule_manager import Schedule_Manager
-from modules.contraintes.contraintes import (
-    clear_screen,
-    get_int_user,
-    header_design,
-    pause_system,
-    saisir_duration
-)
+from modules.contraintes.contraintes import clear_screen, \
+    get_int_user, header_design, pause_system, saisir_duration
 
 
 def menu_horaires():
+    """Affichage Menu Horaire"""
     clear_screen()
     header_design()
-    print("\t" * 4 + "===================================================")
-    print("\t" * 4 + "|                                                 |")
-    print("\t" * 4 + "|                 Menu Horaires                   |")
-    print("\t" * 4 + "|                                                 |")
-    print("\t" * 4 + "===================================================")
-    print("\t" * 4 + "|  1. Enregistrer une horaire (Admin)              |")
-    print("\t" * 4 + "|  2. Afficher l'horaire d'une salle              |")
-    print("\t" * 4 + "|  3. Vérifier la disponibilité d'une salle       |")
-    print("\t" * 4 + "|  4. Supprimer horaires par salle (Admin)        |")
-    print("\t" * 4 + "|  5. Supprimer horaire par ID  (Admin)           |")
-    print("\t" * 4 + "|  0. Retour au menu principal                    |")
-    print("\t" * 4 + "===================================================")
-    
-    return input("\t" * 5 + "   Faites votre choix : ")
+    print("===================================================")
+    print("|                                                 |")
+    print("|                 Menu Horaires                   |")
+    print("|                                                 |")
+    print("===================================================")
+    print("|  1. Enregistrer une horaire (Admin)              |")
+    print("|  2. Afficher l'horaire d'une salle              |")
+    print("|  3. Vérifier la disponibilité d'une salle       |")
+    print("|  4. Supprimer horaires par salle (Admin)        |")
+    print("|  5. Supprimer horaire par ID  (Admin)           |")
+    print("|  0. Retour au menu principal                    |")
+    print("===================================================")
+    return input("   Faites votre choix : ")
 
 
 def menu_gestion_horaires(db_file, invite):
+    """Menu Gestion Horaires"""
     horaire_manager = Schedule_Manager(db_file)
     clear_screen()
-    
     while True:
         choice = menu_horaires()
         if choice == '1':
@@ -71,4 +66,3 @@ def menu_gestion_horaires(db_file, invite):
         else:
             print("Erreur: Veuillez saisir un entier compris entre [0, 5]")
             pause_system()
-
