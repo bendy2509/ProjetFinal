@@ -7,14 +7,15 @@ Importation des modules
 
 """
 from modules.gestion_horaire.gestion_horaire import menu_gestion_horaires
-from modules.administrateur.gestionAdministrateur import create_account, menu_gestion_administrateurs
+from modules.administrateur.gestionAdministrateur \
+    import create_account, menu_gestion_administrateurs
 from modules.gestionSalle.gestionSalle import menuGestionSalle
 from modules.administrateur.administrateur import AdministratorManager
 from modules.gestionBatiment.gestion_batiment import menu_gestion_batiment
 from modules.gestionProfesseur.menuProfessors import menuGestionProfesseur
 from modules.gestionCours.menu_gestion_cours import menu_gestion_cours
 from modules.contraintes.contraintes import (
-    clear_screen, pause_system
+    clear_screen, header_design, pause_system
 )
 
 def display_main_menu():
@@ -23,15 +24,7 @@ def display_main_menu():
     
     """
     clear_screen()
-    print("===================================================")
-    print("|      ____   _    _   ____    _                  |")
-    print("|     / ___| | |  | | / ___|  | |                 |")
-    print("|    | |     | |__| | | |     | |                 |")
-    print("|    | |     |  __  | | |     | |                 |")
-    print("|    | |___  | |  | | | |___  | |____             |")
-    print("|    |_____| |_|  |_| \ ____| |_____ |            |")
-    print("|                                                 |")
-    print("|                      DSI-CHCL                   |")
+    header_design()
     print("===================================================")
     print("|                                                 |")
     print("|                 Menu Principal                  |")
@@ -77,15 +70,7 @@ def main_menu(db_file, invite=True):
 def display_initial_menu():
     """Affiche le menu de démarrage."""
     clear_screen()
-    print("===================================================")
-    print("|      ____   _    _   ____    _                  |")
-    print("|     / ___| | |  | | / ___|  | |                 |")
-    print("|    | |     | |__| | | |     | |                 |")
-    print("|    | |     |  __  | | |     | |                 |")
-    print("|    | |___  | |  | | | |___  | |____             |")
-    print("|    |_____| |_|  |_|  \\____| |______|            |")
-    print("|                                                 |")
-    print("|                      DSI-CHCL                   |")
+    header_design()
     print("===================================================")
     print("|                                                 |")
     print("|                 Menu de configuration           |")
@@ -111,7 +96,6 @@ def handle_initial_menu_choice(choice, db_file, admin_manager):
             pause_system()
     elif choice == '2':
         create_account(admin_manager)
-        
     elif choice == '3':
         print("Connecté en tant qu'invité.")
         pause_system()

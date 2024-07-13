@@ -236,7 +236,7 @@ def modify_professor():
 
     if len(coordinates_find) > 0:
         print("\n")
-        print("\t" * 4, f"=-===========L'information du professeur avec code ' {code} ' :=-===========")
+        print("\t" * 4, f"=-===========L'information du professeur avec code ' {code} ' :===========-=")
 
         data_list = [
             {
@@ -306,7 +306,7 @@ class Professor(Database):
     """Classe de gestion des professeurs héritant de la classe Database"""
 
     def __init__(self, database_name):
-        """ """
+        """Fonction Init """
         super().__init__(database_name)
 
     def add_professor(self):
@@ -332,6 +332,7 @@ class Professor(Database):
                     }
                 )
             afficher_affiches(data=data, valeur_vide="...")
+
 
         else:
             print("\t" + "Pas de professeurs dans la base !")

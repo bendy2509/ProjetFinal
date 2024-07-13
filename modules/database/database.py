@@ -1,4 +1,4 @@
-# database.py
+"""Base de donnees du projet"""
 import sqlite3
 from contextlib import closing
 
@@ -131,15 +131,16 @@ class Database:
         placeholders = ', '.join(['?' for _ in values])
         query = f"INSERT OR IGNORE INTO {table} ({columns}) VALUES ({placeholders})"
         affected_rows = self.execute_query(query, list(values.values()))
-        
         if affected_rows == 0:
             clear_screen()
-            print("\t" * 4 + "Les données que vous essayez d'insérer existent déjà dans la base de données.")
+            print("\t" * 4 + "Les données que vous essayez \
+                  d'insérer existent déjà dans la base de données.")
             pause_system()
 
     def read_records(self, table, columns=None, condition=None, params=None):
         """
-        Récupère des lignes de la table spécifiée en fonction des colonnes et de la condition données.
+        Récupère des lignes de la table spécifiée en \
+            fonction des colonnes et de la condition données.
 
         :param table: Nom de la table.
         :param columns: Colonnes à récupérer qui est une liste.
@@ -190,7 +191,7 @@ class Database:
         Supprime des lignes de la table spécifiée en fonction de la condition donnée.
 
         :param table: Nom de la table.
-        :param condition: Condition pour déterminer les lignes à supprimer.
+        :param condition: Condition pour déterminer les lignes à s-pprimer.
         :param params: Paramètres pour la requête SQL, si nécessaire.
         """
         query = f"DELETE FROM {table} WHERE {condition}"
@@ -198,14 +199,11 @@ class Database:
             self.execute_query(query, params)
         else:
             self.execute_query(query)
-        clear_screen()
-        # print('\t' * 4 + "Request ok !")
+        print('\t' * 4 + "Suppression réussie !")
 
     def __del__(self):
         """
         Ferme la connexion à la base de données lors de la destruction de l'objet.
         """
-        pause_system()
-        clear_screen()
         if self.conn:
             self.conn.close()

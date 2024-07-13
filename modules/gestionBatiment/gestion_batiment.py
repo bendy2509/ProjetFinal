@@ -3,7 +3,7 @@
 from modules.gestionSalle.roomManager import Room
 from modules.gestionBatiment.buildings_manager import Building, BuildingManager
 from modules.contraintes.contraintes import (check_building_name, clear_screen,
-    get_int_user, is_valid_room_type, pause_system,
+    get_int_user, header_design, is_valid_room_type, pause_system,
     validRoomFloor, validRoomNumber
 )
 
@@ -11,14 +11,7 @@ from modules.contraintes.contraintes import (check_building_name, clear_screen,
 def menu_batiment():
     """Affiche le menu de gestion des bâtiments et renvoie le choix de l'utilisateur."""
     clear_screen()
-    print("===================================================")
-    print("|      ____   _    _   ____    _                  |")
-    print("|     / ___| | |  | | / ___|  | |                 |")
-    print("|    | |     | |__| | | |     | |                 |")
-    print("|    | |     |  __  | | |     | |                 |")
-    print("|    | |___  | |  | | | |___  | |____             |")
-    print("|    |_____| |_|  |_|  \\____| |______|            |")
-    print("|                                                 |")
+    header_design()
     print("===================================================")
     print("|                                                 |")
     print("|                 Menu Gestion Bâtiment           |")
@@ -69,7 +62,8 @@ def add_room_to_building(manager, invite):
             clear_screen()
             room_type = input("Type de salle (salle de cours, salle virtuelle, labo): ")
 
-        capacity = get_int_user("Nombre de places disponibles (taper 0 pour laisser par défaut soit 60): ")
+        capacity = get_int_user("Nombre de places disponibles\
+                                (taper 0 pour laisser par défaut soit 60): ")
         capacity = 60 if capacity == 0 else capacity
         room = Room(room_number, room_type, room_floor, "disponible", capacity)
         manager.add_room_to_building(building_name, room)

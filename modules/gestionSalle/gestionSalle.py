@@ -1,18 +1,13 @@
+"""Gestion Salle """
 from modules.gestionBatiment.buildings_manager import BuildingManager
 from modules.gestionBatiment.gestion_batiment import add_room_to_building
-from modules.contraintes.contraintes import clear_screen, pause_system
+from modules.contraintes.contraintes import clear_screen, header_design, pause_system
 from modules.gestionSalle.roomManager import RoomManager
 
 def menuSalle():
+    """Menu salle"""
     clear_screen()
-    print("===================================================")
-    print("|      ____   _    _   ____    _                  |")
-    print("|     / ___| | |  | | / ___|  | |                 |")
-    print("|    | |     | |__| | | |     | |                 |")
-    print("|    | |     |  __  | | |     | |                 |")
-    print("|    | |___  | |  | | | |___  | |____             |")
-    print("|    |_____| |_|  |_|  \\____| |______|            |")
-    print("|                                                 |")
+    header_design()
     print("===================================================")
     print("|                                                 |")
     print("|                 Menu Gestion Salle              |")
@@ -27,7 +22,6 @@ def menuSalle():
     print("===================================================")
     choice = input("Choisissez une option: ")
     return choice
-
 
 def menuGestionSalle(db_file, invite):
     """
@@ -49,7 +43,7 @@ def menuGestionSalle(db_file, invite):
         elif choice == '3':
             if invite:
                 room_number = input("Numéro de la salle à supprimer : ")
-                if building_name.strip() and room_number.strip():
+                if room_number.strip():
                     room_manager.delete_room_from_building(room_number)
                 else:
                     print("Le numéro de la salle ne peut pas être vide.")

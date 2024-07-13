@@ -1,4 +1,4 @@
-# cours.py
+"""Gestion des cours cours """
 from modules.contraintes.contraintes import (
     afficher_affiches, clear_screen,
     pause_system, saisir_annee, saisir_duration, saisir_faculte,
@@ -27,24 +27,20 @@ class Course_Manager:
     def enregistrer_cours(self):
         """Enregistre un nouveau cours dans la base de données."""
         clear_screen()
-        print("\n", "=" * 10 , "Enregistrement d'un Cours" , "=" * 10 ,"\n")
-        
+        print("\n", "=" * 20 , "Enregistrement d'un Cours" , "=" * 20 ,"\n")
         nom = saisir_nom_cours()
         if nom is None:
             return
-        
         fac = saisir_faculte()
         if fac is None:
             return
-        
         duration = saisir_duration("Veuillez saisir la durée du cours (q pour quitter) : ")
         if duration is None:
             return
-        
         session = saisir_session()
         if session is None:
             return
-        
+
         annee = saisir_annee()
         if annee is None:
             return
@@ -66,7 +62,7 @@ class Course_Manager:
             )
             print("Cours enregistré avec succès.")
         else:
-            print("Erreur, un cours avec code existe deja dans la base.")
+            print("Erreur, un cours avec code existe deja dans la base.\n")
         pause_system()
 
     def cours_assignes_ou_non(self, assigner):
@@ -83,11 +79,13 @@ class Course_Manager:
         for cour in cours:
             if not cour[3] and not assigner:
                 data.append(
-                    {"CODE COURS": cour[0], "NOM DU COURS": cour[1],"FACULTE": cour[2], "PROFESSEUR": cour[3], "DUREE": cour[4], "SESSION": cour[5], "ANNEE": cour[6]}
+                    {"CODE COURS": cour[0], "NOM DU COURS": cour[1],"FACULTE": cour[2], \
+                     "PROFESSEUR": cour[3], "DUREE": cour[4], "SESSION": cour[5], "ANNEE": cour[6]}
                 )
             if cour[3] and assigner:
                 data.append(
-                    {"CODE COURS": cour[0], "NOM DU COURS": cour[1],"FACULTE": cour[2], "PROFESSEUR": cour[3], "DUREE": cour[4], "SESSION": cour[5], "ANNEE": cour[6]}
+                    {"CODE COURS": cour[0], "NOM DU COURS": cour[1],"FACULTE": cour[2], \
+                     "PROFESSEUR": cour[3], "DUREE": cour[4], "SESSION": cour[5], "ANNEE": cour[6]}
                 )
         afficher_affiches(data=data, valeur_vide="...")
         pause_system()
@@ -106,7 +104,8 @@ class Course_Manager:
         data = []
         for cour in cours:
             data.append(
-                {"CODE COURS": cour[0], "NOM DU COURS": cour[1],"FACULTE": cour[2], "PROFESSEUR": cour[3], "DUREE": cour[4], "SESSION": cour[5], "ANNEE": cour[6]}
+                {"CODE COURS": cour[0], "NOM DU COURS": cour[1],"FACULTE": cour[2], \
+                 "PROFESSEUR": cour[3], "DUREE": cour[4], "SESSION": cour[5], "ANNEE": cour[6]}
             )
         afficher_affiches(data=data, valeur_vide="...")
 
@@ -118,16 +117,19 @@ class Course_Manager:
         print("\n", "=" * 10 , "Modifier un Cours" , "=" * 10 ,"\n")
 
         code_cours = input("Entrer le code du cours à modifier : ")
-        cours = self.db_manager.read_records(table="cours", condition="code_cours=?", params=(code_cours,))
+        cours = self.db_manager.read_records(table="cours",\
+                                             condition="code_cours=?",\
+                                                params=(code_cours,))
         if not cours:
             print("Erreur : Cours non trouvé.")
             pause_system()
             return
-        
+
         data = []
         for cour in cours:
             data.append(
-                {"CODE COURS": cour[0], "NOM DU COURS": cour[1],"FACULTE": cour[2], "PROFESSEUR": cour[3], "DUREE": cour[4], "SESSION": cour[5], "ANNEE": cour[6]}
+                {"CODE COURS": cour[0], "NOM DU COURS": cour[1],"FACULTE": cour[2], \
+                 "PROFESSEUR": cour[3], "DUREE": cour[4], "SESSION": cour[5], "ANNEE": cour[6]}
             )
         afficher_affiches(data=data, valeur_vide="...")
 
@@ -141,6 +143,7 @@ class Course_Manager:
         print("0. Annuler ou une autre touche pour quitter")
 
         choix = input("Votre choix : ")
+        clear_screen()
         nom, fac, prof, duration, session, annee = cours[0][1:7]
 
         modificateurs = {
@@ -149,7 +152,10 @@ class Course_Manager:
             '3': lambda: saisir_duration("Saisir la nouvelle durée (q pour quitter) : "),
             '4': lambda: saisir_session(),
             '5': lambda: saisir_annee(),
-            '6': lambda: (saisir_nom_cours(), saisir_faculte(), saisir_duration("Saisir la nouvelle durée (q pour quitter) : "), saisir_session(), saisir_annee())
+            '6': lambda: (saisir_nom_cours(), saisir_faculte(), \
+                          saisir_duration("Saisir la nouvelle \
+                                          durée (q pour quitter) : "), \
+                                            saisir_session(), saisir_annee())
         }
 
         if choix in modificateurs:
@@ -171,27 +177,26 @@ class Course_Manager:
                 elif choix == '5':
                     annee = result
         else:
-            print("Modification annulée.")
+            print("Modification annulée.\n")
             return
-        
         if nom is None:
             nom = cours[0][1]
-            return 
+            return
         if fac is None:
             fac = cours[0][2]
-            return 
+            return
         if prof is None:
             prof = cours[0][3]
-            return 
+            return
         if duration is None:
             duration = cours[0][4]
-            return 
+            return
         if session is None:
             session = cours[0][5]
-            return 
+            return
         if annee is None:
             annee = cours[0][6]
-            return 
+            return
 
         nouveau_code_cours = self._generer_code_cours(nom, session, fac, annee)
         if nouveau_code_cours != code_cours and self.verifier_existence_cours(nouveau_code_cours):
@@ -214,6 +219,23 @@ class Course_Manager:
             condition="code_cours=?",
             condition_params=(code_cours,)
         )
+
+        # Vérifiez si le code du cours existe dans la table schedules
+        schedules_exist = self.db_manager.read_records(
+            table="schedules",
+            condition="cours_id=?",
+            params=(code_cours,)
+        )
+
+        if schedules_exist:
+            # Mise à jour du code du cours dans la table schedules
+            self.db_manager.update_record(
+                table="schedules",
+                values={"code_cours": nouveau_code_cours},
+                condition="code_cours=?",
+                condition_params=(code_cours,)
+            )
+
         print("Cours modifié avec succès.")
         pause_system()
 
@@ -222,12 +244,14 @@ class Course_Manager:
         clear_screen()
         print("\n", "=" * 10 , "Rechercher un Cours", "=" * 10 ,"\n")
         code_cours = input("Entrer le code du cours à rechercher : ")
-        cours = self.db_manager.read_records(table="cours", condition="code_cours=?", params=(code_cours,))
+        cours = self.db_manager.read_records(table="cours", \
+        condition="code_cours=?", params=(code_cours,))
         if cours:
             data = []
             for cour in cours:
                 data.append(
-                    {"CODE COURS": cour[0], "NOM DU COURS": cour[1],"FACULTE": cour[2], "PROFESSEUR": cour[3], "DUREE": cour[4], "SESSION": cour[5], "ANNEE": cour[6]}
+                    {"CODE COURS": cour[0], "NOM DU COURS": cour[1],"FACULTE": cour[2], \
+                     "PROFESSEUR": cour[3], "DUREE": cour[4], "SESSION": cour[5], "ANNEE": cour[6]}
                 )
             afficher_affiches(data=data, valeur_vide="...")
         else:
@@ -243,34 +267,34 @@ class Course_Manager:
         """
         # Vérifier l'existence du professeur
         professeur_existe = self.db_manager.read_records(
-            table="professors", 
-            condition="code=?", 
+            table="professors",
+            condition="code=?",
             params=(code_professeur,)
         )
-        
+
         if not professeur_existe:
             print("Erreur : Code professeur non trouvé.")
             pause_system()
             return
-        
+
         # Vérifier l'existence du cours
         cours_existe = self.db_manager.read_records(
             table="cours",
             condition="code_cours=?",
             params=(code_cours,)
         )
-        
+
         if not cours_existe:
             print("Erreur : Code cours non trouvé.")
             pause_system()
             return
-        
+
         # Vérifier si un professeur est déjà assigné à ce cours
         if cours_existe[0][3]:
             print("Erreur : Un professeur est déjà assigné à ce cours.")
             pause_system()
             return
-        
+
         # Mettre à jour le cours avec le code du professeur
         self.db_manager.update_record(
             table="cours",
@@ -282,5 +306,6 @@ class Course_Manager:
 
     def verifier_existence_cours(self, code_cours):
         """Vérifie si un cours avec le code_cours existe déjà."""
-        cours = self.db_manager.read_records(table="cours", condition="code_cours = ?", params=(code_cours,))
+        cours = self.db_manager.read_records(table="cours", \
+        condition="code_cours = ?", params=(code_cours,))
         return bool(cours)

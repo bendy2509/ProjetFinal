@@ -1,4 +1,4 @@
-"""   """
+"""Menu Gestion Professeur """
 
 
 from modules.gestionProfesseur.professors import( 
@@ -6,23 +6,17 @@ from modules.gestionProfesseur.professors import(
 )
 from modules.database.database import Database
 from modules.administrateur.administrateur import AdministratorManager
-from modules.gestionBatiment.buildings_manager import Building, BuildingManager
 from modules.contraintes.contraintes import (
-    clear_screen, pause_system, afficher_affiches
+    clear_screen, pause_system, afficher_affiches,
+    header_design, clear_screen, pause_system
 )
 
 
+
 def menuProfessors():
-    """ """
+    """Menu professeur """
     clear_screen()
-    print("===================================================")
-    print("|      ____   _    _   ____    _                  |")
-    print("|     / ___| | |  | | / ___|  | |                 |")
-    print("|    | |     | |__| | | |     | |                 |")
-    print("|    | |     |  __  | | |     | |                 |")
-    print("|    | |___  | |  | | | |___  | |____             |")
-    print("|    |_____| |_|  |_|  \____| |______|            |")
-    print("|                                                 |")
+    header_design()
     print("===================================================")
     print("|                                                 |")
     print("|        Menu Gestion Professeur                  |")
@@ -37,7 +31,7 @@ def menuProfessors():
     print("===================================================")
 
 def menuChoice():
-    """ """
+    """Menu Choix cours """
     while True:
         clear_screen()
         menuProfessors()
@@ -56,6 +50,8 @@ def menuChoice():
             print()
             print("\t"  + f"Erreur: Veillez Saisir un entier compris entre [0, 5] ")
             pause_system()          
+            print("\t"  + "Erreur: Veillez Saisir un entier compris entre [0, 5] ")
+            pause_system()
 
 
 def menuGestionProfesseur(DB_FILE, access):
@@ -77,9 +73,11 @@ def menuGestionProfesseur(DB_FILE, access):
 
             else:
                 print("\n")          
+                clear_screen()
+                print()
                 print("\t" * 5,"Accès reservé aux Administrateurs.")
                 pause_system()
-  
+
         elif menuchoice == 2:
             print("\n")
             print("\t" * 4, "=-===========Les professeurs du systeme===========-=")
@@ -90,14 +88,19 @@ def menuGestionProfesseur(DB_FILE, access):
             isExist = is_exist_record()
             if isExist :
                 print()
-                code = coordinates.validate_input(" le code  du Professeur")
-                
-                coordinates_find = data.read_records("professors", condition="code=?", params=(code,))
+                code = input(" le code  du Professeur :  ")
+
+                coordinates_find = data.read_records("professors", \
+                                                     condition="code=?", \
+                                                        params=(code,))
                 if len(coordinates_find) > 0:
                     clear_screen()
                     data = []
                     data.append(
-                        {"CODE": coordinates_find[0][0], "NOM": coordinates_find[0][1],"PRENOM": coordinates_find[0][2], "SEXE": coordinates_find[0][3], "EMAIL": coordinates_find[0][4], "TELEPHONE": coordinates_find[0][5], "CODE_COURS": coordinates_find[0][6]}
+                        {"CODE": coordinates_find[0][0], "NOM": coordinates_find[0][1],\
+                         "PRENOM": coordinates_find[0][2], "SEXE": coordinates_find[0][3], \
+                            "EMAIL": coordinates_find[0][4], "TELEPHONE": coordinates_find[0][5], \
+                                "CODE_COURS": coordinates_find[0][6]}
                     )
                     print("\n" * 2)
                     print("\t" * 4, f"=-===========L'information du professeur avec code ' {code} ' :===========-=")
@@ -129,10 +132,10 @@ def menuGestionProfesseur(DB_FILE, access):
                     print()
                     print("\t", "Pas de professeurs dans la base !")
                     pause_system()
-                
+
             else:
                 clear_screen()
-                print()          
+                print()
                 print("\t","Accès reservé aux Administrateurs.")
                 pause_system()
 
@@ -147,15 +150,20 @@ def menuGestionProfesseur(DB_FILE, access):
                     coordinates_find = data.read_records("professors", condition="code=?", params=(code,))
 
                     if len(coordinates_find) > 0:
-                        data.delete_record(table="professors", condition="code=?", params=(code,))
+                        data.delete_record(table="professors", \
+                                           condition="code=?", \
+                                            params=(code,))
                         print("\n")
                         print("\t" * 4, "=-===========Les professeurs du systeme après suppression===========-=")
                         professor.get_all_professors()
-                        data.delete_record(table="cours", condition="teacher_code=?", params=(code,))
- 
+                        data.delete_record(table="cours", \
+                                           condition="teacher_code=?", \
+                                            params=(code,))
+
                     else:
                         clear_screen()
-                        print("\t", f"Pas de professeurs trouve avec le code '{code} ' dans la base !")
+                        print("\t", f"Pas de professeurs trouve avec \
+                              le code '{code} ' dans la base !")
                         pause_system()
 
                 else:
@@ -164,7 +172,7 @@ def menuGestionProfesseur(DB_FILE, access):
                     pause_system()
 
             else:
-                clear_screen()            
+                clear_screen()
                 print("\t","Accès reservé aux Administrateurs.")
                 pause_system()
 

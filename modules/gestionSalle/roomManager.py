@@ -1,6 +1,5 @@
-"""
-Module pour gérer les salles dans un bâtiment.
-"""
+""" Module pour gérer les salles dans un bâtiment. """
+
 from modules.contraintes.contraintes import afficher_affiches, clear_screen, pause_system
 from modules.database.database import Database
 
@@ -29,7 +28,8 @@ class Room:
 
         :return: Description textuelle de la salle.
         """
-        return f"Salle {self.number} (type={self.room_type}, capacité={self.capacity}, statut={self.statut})"
+        return f"Salle {self.number} (type={self.room_type}, \
+            capacité={self.capacity}, statut={self.statut})"
 
 class RoomManager:
     """
@@ -50,7 +50,8 @@ class RoomManager:
         :param building_name: Nom du bâtiment.
         :param room: Objet Room représentant la salle à ajouter.
         """
-        building = self.db.read_records("buildings", columns=["id"], condition="name=?", params=(building_name,))
+        building = self.db.read_records("buildings", columns=["id"], \
+                                        condition="name=?", params=(building_name,))
         if building:
             building_id = building[0][0]
             if not self.room_exists(room.number):
@@ -62,9 +63,11 @@ class RoomManager:
                     "capacity": room.capacity,
                     "statut": room.statut
                 })
-                print(f"La salle '{room.number}' a été ajoutée dans le bâtiment '{building_name}' avec succès.")
+                print(f"La salle '{room.number}' a été ajoutée dans \
+                      le bâtiment '{building_name}' avec succès.")
             else:
-                print(f"La salle '{room.number}' existe déjà dans le bâtiment '{building_name}'.")
+                print(f"La salle '{room.number}' existe déjà \
+                      dans le bâtiment '{building_name}'.")
         else:
             print(f"Pas de bâtiment avec le nom '{building_name}'.")
         pause_system()
@@ -75,18 +78,21 @@ class RoomManager:
 
         :param building_name: Nom du bâtiment.
         """
-        building = self.db.read_records("buildings", columns=["id"], condition=f"name='{building_name}'")
+        building = self.db.read_records("buildings", columns=["id"],\
+                                         condition=f"name='{building_name}'")
         if building:
             building_id = building[0][0]
-            rooms = self.db.read_records("rooms", condition=f"building_id={building_id}")
+            rooms = self.db.read_records("rooms", \
+                                         condition=f"building_id={building_id}")
             if rooms:
                 data = []
                 for room in rooms:
                     data.append(
-                        {"CODE SALLE": room[0], "TYPE": room[3],"CAPACITE": room[4], "STATUT": room[5]}
+                        {"CODE SALLE": room[0], "TYPE": room[3],"CAPACITE": \
+                         room[4], "STATUT": room[5]}
                     )
                 afficher_affiches(data=data, valeur_vide="...")
-                
+
             else:
                 print(f"Aucune salle trouvée dans le bâtiment '{building_name}'.")
         else:
@@ -119,7 +125,7 @@ class RoomManager:
         :param room_number: Numéro(ID) de la salle à supprimer.
         """
         clear_screen()
-        try:        
+        try:
             # Vérifier si la salle existe dans le bâtiment
             room = self.db.read_records("rooms", condition="number=?", params=(room_number,))
             if not room:
@@ -127,12 +133,25 @@ class RoomManager:
                 pause_system()
                 return
 
+            # Vérifier s'il y a des horaires associés aux salles
+            schedules = self.db.read_records(table="schedules", \
+                                             condition="room_number=?", \
+                                                params=(room[0][0],))
+            if schedules:
+                self.db.delete_record(table="schedules", \
+                                      condition="room_number=?", \
+                                        params=(room[0][0],))
+                print("Les horaires associées ont été supprimées.")
+            else:
+                print("Aucune horaire associée trouvée.")
+
             # Supprimer la salle
-            self.db.delete_record(table="rooms", condition="number=?", params=(room[0][0],))
+            self.db.delete_record(table="rooms", \
+                                  condition="number=?", \
+                                    params=(room[0][0],))
             print(f"La salle '{room_number}' a été supprimée avec succès.")
 
         except:
             print("Erreur lors de la suppression de la salle")
         finally:
             pause_system()
-

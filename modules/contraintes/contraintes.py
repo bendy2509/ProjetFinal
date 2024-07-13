@@ -20,6 +20,17 @@ def clear_screen():
     """Efface l'écran de la console."""
     os.system('cls' if os.name == 'nt' else 'clear')
 
+def header_design():
+    """Fonction design header"""
+    print("===================================================")
+    print("|      ____   _    _   ____    _                  |")
+    print("|     / ___| | |  | | / ___|  | |                 |")
+    print("|    | |     | |__| | | |     | |                 |")
+    print("|    | |     |  __  | | |     | |                 |")
+    print("|    | |___  | |  | | | |___  | |____             |")
+    print("|    |_____| |_|  |_|  \____| |______|            |")
+    print("|                                                 |")
+
 def pause_system():
     """Met le système en pause en attendant une action de l'utilisateur."""
     os.system('pause' if os.name == 'nt' else input("\t" + "Appuyez sur Entrée pour continuer..."))
@@ -34,16 +45,19 @@ def is_valid_phone(phone):
     """
     Vérifie si le numéro de téléphone est valide selon les formats spécifiés.
     """
-    expression = r"^((\+)|(011))?[\s-]?((509)|(\(509\)))?[\s-]?(3[1-9]|4[0-4]|4[6-9]|5[5])[\s-]?([0-9]{2})[\s-]?([0-9]{2})[\s-]?[0-9]{2}$"
+    expression = r"^((\+)|(011))?[\s-]?((509)|(\(509\)))?[\s-]?(3[1-9]|4[0-4]|4[6-9]\
+        |5[5])[\s-]?([0-9]{2})[\s-]?([0-9]{2})[\s-]?[0-9]{2}$"
     if not re.fullmatch(expression, phone):
         return False
     return True
 
 def is_valid_password(password):
     """
-    Vérifie si le mot de passe est valide (au moins 8 caractères, une majuscule, une minuscule et un chiffre).
+    Vérifie si le mot de passe est valide (au moins 8 caractères, \
+        une majuscule, une minuscule et un chiffre).
     """
-    return len(password) >= 8 and re.search(r"[A-Z]", password) and re.search(r"[a-z]", password) and re.search(r"[0-9]", password)
+    return len(password) >= 8 and re.search(r"[A-Z]", password) \
+        and re.search(r"[a-z]", password) and re.search(r"[0-9]", password)
 
 def get_validated_input(prompt, validation_func, error_message):
     """
@@ -68,7 +82,7 @@ def get_int_user(prompt):
             return value
         except ValueError:
             clear_screen()
-            print("\t" * 5 + "Veuillez entrer un nombre entier valide.")
+            print("\t" * 5 + "Veuillez entrer un nombre entier valide.\n")
             pause_system()
             clear_screen()
 
@@ -84,7 +98,7 @@ def check_building_name(name):
         return True
     else:
         clear_screen()
-        print("\t" * 5 + "Mauvais choix. Veuillez entrer A, B, C, D")
+        print("\t" * 5 + "Mauvais choix. Veuillez entrer A, B, C, D\n")
         pause_system()
         clear_screen()
         return False
@@ -99,7 +113,7 @@ def validRoomFloor(floor):
     if 1 <= floor <= 3:
         return True
     clear_screen()
-    print("\t" * 5 + "Mauvais choix. Veuillez entrer 1, 2 ou 3 pour l'étage.")
+    print("\t" * 5 + "Mauvais choix. Veuillez entrer 1, 2 ou 3 pour l'étage.\n")
     pause_system()
     clear_screen()
     return False
@@ -141,7 +155,7 @@ def is_valid_room_type(room_type):
     valid_room_types = ["salle de cours", "salle virtuelle", "labo"]
     if room_type.lower() not in valid_room_types:
         clear_screen()
-        print("\t" * 5 + "Vous devez choisir entre 'salle de cours', 'salle virtuelle', 'labo'")
+        print("\t" * 5 + "Vous devez choisir entre 'salle de cours', 'salle virtuelle', 'labo'\n")
         pause_system()
         return False
     return True
@@ -150,7 +164,8 @@ def authenticate_admin(admin_manager):
     """
     Authentifie un administrateur en demandant les informations d'authentification.
 
-    :param admin_manager: Instance de AdminManager pour vérifier les informations d'authentification.
+    :param admin_manager: Instance de AdminManager pour vérifier \
+        les informations d'authentification.
     :return: True si l'authentification réussit, False sinon.
     """
     clear_screen()
@@ -177,16 +192,20 @@ def saisir_nom_cours():
             return None
         if nom and len(nom) >= 3:
             return nom.capitalize()
-        print("Erreur : Le nom du cours ne peut pas être vide et doit contenir au moins 3 caractères.")
+        print("Erreur : Le nom du cours ne peut pas être vide \
+              et doit contenir au moins 3 caractères.\n")
 
 def saisir_faculte():
+    """Fonction Saisir Fac"""
     while True:
-        fac = input("Entrer la faculté pour laquelle vous enregistrez le cours (q pour quitter): ").strip()
+        fac = input("Entrer la faculté pour laquelle vous \
+                    enregistrez le cours (q pour quitter): ").strip()
         if fac == 'q':
             return None
         if fac and len(fac) >= 3:
             return fac.capitalize()
-        print("Erreur : Le nom de la fac ne peut pas être vide et doit contenir au moins 3 caractères.")
+        print("Erreur : Le nom de la fac ne peut pas être vide \
+              et doit contenir au moins 3 caractères.\n")
 
 def saisir_duration(message):
     """Saisit et valide une duration (entier entre 0 et 23)."""
@@ -198,9 +217,9 @@ def saisir_duration(message):
             duration = int(duration)
             if 1 <= duration <= 5:
                 return duration
-            print("Erreur : La durée doit être comprise entre 1 et 5.")
+            print("Erreur : La durée doit être comprise entre 1 et 5.\n")
         except ValueError:
-            print("Erreur : Veuillez entrer une valeur entière pour la durée.")
+            print("Erreur : Veuillez entrer une valeur entière pour la durée.\n")
 
 def saisir_debut(message):
     """Saisit et valide le début (entier entre 8 et 16)."""
@@ -213,7 +232,6 @@ def saisir_debut(message):
 
             if 8 <= duration <= 16:
                 return duration
-            
             print("Erreur : Le début doit être comprise entre 8h et 16h.")
         except ValueError:
             print("Erreur : Veuillez entrer une valeur entière pour le début.")
@@ -228,9 +246,9 @@ def saisir_session():
             session = int(session)
             if session in [1, 2]:
                 return session
-            print("Erreur : La session doit être 1 ou 2.")
+            print("Erreur : La session doit être 1 ou 2.\n")
         except ValueError:
-            print("Erreur : Veuillez entrer une valeur entière pour la session.")
+            print("Erreur : Veuillez entrer une valeur entière pour la session.\n")
 
 def saisir_annee():
     """Saisit et valide l'année académique (entre 2000 et l'année actuelle)."""
@@ -243,13 +261,13 @@ def saisir_annee():
             current_year = datetime.now().year
             if annee >= current_year:
                 return annee
-            print(f"Erreur : L'année académique doit être plus grande ou égale à {current_year}.")
+            print(f"Erreur : L'année académique doit être plus grande ou égale à {current_year}.\n")
         except ValueError:
-            print("Erreur : Veuillez entrer une valeur entière pour l'année académique.")
+            print("Erreur : Veuillez entrer une valeur entière pour l'année académique.\n")
 
 def saisir_jour():
+    """Fonction Saisr Jour"""
     jours_valides = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"]
-    
     while True:
         jour = input("Jour (lundi, mardi, etc.) : ").strip().lower()
         if jour in jours_valides:
@@ -282,25 +300,23 @@ def afficher_affiches(data, valeur_vide="...."):
     :param valeur_vide: Valeur à utiliser si une valeur est vide.
     """
     if not data:
-        print("Aucune donnée à afficher.")
+        print("Aucune donnée à afficher.\n")
         return
 
     # Extraire les clés pour les utiliser comme en-têtes de colonnes
     headers = list(data[0].keys())
-    
     # Calculer la largeur de chaque colonne pour un affichage aligné
     col_widths = [max(len(str(row[key])) for row in data) for key in headers]
     col_widths = [max(width, len(header)) for width, header in zip(col_widths, headers)]
 
     # Afficher l'en-tête du tableau
-    header_row = "| " + " | ".join(f"{header:<{col_widths[i]}}" for i, header in enumerate(headers)) + " |"
+    header_row = "| " + " | ".join(f"{header:<{col_widths[i]}}" \
+                                   for i, header in enumerate(headers)) + " |"
     separator = "-" * len(header_row)
-    
     print("\n")
     print("\t" * 3, separator)
     print("\t" * 3, header_row)
     print("\t" * 3, separator)
-    
     # Afficher chaque ligne de données
     for row in data:
         afficher_ligne(list(row.values()), col_widths, valeur_vide)
