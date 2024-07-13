@@ -27,7 +27,7 @@ class Database:
         """
         try:
             conn = sqlite3.connect(self.DB_FILE)
-            print(f"Connected to database: {self.DB_FILE}")
+            # print(f"Connected to database: {self.DB_FILE}")
             return conn
         except sqlite3.Error as e:
             print(f"Error connecting to database: {e}")
@@ -102,7 +102,7 @@ class Database:
                 )
             """)
             self.conn.commit()
-            print("Tables created successfully")
+            # print("Tables created successfully")
 
     def execute_query(self, query, params=None):
         """
@@ -199,12 +199,13 @@ class Database:
         else:
             self.execute_query(query)
         clear_screen()
-        print('\t' * 4 + "Request ok !")
+        # print('\t' * 4 + "Request ok !")
 
     def __del__(self):
         """
         Ferme la connexion à la base de données lors de la destruction de l'objet.
         """
+        pause_system()
         clear_screen()
         if self.conn:
             self.conn.close()
