@@ -144,10 +144,11 @@ class Coordinates:
 
         Ensures the email is unique among all professors' records.
         """
-        regex = (
-            r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+'
-            r'(\.[a-zA-Z]{2,})?$'
-        )
+        # regex = (
+        #     r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+'
+        #     r'(\.[a-zA-Z]{2,})?$'
+        # )
+        regex = r"[^@]+@[^@]+\.[^@]+"
         return re.match(regex, email) is not None
 
     @staticmethod
