@@ -152,7 +152,10 @@ class Course_Manager:
             '3': lambda: saisir_duration("Saisir la nouvelle durée (q pour quitter) : "),
             '4': lambda: saisir_session(),
             '5': lambda: saisir_annee(),
-            '6': lambda: (saisir_nom_cours(), saisir_faculte(), saisir_duration("Saisir la nouvelle durée (q pour quitter) : "), saisir_session(), saisir_annee())
+            '6': lambda: (saisir_nom_cours(), saisir_faculte(), \
+                          saisir_duration("Saisir la nouvelle \
+                                          durée (q pour quitter) : "), \
+                                            saisir_session(), saisir_annee())
         }
 
         if choix in modificateurs:
@@ -232,7 +235,7 @@ class Course_Manager:
                 condition="code_cours=?",
                 condition_params=(code_cours,)
             )
-        
+
         print("Cours modifié avec succès.")
         pause_system()
 

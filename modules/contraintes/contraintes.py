@@ -21,6 +21,7 @@ def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def header_design():
+    """Fonction design header"""
     print("===================================================")
     print("|      ____   _    _   ____    _                  |")
     print("|     / ___| | |  | | / ___|  | |                 |")

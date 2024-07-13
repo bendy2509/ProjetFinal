@@ -42,7 +42,7 @@ class AdministratorManager:
             print(f"Administrateur {first_name} {last_name} ajouté avec succès.")
             pause_system()
         except Exception:
-            print(f"Erreur lors de l'ajout de l'administrateur")
+            print("Erreur lors de l'ajout de l'administrateur")
 
     def authenticate_administrator(self, email, password):
         """

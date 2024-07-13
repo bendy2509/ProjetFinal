@@ -1,6 +1,7 @@
 """Menu Gestion des cours cours """
 from modules.gestionCours.cours import Course_Manager
-from modules.contraintes.contraintes import clear_screen, header_design, pause_system, authenticate_admin
+from modules.contraintes.contraintes import clear_screen, \
+    header_design, pause_system
 
 def menu_cours():
     """Fonction Menu Cours"""

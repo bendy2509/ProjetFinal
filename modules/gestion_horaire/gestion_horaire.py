@@ -1,7 +1,8 @@
 """Gestion Horaire"""
 
 from modules.gestion_horaire.schedule_manager import Schedule_Manager
-from modules.contraintes.contraintes import clear_screen, get_int_user, header_design, pause_system, saisir_duration
+from modules.contraintes.contraintes import clear_screen, \
+    get_int_user, header_design, pause_system, saisir_duration
 
 
 def menu_horaires():
@@ -65,4 +66,3 @@ def menu_gestion_horaires(db_file, invite):
         else:
             print("Erreur: Veuillez saisir un entier compris entre [0, 5]")
             pause_system()
-

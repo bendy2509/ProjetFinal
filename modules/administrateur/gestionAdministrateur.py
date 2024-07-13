@@ -1,5 +1,7 @@
-
-from modules.contraintes.contraintes import authenticate_admin, clear_screen, get_validated_input, header_design, is_valid_email, is_valid_password, is_valid_phone, pause_system
+"""Gestion administrateur """
+from modules.contraintes.contraintes import authenticate_admin, \
+    clear_screen, get_validated_input, header_design, is_valid_email, \
+        is_valid_password, is_valid_phone, pause_system
 from modules.administrateur.administrateur import AdministratorManager
 
 def create_account(admin_manager):

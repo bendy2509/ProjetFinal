@@ -101,7 +101,7 @@ class Schedule_Manager:
                 entry[4],
                 f"{nom_cours[0][1]} ({nom_cours[0][2]  if nom_cours[0][2] else 'non spécifié'})"
             )
-            
+
             for heure in range(debut, fin):
                 horaire[heure][jour] = cours
 
