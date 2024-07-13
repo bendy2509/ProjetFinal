@@ -28,18 +28,18 @@ import os
 import re
 import random
 
-from modules.contraintes.contraintes import afficher_affiches, clear_screen, pause_system
+from modules.contraintes.contraintes import afficher_affiches, pause_system
 from modules.database.database import Database
 
 class Coordinates:
     """Class to manage professor's coordinates including validation.
     Validates and manages attributes such as name, gender, email, phone,
-    and course code, ensuring uniqueness and proper format. 
+    and course code, ensuring uniqueness and proper format.
     Includes methods for generating unique professor codes and updating records.
     """
     global database
-    DB_FILE = "database.db"
-    database = Database(DB_FILE)
+    bd_file = "database.db"
+    database = Database(bd_file)
 
     def __init__(self, code=None, last_name=None, first_name=None,
                  gender=None, email=None, phone=None, course_code=None):
@@ -159,13 +159,12 @@ class Coordinates:
     @staticmethod
     def return_coordinates():
         """Obtains and validates all coordinates for a professor.
-
         Prompts the user to enter details such as name, gender, email, phone,
         and course code, ensuring each is valid and unique. Returns a dictionary
         with the validated data or None if 'quit' is entered.
         """
 
-        print("\n\t=-=========== Session d'enregistrement des Professeurs.===========-=\n")
+        print("\n=-=========== Session d'enregistrement des Professeurs.===========-=\n")
 
         last_name = Coordinates.validate_name("nom")
         if last_name is None:
@@ -188,7 +187,7 @@ class Coordinates:
             return None
 
         phone = Coordinates.prompt_and_validate(
-            "Veuillez entrer votre numéro de téléphone : ",
+            "Veuillez entrer un numéro de téléphone : ",
             Coordinates.validate_phone,
             "Veuillez entrer un format de numéro correct."
         )
@@ -196,7 +195,7 @@ class Coordinates:
             return None
 
         course_code = Coordinates.prompt_and_validate(
-            "Entrez le code du cours : ",
+            "Entrez un code du cours : ",
             Coordinates.validate_course_code,
             "Erreur : Code cours non trouvé ou déjà assigné à un professeur."
         )
@@ -218,19 +217,20 @@ class Coordinates:
 
 def is_exist_record():
     """function to verify exist record"""
-    DB_FILE = "database.db"
-    database = Database(DB_FILE)
-    isExist = database.read_records("professors")
-    if len(isExist) == 0:
+    global database
+    bd_file = "database.db"
+    database = Database(bd_file)
+    is_exist = database.read_records("professors")
+    if len(is_exist) == 0:
         return None
 
-    return isExist
+    return is_exist
 
 def modify_professor():
     """Function to modify professors"""
-    global database
-    DB_FILE = "database.db"
-    database = Database(DB_FILE)
+
+    bd_file = "database.db"
+    database = Database(bd_file)
     code = input("le code du Professeur :  ")
     coordinates_find = database.read_records("professors", condition="code=?", params=(code,))
 
@@ -241,7 +241,7 @@ def modify_professor():
         data_list = [
             {
                 "CODE": coordinates_find[0][0], "NOM": coordinates_find[0][1],
-                "PRENOM": coordinates_find[0][2], "SEXE": coordinates_find[0][3], 
+                "PRENOM": coordinates_find[0][2], "SEXE": coordinates_find[0][3],
                 "EMAIL": coordinates_find[0][4], "TELEPHONE": coordinates_find[0][5],
                 "CODE_COURS": coordinates_find[0][6]
             }
@@ -264,7 +264,8 @@ def modify_professor():
 
         email = Coordinates.prompt_and_validate(
             "Entrez l'adresse email : ",
-            lambda e: Coordinates.validate_email(e) and (e == coordinates_find[0][4] or Coordinates.validate_unique_email(e)),
+            lambda e: Coordinates.validate_email(e) \
+                and (e == coordinates_find[0][4] or Coordinates.validate_unique_email(e)),
             "Adresse email incorrecte ou l'adresse est déjà assignée à un autre professeur."
         )
         if email is None:
@@ -272,7 +273,8 @@ def modify_professor():
 
         phone = Coordinates.prompt_and_validate(
             "Veuillez entrer votre numéro de téléphone : ",
-            lambda p: Coordinates.validate_phone(p) and (p == coordinates_find[0][5] or Coordinates.validate_unique_phone(p)),
+            lambda p: Coordinates.validate_phone(p) \
+                and (p == coordinates_find[0][5] or Coordinates.validate_unique_phone(p)),
             "Le numéro incorrect ou le numéro est déjà assigné à un autre professeur."
         )
         if phone is None:
@@ -295,11 +297,12 @@ def modify_professor():
             "telephone": phone,
             "codeCours": course_code
         }
-        database.update_record(table="professors", values=params, condition="code=?", condition_params=(code,))
+        database.update_record(table="professors", values=params, condition="code=?", \
+                               condition_params=(code,))
 
     else:
         print("\n")
-        print("\t", f"Pas de professeurs trouvés avec le code '{code}' dans la base !")
+        print(f"Pas de professeurs trouvés avec le code '{code}' dans la base !")
         pause_system()
 
 class Professor(Database):
@@ -335,5 +338,5 @@ class Professor(Database):
 
 
         else:
-            print("\t" + "Pas de professeurs dans la base !")
+            print("Pas de professeurs dans la base !")
         pause_system()

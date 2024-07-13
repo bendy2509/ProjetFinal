@@ -15,7 +15,7 @@ from modules.contraintes.contraintes import (
 
 def menuProfessors():
     """Menu professeur """
-    clear_screen()
+    print("\n")
     header_design()
     print("===================================================")
     print("|                                                 |")
@@ -33,24 +33,21 @@ def menuProfessors():
 def menuChoice():
     """Menu Choix cours """
     while True:
-        clear_screen()
+        print("\n")
         menuProfessors()
         try :
             admin_choice = int(input("\tFaites votre choix : "))
             if 0 <= admin_choice <= 5:
                 return admin_choice
 
-            clear_screen()
+            print("\n")
             print()
-            print("\tVeillez Saisir un entier compris entre [0, 5]")
+            print("Veillez Saisir un entier compris entre [0, 5]")
             pause_system()
 
         except ValueError:
-            clear_screen()
-            print()
-            print("\t"  + f"Erreur: Veillez Saisir un entier compris entre [0, 5] ")
-            pause_system()          
-            print("\t"  + "Erreur: Veillez Saisir un entier compris entre [0, 5] ")
+            print()          
+            print("Erreur: Veillez Saisir un entier compris entre [0, 5] ")
             pause_system()
 
 
@@ -72,10 +69,10 @@ def menuGestionProfesseur(DB_FILE, access):
                 professor.add_professor()
 
             else:
-                print("\n")          
-                clear_screen()
+                print()          
+                print("\n")
                 print()
-                print("\t" * 5,"Accès reservé aux Administrateurs.")
+                print("Accès reservé aux Administrateurs.")
                 pause_system()
 
         elif menuchoice == 2:
@@ -84,9 +81,9 @@ def menuGestionProfesseur(DB_FILE, access):
             professor.get_all_professors()
 
         elif menuchoice == 3:
-            clear_screen()
-            isExist = is_exist_record()
-            if isExist :
+            print("\n")
+            is_exist = is_exist_record()
+            if is_exist :
                 print()
                 code = input(" le code  du Professeur :  ")
 
@@ -94,7 +91,7 @@ def menuGestionProfesseur(DB_FILE, access):
                                                      condition="code=?", \
                                                         params=(code,))
                 if len(coordinates_find) > 0:
-                    clear_screen()
+                    print("\n")
                     data = []
                     data.append(
                         {"CODE": coordinates_find[0][0], "NOM": coordinates_find[0][1],\
@@ -107,43 +104,41 @@ def menuGestionProfesseur(DB_FILE, access):
                     afficher_affiches(data=data, valeur_vide="...")
                     pause_system()
                 else:
-                    clear_screen()
                     print()
-                    print("\t", f"Pas de professeurs trouve avec le code ' {code} ' dans la base !")
+                    print(f"Pas de professeurs trouve avec le code ' {code} ' dans la base !")
                     pause_system()
             else:
-                clear_screen()
                 print()
-                print("\t", "Pas de professeurs dans la base !")
+                print("Pas de professeurs dans la base !")
                 pause_system()
 
         elif menuchoice == 4:
             if is_authenticated:
-                clear_screen()
-                isExist = is_exist_record()
-                if isExist :
+                print("\n")
+                is_exist = is_exist_record()
+                if is_exist :
                     print("\n\t=-=========== Session de modification des Professeurs.===========-=\n")
 
                     print()
                     modify_professor()
 
                 else:
-                    clear_screen()
                     print()
-                    print("\t", "Pas de professeurs dans la base !")
+                    print("Pas de professeurs dans la base !")
                     pause_system()
 
             else:
-                clear_screen()
                 print()
-                print("\t","Accès reservé aux Administrateurs.")
+                print("Accès reservé aux Administrateurs.")
                 pause_system()
 
         elif menuchoice == 5:
             if is_authenticated:
-                isExist = is_exist_record()
-                if isExist:
+                is_exist = is_exist_record()
+                if is_exist:
 
+                    print("\t" * 4, "=-===========La session de suppresion===========-=")
+                    print("\n")
                     print("\t" * 4, "=-===========Les professeurs du systeme===========-=")
                     professor.get_all_professors()
                     code = input("le code du Professeur :  ")
@@ -161,21 +156,20 @@ def menuGestionProfesseur(DB_FILE, access):
                                             params=(code,))
 
                     else:
-                        clear_screen()
-                        print("\t", f"Pas de professeurs trouve avec \
-                              le code '{code} ' dans la base !")
+                        print()
+                        print(f"Pas de professeurs trouve avec le code '{code} ' dans la base !")
                         pause_system()
 
                 else:
-                    clear_screen()
-                    print("\t", "Pas de professeurs dans la base !")
+                    print()
+                    print("Pas de professeurs dans la base !")
                     pause_system()
 
             else:
-                clear_screen()
-                print("\t","Accès reservé aux Administrateurs.")
+                print()
+                print("Accès reservé aux Administrateurs.")
                 pause_system()
 
         else:
-            clear_screen()
+            print("\n")
             break
