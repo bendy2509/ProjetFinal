@@ -82,7 +82,6 @@ class Schedule_Manager:
             condition="room_number=?",
             params=(salle,)
         )
-
         if not horaires:
             print("Aucune horaire trouvée pour cette salle.")
             pause_system()
@@ -96,11 +95,16 @@ class Schedule_Manager:
         for entry in horaires:
             nom_cours = self.db_manager.read_records(
                 table='cours',
-                columns=['nom'],
                 condition="code_cours=?",
                 params=(entry[5],)
             )
-            jour, debut, fin, cours = entry[2].lower(), entry[3], entry[4], nom_cours[0][0]
+            jour, debut, fin, cours = (
+                entry[2].lower(),
+                entry[3],
+                entry[4],
+                f"{nom_cours[0][1]} ({nom_cours[0][2]  if nom_cours[0][2] else 'non spécifié'})"
+            )
+            
             for heure in range(debut, fin):
                 horaire[heure][jour] = cours
 
@@ -167,7 +171,7 @@ class Schedule_Manager:
             )
             print(f"Tous les horaires pour la salle {salle} ont été supprimés.")
         except Exception as e:
-            print(f"Erreur lors de la suppression des horaires pour la salle {salle}: {e}")
+            print(f"Erreur lors de la suppression des horaires pour la salle {salle}")
         pause_system()
 
     def supprimer_horaire_par_id(self, horaire_id):
@@ -184,5 +188,5 @@ class Schedule_Manager:
             )
             print(f"L'horaire avec l'identifiant {horaire_id} a été supprimé.")
         except Exception as e:
-            print(f"Erreur lors de la suppression de l'horaire avec l'identifiant {horaire_id}: {e}")
+            print(f"Erreur lors de la suppression de l'horaire avec l'identifiant {horaire_id}")
         pause_system()

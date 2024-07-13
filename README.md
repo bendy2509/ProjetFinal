@@ -1,7 +1,8 @@
 # Projet Final - Gestion des Salles et des Cours
 
 # Introduction
-Ce projet permet de gérer les bâtiments, les salles et les cours d'un établissement. Il est conçu pour être utilisé par des administrateurs et des professeurs afin d'organiser les ressources de manière efficace.
+Ce projet permet de gérer les bâtiments, les salles et les cours du CHC-UEH-L.
+Il est conçu pour être utilisé par des administrateurs et des professeurs afin d'organiser les ressources de manière efficace.
 
 # Fonctionnalités
 
@@ -27,16 +28,25 @@ Ce projet permet de gérer les bâtiments, les salles et les cours d'un établis
 - **Vérification de disponibilité** : Vérifier si une salle est disponible à un horaire donné avant d'ajouter un cours à cet horaire.
 
 # Contraintes
-- **Bâtiments** : Un bâtiment peut avoir jusqu'à 18 salles réparties sur 3 étages.
-- **Salles** : Les salles d'un bâtiment sont stockées dans une base de données SQLite.
-- **Professeurs et Cours** : Les codes des professeurs et des cours doivent être uniques. Les cours ne peuvent pas avoir plus d'un professeur assigné.
+- **Bâtiments** :
+    - Un bâtiment peut avoir jusqu'à 18 salles réparties sur 3 étages.
+    - Supprimer un batiment supprime toutes les salles associé et aussi les horaires de ces salles dans la base de donnée.
+- **Salles** :
+    - Les salles d'un bâtiment sont stockées dans une base de données SQLite.
+    - Supprimer une salle supprime aussi les horaires de ces salles.
+- **Professeurs et Cours** :
+    - Les codes des professeurs et des cours doivent être uniques. Les cours ne peuvent pas avoir plus d'un professeur assigné.
 
 # Utilisation
 1. **Enregistrer un bâtiment** : Fournir le nom du bâtiment.
 2. **Ajouter des salles à un bâtiment** : Sélectionner un bâtiment et ajouter des salles avec les informations requises.
 3. **Enregistrer des cours** : Ajouter des cours avec les détails nécessaires.
 4. **Assigner un professeur à un cours** : Vérifier et assigner un professeur à un cours en s'assurant qu'il n'est pas déjà assigné.
-5. **Afficher et gérer les horaires** : Consulter et gérer les horaires des salles.
+5. **Afficher et gérer les horaires** :
+    **Consulter et gérer les horaires des salles**
+    - Pour enregistrer les horaires on a besoin le code du cours et de la salle, heure de début pour généner l'heure de fin en ajoutant la durée du cours à son heure de début
+    - Pour afficher les horaires on a besoin du code de la salle. L'horaire la salle s'affiche avec l'heure, jour, nom du cours et la faculté entre parenthèse.
+    - On peut supprimer une horaire
 
 # Installation
 Clonez le repository et suivez les instructions pour configurer l'environnement de développement et la base de données.

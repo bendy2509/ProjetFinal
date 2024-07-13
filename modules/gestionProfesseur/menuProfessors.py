@@ -6,21 +6,14 @@ from modules.database.database import Database
 from modules.administrateur.administrateur import AdministratorManager
 from modules.gestionBatiment.buildings_manager import Building, BuildingManager
 from modules.contraintes.contraintes import (
-    authenticate_admin, clear_screen, pause_system,is_valid_email
+    authenticate_admin, clear_screen, header_design, pause_system,is_valid_email
 )
 
 
 def menuProfessors():
     """ """
     clear_screen()
-    print("===================================================")
-    print("|      ____   _    _   ____    _                  |")
-    print("|     / ___| | |  | | / ___|  | |                 |")
-    print("|    | |     | |__| | | |     | |                 |")
-    print("|    | |     |  __  | | |     | |                 |")
-    print("|    | |___  | |  | | | |___  | |____             |")
-    print("|    |_____| |_|  |_|  \____| |______|            |")
-    print("|                                                 |")
+    header_design()
     print("===================================================")
     print("|                                                 |")
     print("|        Menu Gestion Professeur                  |")

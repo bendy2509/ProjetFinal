@@ -149,7 +149,13 @@ class Course_Manager:
             '3': lambda: saisir_duration("Saisir la nouvelle durée (q pour quitter) : "),
             '4': lambda: saisir_session(),
             '5': lambda: saisir_annee(),
-            '6': lambda: (saisir_nom_cours(), saisir_faculte(), saisir_duration("Saisir la nouvelle durée (q pour quitter) : "), saisir_session(), saisir_annee())
+            '6': lambda: (
+                saisir_nom_cours(),
+                saisir_faculte(),
+                saisir_duration("Saisir la nouvelle durée (q pour quitter) : "),
+               saisir_session(),
+               saisir_annee()
+            )
         }
 
         if choix in modificateurs:
@@ -214,6 +220,23 @@ class Course_Manager:
             condition="code_cours=?",
             condition_params=(code_cours,)
         )
+
+        # Vérifiez si le code du cours existe dans la table schedules
+        schedules_exist = self.db_manager.read_records(
+            table="schedules",
+            condition="cours_id=?",
+            params=(code_cours,)
+        )
+
+        if schedules_exist:
+            # Mise à jour du code du cours dans la table schedules
+            self.db_manager.update_record(
+                table="schedules",
+                values={"code_cours": nouveau_code_cours},
+                condition="code_cours=?",
+                condition_params=(code_cours,)
+            )
+        
         print("Cours modifié avec succès.")
         pause_system()
 
