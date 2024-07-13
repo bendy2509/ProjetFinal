@@ -1,8 +1,10 @@
-# menuCours.py
+"""Menu Gestion des cours cours """
 from modules.gestionCours.cours import Course_Manager
-from modules.contraintes.contraintes import clear_screen, header_design, pause_system, authenticate_admin
+from modules.contraintes.contraintes import clear_screen, \
+    header_design, pause_system
 
 def menu_cours():
+    """Fonction Menu Cours"""
     clear_screen()
     header_design()
     print("===================================================")
@@ -23,6 +25,7 @@ def menu_cours():
     return input("   Faites votre choix : ")
 
 def menu_ajouter_professeur_au_cours(course_manager):
+    """Fonction menu ajouter professeur au cours"""
     clear_screen()
     print("\n", "*" * 10 , "Ajouter Professeur au Cours" , "*" * 10 ,"\n")
 
@@ -33,9 +36,10 @@ def menu_ajouter_professeur_au_cours(course_manager):
     pause_system()
 
 def menu_gestion_cours(db_file, invite):
+    """Fonction Menu Gestion Cour"""
     # db = Database(db_file)
     course_Manager = Course_Manager(db_file)
-    
+
     while True:
         choice = menu_cours()
         if choice == '1':
@@ -57,20 +61,23 @@ def menu_gestion_cours(db_file, invite):
 
         elif choice == '4':
             course_Manager.rechercher_cours()
+
         elif choice == '5':
             if invite:
                 menu_ajouter_professeur_au_cours(course_Manager)
             else:
                 print("Accès refusé. Authentification requise.")
                 pause_system()
+
         elif choice == '6':
-            course_Manager.cours_assignes_ou_non(assigner=True)            
+            course_Manager.cours_assignes_ou_non(assigner=True)
 
         elif choice == '7':
             course_Manager.cours_assignes_ou_non(assigner=False)
 
         elif choice == '0':
             break
+
         else:
             print("Erreur: Veuillez saisir un entier compris entre 0 et 7")
             pause_system()

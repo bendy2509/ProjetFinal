@@ -1,16 +1,12 @@
-# Importez les modules nécessaires ici
+"""Gestion Horaire"""
 
 from modules.gestion_horaire.schedule_manager import Schedule_Manager
-from modules.contraintes.contraintes import (
-    clear_screen,
-    get_int_user,
-    header_design,
-    pause_system,
-    saisir_duration
-)
+from modules.contraintes.contraintes import clear_screen, \
+    get_int_user, header_design, pause_system, saisir_duration
 
 
 def menu_horaires():
+    """Affichage Menu Horaire"""
     clear_screen()
     header_design()
     print("\t" * 4 + "===================================================")
@@ -25,14 +21,13 @@ def menu_horaires():
     print("\t" * 4 + "|  5. Supprimer horaire par ID  (Admin)           |")
     print("\t" * 4 + "|  0. Retour au menu principal                    |")
     print("\t" * 4 + "===================================================")
-    
     return input("\t" * 5 + "   Faites votre choix : ")
 
 
 def menu_gestion_horaires(db_file, invite):
+    """Menu Gestion Horaires"""
     horaire_manager = Schedule_Manager(db_file)
     clear_screen()
-    
     while True:
         choice = menu_horaires()
         if choice == '1':
@@ -71,4 +66,3 @@ def menu_gestion_horaires(db_file, invite):
         else:
             print("Erreur: Veuillez saisir un entier compris entre [0, 5]")
             pause_system()
-

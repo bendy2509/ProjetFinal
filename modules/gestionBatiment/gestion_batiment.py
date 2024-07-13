@@ -62,7 +62,8 @@ def add_room_to_building(manager, invite):
             clear_screen()
             room_type = input("Type de salle (salle de cours, salle virtuelle, labo): ")
 
-        capacity = get_int_user("Nombre de places disponibles (taper 0 pour laisser par défaut soit 60): ")
+        capacity = get_int_user("Nombre de places disponibles\
+                                (taper 0 pour laisser par défaut soit 60): ")
         capacity = 60 if capacity == 0 else capacity
         room = Room(room_number, room_type, room_floor, "disponible", capacity)
         manager.add_room_to_building(building_name, room)

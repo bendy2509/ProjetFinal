@@ -1,4 +1,4 @@
-# cours.py
+"""Gestion des cours cours """
 from modules.contraintes.contraintes import (
     afficher_affiches, clear_screen,
     pause_system, saisir_annee, saisir_duration, saisir_faculte,
@@ -31,15 +31,12 @@ class Course_Manager:
         nom = saisir_nom_cours()
         if nom is None:
             return
-        
         fac = saisir_faculte()
         if fac is None:
             return
-        
         duration = saisir_duration("Veuillez saisir la durée du cours (q pour quitter) : ")
         if duration is None:
             return
-        
         session = saisir_session()
         if session is None:
             return
@@ -120,12 +117,14 @@ class Course_Manager:
         print("\n", "=" * 10 , "Modifier un Cours" , "=" * 10 ,"\n")
 
         code_cours = input("Entrer le code du cours à modifier : ")
-        cours = self.db_manager.read_records(table="cours", condition="code_cours=?", params=(code_cours,))
+        cours = self.db_manager.read_records(table="cours",\
+                                             condition="code_cours=?",\
+                                                params=(code_cours,))
         if not cours:
             print("Erreur : Cours non trouvé.")
             pause_system()
             return
-        
+
         data = []
         for cour in cours:
             data.append(
@@ -153,13 +152,10 @@ class Course_Manager:
             '3': lambda: saisir_duration("Saisir la nouvelle durée (q pour quitter) : "),
             '4': lambda: saisir_session(),
             '5': lambda: saisir_annee(),
-            '6': lambda: (
-                saisir_nom_cours(),
-                saisir_faculte(),
-                saisir_duration("Saisir la nouvelle durée (q pour quitter) : "),
-               saisir_session(),
-               saisir_annee()
-            )
+            '6': lambda: (saisir_nom_cours(), saisir_faculte(), \
+                          saisir_duration("Saisir la nouvelle \
+                                          durée (q pour quitter) : "), \
+                                            saisir_session(), saisir_annee())
         }
 
         if choix in modificateurs:
@@ -183,25 +179,24 @@ class Course_Manager:
         else:
             print("Modification annulée.\n")
             return
-        
         if nom is None:
             nom = cours[0][1]
-            return 
+            return
         if fac is None:
             fac = cours[0][2]
-            return 
+            return
         if prof is None:
             prof = cours[0][3]
-            return 
+            return
         if duration is None:
             duration = cours[0][4]
-            return 
+            return
         if session is None:
             session = cours[0][5]
-            return 
+            return
         if annee is None:
             annee = cours[0][6]
-            return 
+            return
 
         nouveau_code_cours = self._generer_code_cours(nom, session, fac, annee)
         if nouveau_code_cours != code_cours and self.verifier_existence_cours(nouveau_code_cours):
@@ -240,7 +235,7 @@ class Course_Manager:
                 condition="code_cours=?",
                 condition_params=(code_cours,)
             )
-        
+
         print("Cours modifié avec succès.")
         pause_system()
 
@@ -272,34 +267,34 @@ class Course_Manager:
         """
         # Vérifier l'existence du professeur
         professeur_existe = self.db_manager.read_records(
-            table="professors", 
-            condition="code=?", 
+            table="professors",
+            condition="code=?",
             params=(code_professeur,)
         )
-        
+
         if not professeur_existe:
             print("Erreur : Code professeur non trouvé.")
             pause_system()
             return
-        
+
         # Vérifier l'existence du cours
         cours_existe = self.db_manager.read_records(
             table="cours",
             condition="code_cours=?",
             params=(code_cours,)
         )
-        
+
         if not cours_existe:
             print("Erreur : Code cours non trouvé.")
             pause_system()
             return
-        
+
         # Vérifier si un professeur est déjà assigné à ce cours
         if cours_existe[0][3]:
             print("Erreur : Un professeur est déjà assigné à ce cours.")
             pause_system()
             return
-        
+
         # Mettre à jour le cours avec le code du professeur
         self.db_manager.update_record(
             table="cours",
