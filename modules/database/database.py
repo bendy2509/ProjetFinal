@@ -27,7 +27,7 @@ class Database:
         """
         try:
             conn = sqlite3.connect(self.DB_FILE)
-            print(f"Connected to database: {self.DB_FILE}")
+            # print(f"Connected to database: {self.DB_FILE}")
             return conn
         except sqlite3.Error as e:
             print(f"Error connecting to database: {e}")
@@ -102,7 +102,7 @@ class Database:
                 )
             """)
             self.conn.commit()
-            print("Tables created successfully")
+            # print("Tables created successfully")
 
     def execute_query(self, query, params=None):
         """
@@ -191,7 +191,7 @@ class Database:
         Supprime des lignes de la table spécifiée en fonction de la condition donnée.
 
         :param table: Nom de la table.
-        :param condition: Condition pour déterminer les lignes à supprimer.
+        :param condition: Condition pour déterminer les lignes à s-pprimer.
         :param params: Paramètres pour la requête SQL, si nécessaire.
         """
         query = f"DELETE FROM {table} WHERE {condition}"

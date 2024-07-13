@@ -2,7 +2,6 @@
 
 # Ajouter le chemin du projet au sys.path
 # sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
 """ 
 Importation des modules 
 
