@@ -1,7 +1,8 @@
 """
 Modules pour la gestion d'horaires des salles
 """
-from modules.contraintes.contraintes import afficher_affiches, clear_screen, pause_system, saisir_debut, saisir_duration, saisir_jour
+from modules.contraintes.contraintes import afficher_affiches, clear_screen,\
+    pause_system, saisir_debut, saisir_jour
 from modules.database.database import Database
 from modules.gestionCours.menu_gestion_cours import Course_Manager
 from modules.gestionSalle.roomManager import RoomManager
@@ -23,26 +24,22 @@ class Schedule_Manager:
             print("Erreur : Salle non trouvée.")
             pause_system()
             return
-        
         jour = saisir_jour()
         if jour is None:
             print("Vous venez d'annuler !")
             pause_system()
             return
-        
         debut = saisir_debut("Heure de debut (de 8h a 16h) : ")
         if debut is None:
             print("Vous venez d'annuler !")
             pause_system()
             return
-        
         code_cours = input("Code du cours : ")
 
         if not self.course_manager.verifier_existence_cours(code_cours):
             print("Erreur : Cours non trouvé.")
             pause_system()
             return
-        
         cours = self.db_manager.read_records(
             table='cours',
             condition="code_cours=?",
@@ -129,14 +126,18 @@ class Schedule_Manager:
 
         :param salle: Numéro ou identifiant de la salle à vérifier.
         :param jour: Jour de la semaine pour lequel vérifier la disponibilité (ex. 'lundi').
-        :param debut: Heure de début de l'occupation demandée (en format 24 heures, par exemple 9 pour 9h00).
-        :param fin: Heure de fin de l'occupation demandée (en format 24 heures, par exemple 11 pour 11h00).
+        :param debut: Heure de début de l'occupation demandée \
+            (en format 24 heures, par exemple 9 pour 9h00).
+        :param fin: Heure de fin de l'occupation demandée \
+            (en format 24 heures, par exemple 11 pour 11h00).
 
         :return: True si la salle est occupée pendant la plage horaire donnée, False sinon.
 
         Les conditions vérifiées sont :
-        - Si la salle est déjà occupée avant l'heure de début demandée mais se libère pendant ou après l'heure de début demandée.
-        - Si la salle est occupée avant ou à l'heure de fin demandée mais se libère pendant ou après l'heure de fin demandée.
+        - Si la salle est déjà occupée avant l'heure de début demandée \
+            mais se libère pendant ou après l'heure de début demandée.
+        - Si la salle est occupée avant ou à l'heure de fin demandée \
+            mais se libère pendant ou après l'heure de fin demandée.
         
         Exemple d'utilisation :
         ```
@@ -148,7 +149,8 @@ class Schedule_Manager:
         """
         horaires = self.db_manager.read_records(
             table="schedules",
-            condition="room_number=? AND jour=? AND ((debut <= ? AND fin > ?) OR (debut < ? AND fin >= ?))",
+            condition="room_number=? AND jour=? AND ((debut <= ? AND fin > ?) \
+                OR (debut < ? AND fin >= ?))",
             params=(salle, jour, debut, debut, fin, fin)
         )
         return bool(horaires)
@@ -184,5 +186,6 @@ class Schedule_Manager:
             )
             print(f"L'horaire avec l'identifiant {horaire_id} a été supprimé.")
         except Exception as e:
-            print(f"Erreur lors de la suppression de l'horaire avec l'identifiant {horaire_id}: {e}")
+            print(f"Erreur lors de la suppression de \
+                  l'horaire avec l'identifiant {horaire_id}: {e}")
         pause_system()

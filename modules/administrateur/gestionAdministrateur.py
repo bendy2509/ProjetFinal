@@ -1,5 +1,8 @@
-
-from modules.contraintes.contraintes import authenticate_admin, clear_screen, get_validated_input, is_valid_email, is_valid_password, is_valid_phone, pause_system
+"""Gestion administrateur"""
+from modules.contraintes.contraintes import (authenticate_admin, clear_screen,
+                                            get_validated_input, is_valid_email,
+                                            is_valid_password, is_valid_phone,
+                                            pause_system)
 from modules.administrateur.administrateur import AdministratorManager
 
 def create_account(admin_manager):
@@ -10,17 +13,22 @@ def create_account(admin_manager):
         first_name = input("Prénom : ")
         last_name = input("Nom : ")
         address = input("Adresse : ")
-        phone = get_validated_input("Téléphone : ", is_valid_phone, "Numéro de téléphone invalide. Veuillez réessayer.")
-        email = get_validated_input("Email : ", is_valid_email, "Email invalide. Veuillez réessayer.")
-        password = get_validated_input("Mot de passe : ", is_valid_password, "Mot de passe invalide. \
-                                       Il doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre.")
-        
+        phone = get_validated_input("Téléphone : ", is_valid_phone, \
+                                    "Numéro de téléphone invalide. Veuillez réessayer.")
+        email = get_validated_input("Email : ", is_valid_email, \
+                                    "Email invalide. Veuillez réessayer.")
+        password = get_validated_input("Mot de passe : ", is_valid_password, \
+                                       "Mot de passe invalide. \
+                                       Il doit contenir au moins 8 caractères, \
+                                        une majuscule, une minuscule et un chiffre.")
+
         admin_manager.add_administrator(first_name, last_name, address, phone, email, password)
     else:
         print("Echec de l'authentification !!")
         pause_system()
 
 def menuAdmin():
+    """Fonction Menu Administrateur"""
     clear_screen()
     print("===================================================")
     print("|      ____   _    _   ____    _                  |")
@@ -46,6 +54,7 @@ def menuAdmin():
     return choice
 
 def menu_gestion_administrateurs(DB_FILE):
+    """ Fonction Menu Gestion Administrateurs """
     admin_manager = AdministratorManager(DB_FILE)
 
     while True:

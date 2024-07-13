@@ -1,17 +1,16 @@
-"""   """
+"""Menu Gestion Professeur """
 
 from modules.gestionProfesseur.getInfosProfessors import Coordinates
 from modules.gestionProfesseur.professors import *
 from modules.database.database import Database
 from modules.administrateur.administrateur import AdministratorManager
-from modules.gestionBatiment.buildings_manager import Building, BuildingManager
 from modules.contraintes.contraintes import (
-    authenticate_admin, clear_screen, pause_system,is_valid_email
+    clear_screen, pause_system
 )
 
 
 def menuProfessors():
-    """ """
+    """Menu professeur """
     clear_screen()
     print("===================================================")
     print("|      ____   _    _   ____    _                  |")
@@ -35,7 +34,7 @@ def menuProfessors():
     print("===================================================")
 
 def menuChoice():
-    """ """
+    """Menu Choix cours """
     while True:
         clear_screen()
         menuProfessors()
@@ -52,17 +51,17 @@ def menuChoice():
         except ValueError:
             clear_screen()
             print()
-            print("\t"  + f"Erreur: Veillez Saisir un entier compris entre [0, 5] ")
-            pause_system()          
+            print("\t"  + "Erreur: Veillez Saisir un entier compris entre [0, 5] ")
+            pause_system()
 
 def is_exist_record():
     """function to verify exist record"""
     isExist = data.read_records("professors")
     if len(isExist) == 0:
         return None
-    
+
     return isExist
-    
+
 def valide_coordinates_modify(code):
     """
     Valide et modifie les coordonnées d'un professeur.
@@ -70,15 +69,19 @@ def valide_coordinates_modify(code):
     :param code: Code du professeur à modifier
     :return: Dictionnaire des coordonnées mises à jour
     """
-    coordinates_find = data.read_records("professors", condition="code=?", params=(code,))
+    coordinates_find = data.read_records("professors", \
+                                         condition="code=?", \
+                                            params=(code,))
 
     def get_valid_name(field_name, current_value):
         """
-        Valide que le nom/prénom commence par une lettre. Utilise la valeur actuelle si l'entrée est vide.
+        Valide que le nom/prénom commence par une lettre. \
+            Utilise la valeur actuelle si l'entrée est vide.
 
         :param field_name: Nom du champ (nom ou prénom)
         :param current_value: Valeur actuelle du champ
-        :return: Nouvelle valeur validée du champ ou valeur actuelle si l'entrée est vide
+        :return: Nouvelle valeur validée du champ ou valeur \
+            actuelle si l'entrée est vide
         """
         while True:
             print("\n")
@@ -92,12 +95,15 @@ def valide_coordinates_modify(code):
 
     def get_unique_value(field_name, current_value, index):
         """
-        Valide que le téléphone ou l'email est unique dans la base de données, sauf s'il est inchangé.
+        Valide que le téléphone ou l'email est unique dans \
+            la base de données, sauf s'il est inchangé.
 
         :param field_name: Nom du champ (phone ou email)
         :param current_value: Valeur actuelle du champ
-        :param index: Index du champ dans les enregistrements de la base de données
-        :return: Nouvelle valeur validée du champ ou valeur actuelle si l'entrée est inchangée
+        :param index: Index du champ dans les enregistrements \
+            de la base de données
+        :return: Nouvelle valeur validée du champ ou valeur \
+            actuelle si l'entrée est inchangée
         """
         while True:
             print("\n")
@@ -114,13 +120,15 @@ def valide_coordinates_modify(code):
 
     def get_valid_course_code():
         """
-        Valide que le code du cours existe et n'est pas déjà attribué à un autre professeur.
+        Valide que le code du cours existe et n'est pas \
+            déjà attribué à un autre professeur.
 
         :return: Code du cours validé
         """
         while True:
             print("\n")
-            course_code = input("\t" + "Entrez le code du cours ou taper 'quit' pour quiter la modification : ").strip()
+            course_code = input("\t" + "Entrez le code du cours ou \
+                                taper 'quit' pour quiter la modification : ").strip()
             if course_code.lower() == 'quit':
                 break
 
@@ -157,7 +165,6 @@ def valide_coordinates_modify(code):
         "codeCours": course_code
     }
 
-
 def modify_professor():
     """function for modify professors"""
     DB_FILE = "database.db"
@@ -168,14 +175,18 @@ def modify_professor():
         clear_screen()
         print("\n")
         print("\t" * 4, f"L'information du professeur avec code \" {code} \" : ")
-        
+
         data_list = []
         data_list.append(
-            {"CODE": coordinates_find[0][0], "NOM": coordinates_find[0][1],"PRENOM": coordinates_find[0][2], "SEXE": coordinates_find[0][3], "EMAIL": coordinates_find[0][4], "TELEPHONE": coordinates_find[0][5], "CODE_COURS": coordinates_find[0][6]}
+            {"CODE": coordinates_find[0][0], "NOM": coordinates_find[0][1],\
+             "PRENOM": coordinates_find[0][2], "SEXE": coordinates_find[0][3], \
+                "EMAIL": coordinates_find[0][4], "TELEPHONE": coordinates_find[0][5], \
+                    "CODE_COURS": coordinates_find[0][6]}
         )
         afficher_affiches(data=data_list, valeur_vide="...")
         print()
-        print("\n", "\t", " SOS !!  seulement les champs contenant un * sont aubligatoire. : ")
+        print("\n", "\t", " SOS !!  seulement les champs contenant \
+              un * sont aubligatoire. : ")
         print()
         print("\tnom")
         print("\tprenom")
@@ -186,8 +197,8 @@ def modify_professor():
         print()
         pause_system()
         params = valide_coordinates_modify(code)
-        dB.update_record(table="professors", values=params, condition="code=?", condition_params=(code,))
-
+        dB.update_record(table="professors", values=params, \
+                         condition="code=?", condition_params=(code,))
 
     else:
         clear_screen()
@@ -215,10 +226,10 @@ def menuGestionProfesseur(DB_FILE, access):
 
             else:
                 clear_screen()
-                print()          
+                print()
                 print("\t" * 5,"Accès reservé aux Administrateurs.")
                 pause_system()
-  
+
         elif menuchoice == 2:
             professor.get_all_professors()
 
@@ -228,15 +239,20 @@ def menuGestionProfesseur(DB_FILE, access):
             if isExist :
                 print()
                 code = coordinates.validate_input(" le code  du Professeur")
-                
-                coordinates_find = data.read_records("professors", condition="code=?", params=(code,))
+
+                coordinates_find = data.read_records("professors", \
+                                                     condition="code=?", \
+                                                        params=(code,))
                 if len(coordinates_find) > 0:
                     clear_screen()
                     print("\n" * 2)
                     print("\t" * 4, f"L'information du professeur avec code ' {code} ' : ")
                     data = []
                     data.append(
-                        {"CODE": coordinates_find[0][0], "NOM": coordinates_find[0][1],"PRENOM": coordinates_find[0][2], "SEXE": coordinates_find[0][3], "EMAIL": coordinates_find[0][4], "TELEPHONE": coordinates_find[0][5], "CODE_COURS": coordinates_find[0][6]}
+                        {"CODE": coordinates_find[0][0], "NOM": coordinates_find[0][1],\
+                         "PRENOM": coordinates_find[0][2], "SEXE": coordinates_find[0][3], \
+                            "EMAIL": coordinates_find[0][4], "TELEPHONE": coordinates_find[0][5], \
+                                "CODE_COURS": coordinates_find[0][6]}
                     )
                     afficher_affiches(data=data, valeur_vide="...")
                     pause_system()
@@ -263,10 +279,10 @@ def menuGestionProfesseur(DB_FILE, access):
                     print()
                     print("\t", "Pas de professeurs dans la base !")
                     pause_system()
-                
+
             else:
                 clear_screen()
-                print()          
+                print()
                 print("\t","Accès reservé aux Administrateurs.")
                 pause_system()
 
@@ -277,16 +293,23 @@ def menuGestionProfesseur(DB_FILE, access):
 
                     professor.get_all_professors()
                     code = Coordinates.validate_input("le code du professeur")
-                    coordinates_find = data.read_records("professors", condition="code=?", params=(code,))
+                    coordinates_find = data.read_records("professors", \
+                                                         condition="code=?", \
+                                                            params=(code,))
                     if len(coordinates_find) > 0:
-                        data.delete_record(table="professors", condition="code=?", params=(code,))
+                        data.delete_record(table="professors", \
+                                           condition="code=?", \
+                                            params=(code,))
                         print("\n")
                         professor.get_all_professors()
-                        data.delete_record(table="cours", condition="teacher_code=?", params=(code,))
- 
+                        data.delete_record(table="cours", \
+                                           condition="teacher_code=?", \
+                                            params=(code,))
+
                     else:
                         clear_screen()
-                        print("\t", f"Pas de professeurs trouve avec le code '{code} ' dans la base !")
+                        print("\t", f"Pas de professeurs trouve avec \
+                              le code '{code} ' dans la base !")
                         pause_system()
 
                 else:
@@ -295,11 +318,10 @@ def menuGestionProfesseur(DB_FILE, access):
                     pause_system()
 
             else:
-                clear_screen()            
+                clear_screen()
                 print("\t","Accès reservé aux Administrateurs.")
                 pause_system()
 
         else:
             clear_screen()
             break
-

@@ -1,12 +1,11 @@
-"""
-"""
+""" Module Infos Prof"""
 
 import re
 import os
 import random
 
 from modules.database.database import Database
-from modules.contraintes.contraintes import clear_screen, pause_system,is_valid_email
+from modules.contraintes.contraintes import clear_screen, pause_system
 
 class InvalidInputError(Exception):
     """Classe d'exception personnalisée pour les entrées invalides."""
@@ -21,8 +20,8 @@ class InvalidInputError(Exception):
 
 class Coordinates:
     """Class to manage professor's coordinates."""
-    
-    def __init__(self, code=None, last_name=None, first_name=None, gender=None, email=None, phone=None, course_code=None):
+    def __init__(self, code=None, last_name=None, first_name=None,\
+                 gender=None, email=None, phone=None, course_code=None):
         self._code = code
         self._last_name = last_name
         self._first_name = first_name
@@ -33,30 +32,37 @@ class Coordinates:
 
     @property
     def code(self):
+        """ Fonction Code """
         return self._code
 
     @property
     def last_name(self):
+        """ Fonction last name """
         return self._last_name
 
     @property
     def first_name(self):
+        """ Fonction first name """
         return self._first_name
 
     @property
     def gender(self):
+        """ Fonction gender """
         return self._gender
 
     @property
     def email(self):
+        """ Fonction email """
         return self._email
 
     @property
     def phone(self):
+        """ Fonction phone """
         return self._phone
 
     @property
     def course_code(self):
+        """ Fonction code cours """
         return self.course_code
 
     @staticmethod
@@ -114,7 +120,8 @@ class Coordinates:
         while True:
             try:
                 phone = input("\t" + "Entrez le téléphone : ").strip()
-                if phone[:4] == "+509" or phone[:3] == "509" or phone[:5] == "(509)" or phone[:6] == "+(509)":
+                if phone[:4] == "+509" or phone[:3] == "509" \
+                    or phone[:5] == "(509)" or phone[:6] == "+(509)":
                     if phone[1:].isdigit() or phone[6:].isdigit() :
                         return phone
                 int(phone)
@@ -160,7 +167,7 @@ class Coordinates:
         if course_assigned:
 
             for items in course_assigned:
-                 if items[6] == course_code:
+                if items[6] == course_code:
                     clear_screen()
                     print("\t", "Erreur : Un professeur est déjà assigné à ce cours.")
                     pause_system()
@@ -201,7 +208,9 @@ class Coordinates:
                 self._gender = Coordinates.validate_gender()
                 self._email = Coordinates.validate_email()
                 self._phone = Coordinates.validate_phone()
-                self._code = Coordinates.generate_code(last_name=self._last_name, first_name=self._first_name, gender=self._gender)
+                self._code = Coordinates.generate_code(last_name=self._last_name, \
+                                                       first_name=self._first_name, \
+                                                        gender=self._gender)
 
                 return {
                     "code": self._code,
@@ -215,5 +224,6 @@ class Coordinates:
 
             clear_screen()
             print("\n")
-            print("\t", "Le cours doit exister et ne doit être attribué à aucun professeur pour pouvoir passer à l'étape suivante.")
+            print("\t", "Le cours doit exister et ne doit être attribué \
+                  à aucun professeur pour pouvoir passer à l'étape suivante.")
             pause_system()

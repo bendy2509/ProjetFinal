@@ -185,6 +185,7 @@ def saisir_nom_cours():
               et doit contenir au moins 3 caractères.\n")
 
 def saisir_faculte():
+    """Fonction Saisir Fac"""
     while True:
         fac = input("Entrer la faculté pour laquelle vous \
                     enregistrez le cours (q pour quitter): ").strip()
@@ -254,6 +255,7 @@ def saisir_annee():
             print("Erreur : Veuillez entrer une valeur entière pour l'année académique.\n")
 
 def saisir_jour():
+    """Fonction Saisr Jour"""
     jours_valides = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"]
     while True:
         jour = input("Jour (lundi, mardi, etc.) : ").strip().lower()

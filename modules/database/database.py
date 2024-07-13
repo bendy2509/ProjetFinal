@@ -1,4 +1,4 @@
-# database.py
+"""Base de donnees du projet"""
 import sqlite3
 from contextlib import closing
 
@@ -131,15 +131,16 @@ class Database:
         placeholders = ', '.join(['?' for _ in values])
         query = f"INSERT OR IGNORE INTO {table} ({columns}) VALUES ({placeholders})"
         affected_rows = self.execute_query(query, list(values.values()))
-        
         if affected_rows == 0:
             clear_screen()
-            print("\t" * 4 + "Les données que vous essayez d'insérer existent déjà dans la base de données.")
+            print("\t" * 4 + "Les données que vous essayez \
+                  d'insérer existent déjà dans la base de données.")
             pause_system()
 
     def read_records(self, table, columns=None, condition=None, params=None):
         """
-        Récupère des lignes de la table spécifiée en fonction des colonnes et de la condition données.
+        Récupère des lignes de la table spécifiée en \
+            fonction des colonnes et de la condition données.
 
         :param table: Nom de la table.
         :param columns: Colonnes à récupérer qui est une liste.

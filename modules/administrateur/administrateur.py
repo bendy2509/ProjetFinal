@@ -1,3 +1,4 @@
+""" Gestion Administrateur """
 import hashlib
 
 from modules.contraintes.contraintes import afficher_affiches, clear_screen, pause_system
@@ -5,6 +6,7 @@ from modules.database.database import Database
 
 
 class AdministratorManager:
+    """Class AdministratorManager"""
     def __init__(self, DB_FILE):
         """
         Initialise une instance de AdministratorManager.
@@ -39,7 +41,6 @@ class AdministratorManager:
             )
             print(f"Administrateur {first_name} {last_name} ajouté avec succès.")
             pause_system()
-            
         except Exception:
             print(f"Erreur lors de l'ajout de l'administrateur")
 
@@ -54,9 +55,9 @@ class AdministratorManager:
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
         try:
             results = self.db.read_records(
-                table="administrators", 
-                condition="email=? AND password=?", 
-                params=(email, hashed_password)
+                table="administrators",
+                condition="email=? AND password=?",
+                params=(email,hashed_password)
             )
             if results:
                 return True
@@ -64,7 +65,7 @@ class AdministratorManager:
                 # print("Identifiants incorrects.")
                 return False
         except:
-            print("\t" * 4, f"Erreur lors de l'authentification")
+            print("\t" * 4, "Erreur lors de l'authentification")
             pause_system()
             return False
 
@@ -76,11 +77,11 @@ class AdministratorManager:
         administrators = self.db.read_records(table="administrators")
         if administrators:
             print("\t"*5, "Liste des administrateurs :\n")
-            
             data = []
             for administrator in administrators:
                 data.append(
-                    {"NOM": administrator[2], "PRENOM": administrator[1],"ADRESSE": administrator[3], "TELEPHONE": administrator[4], "EMAIL": administrator[5]}
+                    {"NOM": administrator[2], "PRENOM": administrator[1],"ADRESSE": \
+                     administrator[3], "TELEPHONE": administrator[4], "EMAIL": administrator[5]}
                 )
             afficher_affiches(data=data, valeur_vide="...")
 

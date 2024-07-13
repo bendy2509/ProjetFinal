@@ -8,7 +8,8 @@ Importation des modules
 
 """
 from modules.gestion_horaire.gestion_horaire import menu_gestion_horaires
-from modules.administrateur.gestionAdministrateur import create_account, menu_gestion_administrateurs
+from modules.administrateur.gestionAdministrateur \
+    import create_account, menu_gestion_administrateurs
 from modules.gestionSalle.gestionSalle import menuGestionSalle
 from modules.administrateur.administrateur import AdministratorManager
 from modules.gestionBatiment.gestion_batiment import menu_gestion_batiment
@@ -112,7 +113,6 @@ def handle_initial_menu_choice(choice, db_file, admin_manager):
             pause_system()
     elif choice == '2':
         create_account(admin_manager)
-        
     elif choice == '3':
         print("Connecté en tant qu'invité.")
         pause_system()
