@@ -7,8 +7,8 @@ from modules.gestionProfesseur.professors import(
 from modules.database.database import Database
 from modules.administrateur.administrateur import AdministratorManager
 from modules.contraintes.contraintes import (
-    clear_screen, pause_system, afficher_affiches,
-    header_design, clear_screen, pause_system
+    pause_system, afficher_affiches,
+    header_design, pause_system
 )
 
 
@@ -85,11 +85,11 @@ def menuGestionProfesseur(DB_FILE, access):
             is_exist = is_exist_record()
             if is_exist :
                 print()
-                code = input(" le code  du Professeur :  ")
+                first_name = input(" le prenom  du Professeur :  ")
 
                 coordinates_find = data.read_records("professors", \
-                                                     condition="code=?", \
-                                                        params=(code,))
+                                                     condition="prenom=?", \
+                                                        params=(first_name,))
                 if len(coordinates_find) > 0:
                     print("\n")
                     data = []
@@ -100,12 +100,12 @@ def menuGestionProfesseur(DB_FILE, access):
                                 "CODE_COURS": coordinates_find[0][6]}
                     )
                     print("\n" * 2)
-                    print("\t" * 4, f"=-===========L'information du professeur avec code ' {code} ' :===========-=")
+                    print("\t" * 4, f"=-===========L'information du professeur avec code ' {first_name} ' :===========-=")
                     afficher_affiches(data=data, valeur_vide="...")
                     pause_system()
                 else:
                     print()
-                    print(f"Pas de professeurs trouve avec le code ' {code} ' dans la base !")
+                    print(f"Pas de professeurs trouve avec le code ' {first_name} ' dans la base !")
                     pause_system()
             else:
                 print()
