@@ -1,7 +1,7 @@
 """Gestion Horaire"""
 
 from modules.gestion_horaire.schedule_manager import Schedule_Manager
-from modules.contraintes.contraintes import clear_screen, get_int_user, pause_system, saisir_duration
+from modules.contraintes.contraintes import clear_screen, get_int_user, header_design, pause_system, saisir_duration
 
 
 def menu_horaires():

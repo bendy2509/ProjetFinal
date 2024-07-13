@@ -5,7 +5,7 @@ from modules.gestionProfesseur.professors import *
 from modules.database.database import Database
 from modules.administrateur.administrateur import AdministratorManager
 from modules.contraintes.contraintes import (
-    authenticate_admin, clear_screen, pause_system,is_valid_email
+    authenticate_admin, header_design, clear_screen, pause_system,is_valid_email
 )
 
 
