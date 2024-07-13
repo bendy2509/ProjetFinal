@@ -5,21 +5,14 @@ from modules.gestionProfesseur.professors import *
 from modules.database.database import Database
 from modules.administrateur.administrateur import AdministratorManager
 from modules.contraintes.contraintes import (
-    clear_screen, pause_system
+    authenticate_admin, clear_screen, pause_system,is_valid_email
 )
 
 
 def menuProfessors():
     """Menu professeur """
     clear_screen()
-    print("===================================================")
-    print("|      ____   _    _   ____    _                  |")
-    print("|     / ___| | |  | | / ___|  | |                 |")
-    print("|    | |     | |__| | | |     | |                 |")
-    print("|    | |     |  __  | | |     | |                 |")
-    print("|    | |___  | |  | | | |___  | |____             |")
-    print("|    |_____| |_|  |_|  \____| |______|            |")
-    print("|                                                 |")
+    header_design()
     print("===================================================")
     print("|                                                 |")
     print("|        Menu Gestion Professeur                  |")

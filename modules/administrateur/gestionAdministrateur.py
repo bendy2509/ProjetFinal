@@ -1,8 +1,5 @@
-"""Gestion administrateur"""
-from modules.contraintes.contraintes import (authenticate_admin, clear_screen,
-                                            get_validated_input, is_valid_email,
-                                            is_valid_password, is_valid_phone,
-                                            pause_system)
+
+from modules.contraintes.contraintes import authenticate_admin, clear_screen, get_validated_input, header_design, is_valid_email, is_valid_password, is_valid_phone, pause_system
 from modules.administrateur.administrateur import AdministratorManager
 
 def create_account(admin_manager):
@@ -30,14 +27,7 @@ def create_account(admin_manager):
 def menuAdmin():
     """Fonction Menu Administrateur"""
     clear_screen()
-    print("===================================================")
-    print("|      ____   _    _   ____    _                  |")
-    print("|     / ___| | |  | | / ___|  | |                 |")
-    print("|    | |     | |__| | | |     | |                 |")
-    print("|    | |     |  __  | | |     | |                 |")
-    print("|    | |___  | |  | | | |___  | |____             |")
-    print("|    |_____| |_|  |_|  \\____| |______|            |")
-    print("|                                                 |")
+    header_design()
     print("===================================================")
     print("|                                                 |")
     print("|           Menu Gestion Administrateurs          |")

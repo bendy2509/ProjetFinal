@@ -1,20 +1,13 @@
 """Gestion Salle """
 from modules.gestionBatiment.buildings_manager import BuildingManager
 from modules.gestionBatiment.gestion_batiment import add_room_to_building
-from modules.contraintes.contraintes import clear_screen, pause_system
+from modules.contraintes.contraintes import clear_screen, header_design, pause_system
 from modules.gestionSalle.roomManager import RoomManager
 
 def menuSalle():
     """Menu salle"""
     clear_screen()
-    print("===================================================")
-    print("|      ____   _    _   ____    _                  |")
-    print("|     / ___| | |  | | / ___|  | |                 |")
-    print("|    | |     | |__| | | |     | |                 |")
-    print("|    | |     |  __  | | |     | |                 |")
-    print("|    | |___  | |  | | | |___  | |____             |")
-    print("|    |_____| |_|  |_|  \\____| |______|            |")
-    print("|                                                 |")
+    header_design()
     print("===================================================")
     print("|                                                 |")
     print("|                 Menu Gestion Salle              |")

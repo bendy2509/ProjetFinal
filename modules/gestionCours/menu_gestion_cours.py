@@ -1,18 +1,11 @@
 """Menu Gestion des cours cours """
 from modules.gestionCours.cours import Course_Manager
-from modules.contraintes.contraintes import clear_screen, pause_system
+from modules.contraintes.contraintes import clear_screen, pause_system, authenticate_admin
 
 def menu_cours():
     """Fonction Menu Cours"""
     clear_screen()
-    print("\t" * 4 + "===================================================")
-    print("\t" * 4 + "|      ____   _    _   ____    _                  |")
-    print("\t" * 4 + "|     / ___| | |  | | / ___|  | |                 |")
-    print("\t" * 4 + "|    | |     | |__| | | |     | |                 |")
-    print("\t" * 4 + "|    | |     |  __  | | |     | |                 |")
-    print("\t" * 4 + "|    | |___  | |  | | | |___  | |____             |")
-    print("\t" * 4 + "|    |_____| |_|  |_|  \\____| |______|            |")
-    print("\t" * 4 + "|                                                 |")
+    header_design()
     print("\t" * 4 + "===================================================")
     print("\t" * 4 + "|                                                 |")
     print("\t" * 4 + "|                Menu Gestion Cours               |")
