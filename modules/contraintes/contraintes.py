@@ -20,6 +20,16 @@ def clear_screen():
     """Efface l'écran de la console."""
     os.system('cls' if os.name == 'nt' else 'clear')
 
+def header_design():
+    print("===================================================")
+    print("|      ____   _    _   ____    _                  |")
+    print("|     / ___| | |  | | / ___|  | |                 |")
+    print("|    | |     | |__| | | |     | |                 |")
+    print("|    | |     |  __  | | |     | |                 |")
+    print("|    | |___  | |  | | | |___  | |____             |")
+    print("|    |_____| |_|  |_|  \____| |______|            |")
+    print("|                                                 |")
+
 def pause_system():
     """Met le système en pause en attendant une action de l'utilisateur."""
     os.system('pause' if os.name == 'nt' else input("\t" + "Appuyez sur Entrée pour continuer..."))
