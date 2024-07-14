@@ -84,9 +84,16 @@ def menuGestionProfesseur(DB_FILE, access):
                 print()
                 first_name = input(" le prenom  du Professeur :  ")
 
-                coordinates_find = data.read_records("professors", \
+                try:
+                    coordinates_find = data.read_records("professors", \
                                                      condition="prenom=?", \
                                                         params=(first_name,))
+
+                except AttributeError:
+                    print()
+                    print("vous devez entrez le prenom du professeur. ")
+                    pause_system()
+
                 if len(coordinates_find) > 0:
                     print("\n")
                     data = []
@@ -97,12 +104,12 @@ def menuGestionProfesseur(DB_FILE, access):
                                 "CODE_COURS": coordinates_find[0][6]}
                     )
                     print("\n" * 2)
-                    print("\t" * 4, f"=-===========L'information du professeur avec code ' {first_name} ' :===========-=")
+                    print("\t" * 4, f"=-===========L'information du professeur avec le prenom ' {first_name} ' :===========-=")
                     afficher_affiches(data=data, valeur_vide="...")
                     pause_system()
                 else:
                     print()
-                    print(f"Pas de professeurs trouve avec le code ' {first_name} ' dans la base !")
+                    print(f"Pas de professeurs trouve avec le prenom ' {first_name} ' dans la base !")
                     pause_system()
             else:
                 print()
