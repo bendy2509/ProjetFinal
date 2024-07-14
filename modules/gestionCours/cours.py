@@ -101,13 +101,16 @@ class Course_Manager:
         cours = self.db_manager.read_records("cours")
         print("\n")
 
-        data = []
-        for cour in cours:
-            data.append(
-                {"CODE COURS": cour[0], "NOM DU COURS": cour[1],"FACULTE": cour[2], \
-                 "PROFESSEUR": cour[3], "DUREE": cour[4], "SESSION": cour[5], "ANNEE": cour[6]}
-            )
-        afficher_affiches(data=data, valeur_vide="...")
+        if len(cours) > 0:
+            data = []
+            for cour in cours:
+                data.append(
+                    {"CODE COURS": cour[0], "NOM DU COURS": cour[1],"FACULTE": cour[2], \
+                     "PROFESSEUR": cour[3], "DUREE": cour[4], "SESSION": cour[5], "ANNEE": cour[6]}
+                )
+            afficher_affiches(data=data, valeur_vide="...")
+        else:
+            print("Aucun cours trouvé!")
 
         pause_system()
 

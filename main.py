@@ -87,6 +87,7 @@ def handle_initial_menu_choice(choice, db_file, admin_manager):
     if choice == '1':
         email = input("Entrer l'email de l'administrateur : ")
         password = input("Entrer le mot de passe de l'administrateur : ")
+        
         if admin_manager.authenticate_administrator(email, password):
             print("Connexion réussie.")
             pause_system()
@@ -95,7 +96,7 @@ def handle_initial_menu_choice(choice, db_file, admin_manager):
             print("Échec de la connexion. Vérifiez vos identifiants.")
             pause_system()
     elif choice == '2':
-        create_account(admin_manager)
+        create_account(admin_manager, db_file)
     elif choice == '3':
         print("Connecté en tant qu'invité.")
         pause_system()
