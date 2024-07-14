@@ -50,8 +50,12 @@ class RoomManager:
         :param building_name: Nom du bâtiment.
         :param room: Objet Room représentant la salle à ajouter.
         """
-        building = self.db.read_records("buildings", columns=["id"], \
-                                        condition="name=?", params=(building_name,))
+        building = self.db.read_records(
+            "buildings",
+            columns=["id"],
+            condition="name=?",
+            params=(building_name,)
+        )
         if building:
             building_id = building[0][0]
             if not self.room_exists(room.number):
@@ -63,11 +67,9 @@ class RoomManager:
                     "capacity": room.capacity,
                     "statut": room.statut
                 })
-                print(f"La salle '{room.number}' a été ajoutée dans \
-                      le bâtiment '{building_name}' avec succès.")
+                print(f"La salle '{room.number}' a été ajoutée dans le bâtiment '{building_name}' avec succès.")
             else:
-                print(f"La salle '{room.number}' existe déjà \
-                      dans le bâtiment '{building_name}'.")
+                print(f"La salle '{room.number}' existe déjà dans le bâtiment '{building_name}'.")
         else:
             print(f"Pas de bâtiment avec le nom '{building_name}'.")
         pause_system()
@@ -78,12 +80,17 @@ class RoomManager:
 
         :param building_name: Nom du bâtiment.
         """
-        building = self.db.read_records("buildings", columns=["id"],\
-                                         condition=f"name='{building_name}'")
+        building = self.db.read_records(
+            "buildings",
+            columns=["id"],
+            condition=f"name='{building_name}'"
+        )
         if building:
             building_id = building[0][0]
-            rooms = self.db.read_records("rooms", \
-                                         condition=f"building_id={building_id}")
+            rooms = self.db.read_records(
+                "rooms",
+                condition=f"building_id={building_id}"
+            )
             if rooms:
                 data = []
                 for room in rooms:

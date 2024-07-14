@@ -78,11 +78,11 @@ def get_int_user(prompt):
     """
     while True:
         try:
-            value = int(input("\t" * 5 + prompt))
+            value = int(input(prompt))
             return value
         except ValueError:
             clear_screen()
-            print("\t" * 5 + "Veuillez entrer un nombre entier valide.\n")
+            print("Veuillez entrer un nombre entier valide.\n")
             pause_system()
             clear_screen()
 
@@ -98,7 +98,7 @@ def check_building_name(name):
         return True
     else:
         clear_screen()
-        print("\t" * 5 + "Mauvais choix. Veuillez entrer A, B, C, D\n")
+        print("Mauvais choix. Veuillez entrer A, B, C, D\n")
         pause_system()
         clear_screen()
         return False
@@ -113,7 +113,7 @@ def validRoomFloor(floor):
     if 1 <= floor <= 3:
         return True
     clear_screen()
-    print("\t" * 5 + "Mauvais choix. Veuillez entrer 1, 2 ou 3 pour l'étage.\n")
+    print("Mauvais choix. Veuillez entrer 1, 2 ou 3 pour l'étage.\n")
     pause_system()
     clear_screen()
     return False
@@ -169,7 +169,7 @@ def authenticate_admin(admin_manager):
     :return: True si l'authentification réussit, False sinon.
     """
     clear_screen()
-    print("\t" * 4 + "Vous devez vous identifier !")
+    print("\t" * 5 + "Vous devez vous identifier !")
     admin_email = input("\t" * 5 + "Email administrateur: ")
     admin_password = input("\t" * 5 + "Mot de passe : ")
     return admin_manager.authenticate_administrator(admin_email, admin_password)
@@ -192,20 +192,17 @@ def saisir_nom_cours():
             return None
         if nom and len(nom) >= 3:
             return nom.capitalize()
-        print("Erreur : Le nom du cours ne peut pas être vide \
-              et doit contenir au moins 3 caractères.\n")
+        print("Erreur : Le nom du cours ne peut pas être vide et doit contenir au moins 3 caractères.\n")
 
 def saisir_faculte():
     """Fonction Saisir Fac"""
     while True:
-        fac = input("Entrer la faculté pour laquelle vous \
-                    enregistrez le cours (q pour quitter): ").strip()
+        fac = input("Entrer la faculté pour laquelle vous enregistrez le cours (q pour quitter): ").strip()
         if fac == 'q':
             return None
         if fac and len(fac) >= 3:
             return fac.capitalize()
-        print("Erreur : Le nom de la fac ne peut pas être vide \
-              et doit contenir au moins 3 caractères.\n")
+        print("Erreur : Le nom de la fac ne peut pas être vide et doit contenir au moins 3 caractères.\n")
 
 def saisir_duration(message):
     """Saisit et valide une duration (entier entre 0 et 23)."""
@@ -310,8 +307,7 @@ def afficher_affiches(data, valeur_vide="...."):
     col_widths = [max(width, len(header)) for width, header in zip(col_widths, headers)]
 
     # Afficher l'en-tête du tableau
-    header_row = "| " + " | ".join(f"{header:<{col_widths[i]}}" \
-                                   for i, header in enumerate(headers)) + " |"
+    header_row = "| " + " | ".join(f"{header:<{col_widths[i]}}" for i, header in enumerate(headers)) + " |"
     separator = "-" * len(header_row)
     print("\n")
     print("\t" * 3, separator)

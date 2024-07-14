@@ -152,12 +152,17 @@ class BuildingManager(Database):
             room_numbers = [room[0] for room in rooms]
 
             # Vérifier s'il y a des horaires associés aux salles
-            schedules = self.read_records(table="schedules", condition=f"room_number \
-                                          IN ({','.join('?' * len(room_numbers))})",\
-                                            params=room_numbers)
+            schedules = self.read_records(
+                table="schedules",
+                condition=f"room_number IN ({','.join('?' * len(room_numbers))})",
+                params=room_numbers
+            )
             if schedules:
-                self.delete_record(table="schedules", condition=f"room_number \
-                                   IN ({','.join('?' * len(room_numbers))})", params=room_numbers)
+                self.delete_record(
+                    table="schedules",
+                    condition=f"room_number IN ({','.join('?' * len(room_numbers))})",
+                    params=room_numbers
+                )
                 print("Les horaires associées ont été supprimées.")
             else:
                 print("Aucune horaire associée trouvée.")
@@ -206,7 +211,7 @@ class BuildingManager(Database):
                 {"NOM BATIMENT": building[1], "NOMBRE D'ETAGE": building[2]}
             )
             afficher_affiches(data=data, valeur_vide="...")
-            print("\n", "\t" * 3, "Les salles du batiment {building[1]} :")
+            print(f"Les salles du batiment {building[1]} :")
             self.list_building_rooms(building[1])
         print("\n")
         pause_system()

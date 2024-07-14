@@ -3,12 +3,15 @@ from modules.contraintes.contraintes import authenticate_admin, \
     clear_screen, get_validated_input, header_design, is_valid_email, \
         is_valid_password, is_valid_phone, pause_system
 from modules.administrateur.administrateur import AdministratorManager
+from modules.database.database import Database
 
-def create_account(admin_manager):
+def create_account(admin_manager, db_file):
     """
     Crée un compte administrateur en demandant les informations nécessaires à l'utilisateur.
     """
-    if authenticate_admin(admin_manager):
+    db = Database(db_file)
+    administrator_exist = db.read_records(table="administrators")
+    if len(administrator_exist) == 0 or authenticate_admin(admin_manager):
         first_name = input("Prénom : ")
         last_name = input("Nom : ")
         address = input("Adresse : ")
@@ -54,7 +57,7 @@ def menu_gestion_administrateurs(DB_FILE):
         choice = menuAdmin()
 
         if choice == '1':
-            create_account(admin_manager)
+            create_account(admin_manager, DB_FILE)
         elif choice == '2':
             admin_manager.list_administrators()
         elif choice == '3':
