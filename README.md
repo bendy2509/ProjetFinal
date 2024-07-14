@@ -129,6 +129,19 @@ Ce modèle d'accès garantit que les administrateurs peuvent pleinement gérer l
     - Un cours ne peut pas avoir plus d'un professeur assigné à la fois.
 
 ## Utilisation
+Veuillez utiliser l'un de ces comptes pour connecter en tant que admin:
+- email: bendy.servilus@student.ueh.edu.ht
+- password: Servilus_2509
+
+- email: blemy.joseph@student.ueh.edu.ht
+- password: Blemy_001
+
+- email : albikendy.jean@student.ueh.edu.ht
+- password: pythons&Albe--}
+
+- email: dually.dagobert@student.ueh.edu.ht
+- password: ATEIEIZ9mike
+
 1. **Enregistrer un bâtiment** : Fournit le nom du bâtiment pour l'ajouter à la base de données.
 2. **Ajouter des salles à un bâtiment** : Sélectionne un bâtiment existant et ajoute des salles avec les informations requises.
 3. **Enregistrer des cours** : Ajoute des cours avec tous les détails nécessaires pour les identifier.
