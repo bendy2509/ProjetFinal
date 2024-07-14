@@ -31,7 +31,7 @@ def menuProfessors():
     print("===================================================")
 
 def menuChoice():
-    """Menu Choix cours """
+    """Menu Choix d'option de l'utilisateur """
     while True:
         print("\n")
         menuProfessors()
@@ -40,7 +40,6 @@ def menuChoice():
             if 0 <= admin_choice <= 5:
                 return admin_choice
 
-            print("\n")
             print()
             print("Veillez Saisir un entier compris entre [0, 5]")
             pause_system()
@@ -68,10 +67,8 @@ def menuGestionProfesseur(DB_FILE, access):
             if is_authenticated:
                 professor.add_professor()
 
-            else:
-                print()          
+            else:        
                 print("\n")
-                print()
                 print("Accès reservé aux Administrateurs.")
                 pause_system()
 

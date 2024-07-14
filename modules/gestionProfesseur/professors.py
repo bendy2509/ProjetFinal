@@ -114,6 +114,7 @@ class Coordinates:
 
     @staticmethod
     def validate_phone(phone):
+        """Checks if the number given is valid according to the Haitian standard ."""
         expression = (
             r"^((\+)|(011))?[\s-]?((509)|(\(509\)))?[\s-]?"
             r"([2-9]{1}[0-9]{7}|(3[1-9]|4[0-4]|4[6-9]|5[5])[\s-]?"
@@ -123,6 +124,8 @@ class Coordinates:
 
     @staticmethod
     def validate_course_code(course_code):
+        """Checks if the given course code is already exist.
+        Ensures the course code is not assigned to another professors. """
         cours_existe = database.read_records(
             table="cours",
             condition="code_cours=?",
@@ -140,15 +143,11 @@ class Coordinates:
 
     @staticmethod
     def validate_email(email):
-        """Checks if the given email is already assigned to another professor.
-
-        Ensures the email is unique among all professors' records.
-        """
-        # regex = (
-        #     r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+'
-        #     r'(\.[a-zA-Z]{2,})?$'
-        # )
-        regex = r"[^@]+@[^@]+\.[^@]+"
+        """Checks if the given email address is valid according to the standard ."""
+        regex = (
+            r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+'
+            r'(\.[a-zA-Z]{2,})?$'
+        )
         return re.match(regex, email) is not None
 
     @staticmethod
