@@ -14,7 +14,7 @@ def menu_horaires():
     print("|                 Menu Horaires                   |")
     print("|                                                 |")
     print("===================================================")
-    print("|  1. Enregistrer une horaire (Admin)              |")
+    print("|  1. Enregistrer une horaire (Admin)             |")
     print("|  2. Afficher l'horaire d'une salle              |")
     print("|  3. Vérifier la disponibilité d'une salle       |")
     print("|  4. Supprimer horaires par salle (Admin)        |")

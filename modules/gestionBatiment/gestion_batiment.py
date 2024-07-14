@@ -23,7 +23,7 @@ def menu_batiment():
     print("|  3. Modifier le nom d'un bâtiment (admin)       |")
     print("|  4. Afficher les bâtiments                      |")
     print("|  5. Supprimer un bâtiment (admin)               |")
-    print("|  6. Retour au menu principal                    |")
+    print("|  0. Retour au menu principal                    |")
     print("|                                                 |")
     print("===================================================")
     choice = input("Choisissez une option: ")
@@ -119,7 +119,7 @@ def menu_gestion_batiment(db_file, invite):
             manager.list_buildings()
         elif choice == '5':
             delete_building(manager, invite)
-        elif choice == '6':
+        elif choice == '0':
             break
         else:
             print("Choix invalide. Veuillez saisir un nombre entre 1 et 6. Réessayez !!")

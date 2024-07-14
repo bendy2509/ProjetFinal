@@ -28,7 +28,7 @@ import os
 import re
 import random
 
-from modules.contraintes.contraintes import afficher_affiches, pause_system
+from modules.contraintes.contraintes import afficher_affiches, is_valid_email, pause_system
 from modules.database.database import Database
 
 class Coordinates:
@@ -144,11 +144,10 @@ class Coordinates:
     @staticmethod
     def validate_email(email):
         """Checks if the given email address is valid according to the standard ."""
-        regex = (
-            r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+'
-            r'(\.[a-zA-Z]{2,})?$'
-        )
-        return re.match(regex, email) is not None
+        if is_valid_email(email):
+            return True
+        return False
+        
 
     @staticmethod
     def generate_code(last_name, first_name, gender):
