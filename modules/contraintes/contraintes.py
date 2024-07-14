@@ -28,7 +28,7 @@ def header_design():
     print("|    | |     | |__| | | |     | |                 |")
     print("|    | |     |  __  | | |     | |                 |")
     print("|    | |___  | |  | | | |___  | |____             |")
-    print("|    |_____| |_|  |_|  \____| |______|            |")
+    print("|    |_____| |_|  |_|  \\____| |______|            |")
     print("|                                                 |")
 
 def pause_system():
@@ -45,19 +45,25 @@ def is_valid_phone(phone):
     """
     Vérifie si le numéro de téléphone est valide selon les formats spécifiés.
     """
-    expression = r"^((\+)|(011))?[\s-]?((509)|(\(509\)))?[\s-]?(3[1-9]|4[0-4]|4[6-9]\
-        |5[5])[\s-]?([0-9]{2})[\s-]?([0-9]{2})[\s-]?[0-9]{2}$"
+    expression = r"^((\+)|(011))?[\s-]?((509)|(\(509\)))?[\s-]?(3[1-9]|4[0-4]|4[6-9]|5[5])[\s-]?([0-9]{2})[\s-]?([0-9]{2})[\s-]?[0-9]{2}$"
     if not re.fullmatch(expression, phone):
         return False
     return True
 
+import re
+
+import re
+
 def is_valid_password(password):
     """
-    Vérifie si le mot de passe est valide (au moins 8 caractères, \
-        une majuscule, une minuscule et un chiffre).
+    Vérifie si le mot de passe est valide (au moins 8 caractères,
+    une majuscule, une minuscule, un chiffre et un caractère spécial).
     """
-    return len(password) >= 8 and re.search(r"[A-Z]", password) \
-        and re.search(r"[a-z]", password) and re.search(r"[0-9]", password)
+    if len(password) < 8:
+        print("Le mot de passe doit contenir au moins 8 caractères.")
+        return False
+    return True
+
 
 def get_validated_input(prompt, validation_func, error_message):
     """

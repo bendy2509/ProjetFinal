@@ -29,11 +29,7 @@ class Schedule_Manager:
             print("Vous venez d'annuler !")
             pause_system()
             return
-        debut = saisir_debut("Heure de debut (de 8h a 16h) : ")
-        if debut is None:
-            print("Vous venez d'annuler !")
-            pause_system()
-            return
+        
         code_cours = input("Code du cours : ")
 
         if not self.course_manager.verifier_existence_cours(code_cours):
@@ -45,7 +41,19 @@ class Schedule_Manager:
             condition="code_cours=?",
             params=(code_cours,)
         )
+
+        debut = saisir_debut("Heure de debut (de 8h a 16h) : ")
+        if debut is None:
+            print("Vous venez d'annuler !")
+            pause_system()
+            return
+        
         fin = debut + cours[0][4]
+        if fin > 16:
+            print("Selon la durée du cours l'heure de début est trop grande !!")
+            print("Vous devez vous rendre dans le menu gestion cours pour obtenir les bonne infos.")
+            pause_system()
+            return
 
         if self.verifier_disponibilite(salle, jour, debut, fin):
             print(f"La salle {salle} est occupée de {debut}h00 à {fin}h00 le {jour}.")

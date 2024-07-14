@@ -30,9 +30,9 @@ def display_main_menu():
     print("|                 Menu Principal                  |")
     print("|                                                 |")
     print("===================================================")
-    print("|  1. Gestion des cours                           |")
+    print("|  1. Gestion des Bâtiments                       |")
     print("|  2. Gestion des Salles                          |")
-    print("|  3. Gestion des Bâtiments                       |")
+    print("|  3. Gestion des cours                           |")
     print("|  4. Gestion des Professeurs                     |")
     print("|  5. Gestion des Administrateurs                 |")
     print("|  6. Gestion des horaires                        |")
@@ -45,11 +45,11 @@ def main_menu(db_file, invite=True):
         display_main_menu()
         choice = input("Choisissez une option (0-6) : ")
         if choice == '1':
-            menu_gestion_cours(db_file, invite)
+            menu_gestion_batiment(db_file, invite)
         elif choice == '2':
             menuGestionSalle(db_file, invite)
         elif choice == '3':
-            menu_gestion_batiment(db_file, invite)
+            menu_gestion_cours(db_file, invite)
         elif choice == '4':
             menuGestionProfesseur(db_file, invite)
         elif choice == '5':

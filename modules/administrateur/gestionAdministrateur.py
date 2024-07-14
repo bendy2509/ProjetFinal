@@ -21,8 +21,7 @@ def create_account(admin_manager, db_file):
                                     "Email invalide. Veuillez réessayer.")
         password = get_validated_input("Mot de passe : ", is_valid_password, \
                                        "Mot de passe invalide. \
-                                       Il doit contenir au moins 8 caractères, \
-                                        une majuscule, une minuscule et un chiffre.")
+                                       Il doit contenir au moins 8 caractères")
 
         admin_manager.add_administrator(first_name, last_name, address, phone, email, password)
     else:
